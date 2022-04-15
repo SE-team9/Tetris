@@ -18,6 +18,7 @@ public class GameForm extends JFrame {
 	private JPanel gameAreaPlaceholder;
 	private GameArea ga;
 	private GameThread gt;
+	private NextBlockArea nba;
 
 	private final static int WIDTH = 600;
 	private final static int HEIGHT = 450;
@@ -37,6 +38,8 @@ public class GameForm extends JFrame {
 
 		ga = new GameArea(gameAreaPlaceholder, 10);
 		this.add(ga); // JFrame에 JPanel 추가하기
+		nba = new NextBlockArea(ga);
+		this.add(nba);
 
 		initControls();
 	}
@@ -117,7 +120,9 @@ public class GameForm extends JFrame {
 	public void startGame() {
 		// 시작 할때마다 배경 초기화
 		ga.initBackgroundArray();
-		gt = new GameThread(ga, this);
+		// 다음 블럭 초기화, 
+		ga.setNextBlock();
+		gt = new GameThread(ga, this, nba);
 		gt.start();
 	}
 

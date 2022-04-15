@@ -3,6 +3,7 @@ package tetris;
 public class GameThread extends Thread {
 	private GameArea ga;
 	private GameForm gf;
+	private NextBlockArea nba;
 
 	private int score = 0;
 	private int level = 1;
@@ -13,9 +14,10 @@ public class GameThread extends Thread {
 	
 	private boolean isPaused = false;
 
-	public GameThread(GameArea ga, GameForm gf) {
+	public GameThread(GameArea ga, GameForm gf, NextBlockArea nba) {
 		this.ga = ga;
 		this.gf = gf;
+		this.nba = nba;
 
 		gf.updateScore(score);
 		gf.updateLevel(level);
@@ -27,7 +29,11 @@ public class GameThread extends Thread {
 		// 블록이 1초마다 1칸씩 떨어지도록
 		while (true) {
 			ga.spawnBlock(); // 새로운 블록 생성
-
+			
+			// 다음 블럭 설정
+			ga.setNextBlock(); 
+			nba.setNextBlock(ga.getNextBlock());
+			
 			while (ga.moveBlockDown()) {
 				try {
 					// 점수 업데이트
