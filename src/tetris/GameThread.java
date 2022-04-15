@@ -3,6 +3,7 @@ package tetris;
 public class GameThread extends Thread {
 	private GameArea ga;
 	private GameForm gf;
+	private NextBlockArea nba;
 
 	private int score = 0;
 	private int level = 1;
@@ -10,10 +11,13 @@ public class GameThread extends Thread {
 
 	private int pause = 1000;
 	private int speedupPerLevel = 50;
+	
+	private boolean isPaused = false;
 
-	public GameThread(GameArea ga, GameForm gf) {
+	public GameThread(GameArea ga, GameForm gf, NextBlockArea nba) {
 		this.ga = ga;
 		this.gf = gf;
+		this.nba = nba;
 
 		gf.updateScore(score);
 		gf.updateLevel(level);
@@ -25,13 +29,30 @@ public class GameThread extends Thread {
 		// 블록이 1초마다 1칸씩 떨어지도록
 		while (true) {
 			ga.spawnBlock(); // 새로운 블록 생성
-
+			
+			// 다음 블럭 설정
+			ga.setNextBlock(); 
+			nba.setNextBlock(ga.getNextBlock());
+			
 			while (ga.moveBlockDown()) {
 				try {
 					// 점수 업데이트
 					score++;
 					gf.updateScore(score);
-					Thread.sleep(pause);
+
+					// 0.1초마다 pause키가 눌렸는지 확인
+					// pause키가 눌렸으면 루프를 돌면서 대기 
+					int i = 0;
+					while(i<pause / 100) {
+						Thread.sleep(100);
+						i++;
+						while(isPaused) {
+							if(!isPaused) {
+								break;
+							}
+						}
+					}
+				
 				} catch (InterruptedException e) {
 					// 스레드가 종료 되어도 예외 메세지를 출력하지 않음
 					return;
@@ -59,5 +80,15 @@ public class GameThread extends Thread {
 				pause -= speedupPerLevel;
 			}
 		}
+	}
+	
+	// 스레드 pause
+	public void pause() {
+		this.isPaused = true;
+	}
+	
+	// 스레드 재시작
+	public void reStart() {
+		this.isPaused = false;
 	}
 }

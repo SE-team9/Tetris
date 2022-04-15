@@ -12,7 +12,6 @@ public class TetrisBlock {
 	
 	// 블럭 색 지정에 사용할 변수들
 	private Color[] availableColors = {Color.green, Color.red, Color.blue, Color.orange, Color.yellow, Color.magenta, Color.pink};
-	private int colorNum;
 	
 	public TetrisBlock(int[][] shape) {
 		this.shape = shape;
@@ -33,7 +32,6 @@ public class TetrisBlock {
 					shapes[i][y][x] = shape[c - x - 1][y];
 				}
 			}
-			
 			shape = shapes[i];
 		}
 	}
@@ -49,8 +47,6 @@ public class TetrisBlock {
 		// 보드판 맨 윗줄의 가운데에서 새 블록이 떨어지도록
 		y = 0 - getHeight();
 		x = r.nextInt(gridWidth-getWidth());
-		
-		color = availableColors[this.getColorNum()];
 	}
 
 	public int[][] getShape() { return shape; }
@@ -69,10 +65,6 @@ public class TetrisBlock {
 	// 회전 확인을 위해 추가한 함수
 	public int getCurrentRotation() { return currentRotation; }
 	public void setCurrentRotation(int newCurrentRotation) { currentRotation = newCurrentRotation; }
-	
-	// 블럭마다 정해진 색을 지정하기 위해 추가한 함수
-	public int getColorNum() { return colorNum; }
-	public void setColorNum(int newColorNum) { colorNum = newColorNum; }
 	
 	public void moveDown() { y++; }
 	public void moveLeft() { x--; }
