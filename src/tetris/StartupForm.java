@@ -20,7 +20,7 @@ public class StartupForm extends JFrame {
 	private int curMode; // 0이면 일반 모드, 1이면 아이템 모드
 	
 	private JButton[] menu = new JButton[4];
-	private String[] btnText = { "Start Game", "Score Board", "Mode Option", "Quit" };
+	private String[] btnText = { "Start Game", "Settings", "ScoreBoard", "Quit" };
 	private static int curPos;
 
 	public StartupForm() {
@@ -106,13 +106,13 @@ public class StartupForm extends JFrame {
 			Tetris.start(); // 게임 시작 
 			break;
 		case 1:
+			// todo: 설정 화면으로 이동 
+			System.out.println("설정 화면");
+			break;
+		case 2:
 			this.setVisible(false);
 			Tetris.showLeaderboard(); // 스코어 보드 
 			break;
-		case 2:
-			// todo: 옵션 화면으로 이동
-			System.out.println("옵션 화면 선택!");
-			break; 
 		case 3:
 			System.exit(0); // 게임 종료 
 			break;

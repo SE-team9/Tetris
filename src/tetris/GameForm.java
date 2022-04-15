@@ -17,7 +17,6 @@ import javax.swing.border.LineBorder;
 public class GameForm extends JFrame {
 	private final static int WIDTH = 600;
 	private final static int HEIGHT = 450;
-	private JPanel gameAreaPlaceholder;
 	private GameArea ga;
 	private GameThread gt;
 	private NextBlockArea nba;
@@ -154,8 +153,8 @@ public class GameForm extends JFrame {
 		this.add(levelDisplay);
 
 		keyDisplay = new JTextArea(" ← : 블럭 왼쪽 이동 \n → : 블럭 오른쪽 이동 \n"
-				+ " ↓ : 블럭 아래 한 칸 이동\n ↑ : 블럭 회전\n Space : 블럭 맨 아래 이동\n" + " q : 게임 일시 정지\n ESC : 뒤로 가기\n");
-		keyDisplay.setBounds(20, 210, 160, 120);
+				+ " ↓ : 블럭 아래 한 칸 이동\n ↑ : 블럭 회전\n Space : 블럭 맨 아래 이동\n" + " q : 게임 정지/재개\n ESC : 뒤로 가기\n");
+		keyDisplay.setBounds(20, 210, 160, 150);
 		this.add(keyDisplay);
 	}
 
