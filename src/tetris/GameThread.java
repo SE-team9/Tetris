@@ -3,13 +3,11 @@ package tetris;
 public class GameThread extends Thread {
 	private GameArea ga;
 	private GameForm gf;
-
 	private int score = 0;
 	private int level = 1;
-	private int scorePerLevel = 50;
-
+	private int scorePerLevel = 3; // 3개의 행이 삭제되면 레벨 상승
 	private int pause = 1000;
-	private int speedupPerLevel = 50;
+	private int speedupPerLevel = 100;
 
 	public GameThread(GameArea ga, GameForm gf) {
 		this.ga = ga;
@@ -28,36 +26,35 @@ public class GameThread extends Thread {
 
 			while (ga.moveBlockDown()) {
 				try {
-					// 점수 업데이트
-					score++;
-					gf.updateScore(score);
 					Thread.sleep(pause);
+					
 				} catch (InterruptedException e) {
-					// 스레드가 종료 되어도 예외 메세지를 출력하지 않음
-					return;
+					// 메인 메뉴 버튼을 눌러서 GameThread가 인터럽트 되면 
+					// 이 run 함수가 완전히 종료되도록!
+					return; 
 				}
 			}
 
-			// 블럭이 다 내려왔는데 위쪽 경계를 넘어 있는 경우는 게임 종료
+			// 쌓인 블록들이 보드판 경계를 넘어가면 게임 종료 
 			if (ga.isBlockOutOfBounds()) {
 				Tetris.gameOver(score);
 				break;
 			}
 
-			// 현재 블럭위치 배경에 저장
+			// 보드판 경계를 넘지 않은 경우, 백그라운드 블록으로 전환 
 			ga.moveBlockToBackground();
-			// 완성된 줄 삭제, 점수 추가
+			
+			// 삭제된 행의 개수 만큼 점수 증가
 			score += ga.clearLines();
-			// 점수 업데이트
 			gf.updateScore(score);
 
-			// 레벨 업데이트 레벨이 증가할수록 블럭이 내려오는 속도 증가
-			int lvl = score / scorePerLevel + 1;
-			if (lvl > level) {
-				level = lvl;
-				gf.updateLevel(level);
-				pause -= speedupPerLevel;
-			}
+			// scorePerLevel 만큼 점수 얻으면 레벨 상승 
+		 	int lvl = score / scorePerLevel + 1;
+		 	if(lvl > level) {
+		 		level = lvl;
+		 		gf.updateLevel(level);
+		 		pause -= speedupPerLevel; // 속도 증가
+		 	}
 		}
 	}
 }

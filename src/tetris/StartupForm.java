@@ -8,19 +8,24 @@ import javax.swing.ActionMap;
 import javax.swing.InputMap;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.KeyStroke;
+import javax.swing.SwingConstants;
 
 public class StartupForm extends JFrame {
-
-	private JButton[] startButtons = new JButton[3];
-	private String[] btnNames = { "Start Game", "Leaderboard", "Quit" };
-	private static int currentButton;
+	private JLabel guideText = new JLabel("메뉴 이동: Up/Down, 메뉴 선택: Enter");
+	private JButton[] menu = new JButton[3];
+	private String[] btnText = { "Start Game", "Leaderboard", "Quit" };
+	private int curPos = 0; // 현재 포커스 초기화 
 
 	public StartupForm() {
-		initThisFrame();
-		initButtons();
-
+		initComponents();
 		initControls();
+		
+		// 메뉴 선택 방법 알려주기 
+		guideText.setHorizontalAlignment(SwingConstants.CENTER);
+		guideText.setBounds(20, 20, 500, 30);
+		this.add(guideText);
 	}
 
 	// 조작키 바인딩
@@ -35,23 +40,72 @@ public class StartupForm extends JFrame {
 		am.put("up", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				moveUpCurrentButton();
+				moveUp();
 			}
 		});
+		
 		am.put("down", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				moveDownCurrentButton();
+				moveDown();
 			}
 		});
+		
 		am.put("enter", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				enterCurrentButton(currentButton);
+				selectMenu(curPos);
 			}
 		});
 	}
+	
+	// 위로 이동 
+	private void moveUp() {
+		menu[curPos].setBackground(Color.white);
 
+		curPos--;
+		if (curPos < 0) {
+			curPos = 2;
+		}
+
+		menu[curPos].setBackground(Color.lightGray);
+	}
+
+	// 아래로 이동
+	private void moveDown() {
+		menu[curPos].setBackground(Color.white);
+		
+		curPos++;
+		if (curPos > 2) {
+			curPos = 0;
+		}
+	
+		menu[curPos].setBackground(Color.lightGray);
+	}
+
+	// 선택한 메뉴에 따라 화면 전환
+	private void selectMenu(int curPos) {
+		switch (curPos) {
+		case 0:
+			this.setVisible(false);
+			Tetris.start(); // 게임 시작 
+			break;
+		case 1:
+			this.setVisible(false);
+			Tetris.showLeaderboard(); // 점수판 
+			break;
+		case 2:
+			System.exit(0); // 게임 종료 
+			break;
+		}
+	}
+	
+	private void initComponents() {
+		initThisFrame();
+		initButtons();
+	}
+	
+	// todo: 설정에서 화면 크기 선택
 	private void initThisFrame() {
 		this.setSize(600, 450);
 		this.setResizable(false);
@@ -61,56 +115,19 @@ public class StartupForm extends JFrame {
 		this.setVisible(false);
 	}
 
-	// 버튼 생성, 위치, 배경색 설정 
 	private void initButtons() {
-		for (int i = 0; i < startButtons.length; i++) {
-			startButtons[i] = new JButton(btnNames[i]);
-			startButtons[i].setBounds(200, 250 + i * 40, 200, 30);
-			startButtons[i].setBackground(Color.white);
-			this.add(startButtons[i]);
+		for (int i = 0; i < menu.length; i++) {
+			menu[i] = new JButton(btnText[i]);
+			menu[i].setBounds(200, 250 + i * 40, 200, 30);
+			
+			// 버튼 색상은 흰색으로 초기화
+			menu[i].setBackground(Color.white);
+			this.add(menu[i]);
 		}
-
-		startButtons[currentButton].setBackground(Color.lightGray);
-	}
-
-	// 위쪽 버튼으로 이동 
-	private void moveUpCurrentButton() {
-		startButtons[currentButton].setBackground(Color.white);
-
-		currentButton--;
-		if (currentButton < 0)
-			currentButton = 2;
-
-		startButtons[currentButton].setBackground(Color.lightGray);
-	}
-
-	// 아래쪽 버튼으로 이동
-	private void moveDownCurrentButton() {
-		startButtons[currentButton].setBackground(Color.white);
 		
-		currentButton++;
-		if (currentButton > 2) {
-			currentButton = 0;
-		}
-	
-		startButtons[currentButton].setBackground(Color.lightGray);
-	}
-
-	// 버튼에 따라 프레임 이동
-	private void enterCurrentButton(int currentButton) {
-		switch (currentButton) {
-		case 0:
-			this.setVisible(false);
-			Tetris.start();
-			break;
-		case 1:
-			this.setVisible(false);
-			Tetris.showLeaderboard();
-			break;
-		case 2:
-			System.exit(0);
-			break;
-		}
+		// 처음엔 첫번째 버튼에 포커스 두기 
+		curPos = 0;
+		menu[curPos].setBackground(Color.lightGray);
 	}
 
 	public static void main(String[] args) {

@@ -54,10 +54,9 @@ public class GameArea extends JPanel {
 		block.spawn(gridColumns);
 	}
 	
-	// 블럭이 위쪽 경계를 벗어 났으면 게임 종료
+	// 블럭이 위쪽 경계를 벗어나면 게임 종료
 	public boolean isBlockOutOfBounds() {
 		if (block.getY() < 0) {
-
 			block = null;
 			return true;
 		}
