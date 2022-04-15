@@ -26,6 +26,9 @@ public class GameForm extends JFrame {
 	private JLabel levelDisplay;
 	private JTextArea keyDisplay;
 
+	// 퍼즈 상태 표시
+	private boolean isPaused = false;
+
 	// Create the frame.
 	public GameForm() {
 		initThisFrame();
@@ -48,40 +51,58 @@ public class GameForm extends JFrame {
 		im.put(KeyStroke.getKeyStroke("UP"), "up");
 		im.put(KeyStroke.getKeyStroke("DOWN"), "downOneLine");
 		im.put(KeyStroke.getKeyStroke("ENTER"), "downToEnd");
+		im.put(KeyStroke.getKeyStroke("Q"), "pause");
 		im.put(KeyStroke.getKeyStroke("ESCAPE"), "back");
 
 		am.put("right", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				ga.moveBlockRight();
+				if (!isPaused)
+					ga.moveBlockRight();
 			}
 		});
 
 		am.put("left", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				ga.moveBlockLeft();
+				if (!isPaused)
+					ga.moveBlockLeft();
 			}
 		});
 
 		am.put("up", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				ga.rotateBlock();
+				if (!isPaused)
+					ga.rotateBlock();
 			}
 		});
 
 		am.put("downOneLine", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				ga.moveBlockDown();
+				if (!isPaused)
+					ga.moveBlockDown();
 			}
 		});
 
 		am.put("downToEnd", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				ga.dropBlock();
+				if (!isPaused)
+					ga.dropBlock();
+			}
+		});
+		am.put("pause", new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (!isPaused) {
+					isPaused = true;
+					gt.pause();
+				} else {
+					isPaused = false;
+					gt.reStart();
+				}
 			}
 		});
 		am.put("back", new AbstractAction() {
@@ -135,7 +156,7 @@ public class GameForm extends JFrame {
 		this.add(levelDisplay);
 
 		keyDisplay = new JTextArea(" ← : 블럭 왼쪽 이동 \n → : 블럭 오른쪽 이동 \n"
-				+ " ↓ : 블럭 아래 한 칸 이동\n ↑ : 블럭 회전\n Enter : 블럭 맨 아래 이동\n" + " ESC : 뒤로 가기\n");
+				+ " ↓ : 블럭 아래 한 칸 이동\n ↑ : 블럭 회전\n Enter : 블럭 맨 아래 이동\n" + " q : 게임 일시 정지\n ESC : 뒤로 가기\n");
 		keyDisplay.setBounds(20, 210, 160, 120);
 		this.add(keyDisplay);
 	}
