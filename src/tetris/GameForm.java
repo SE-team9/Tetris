@@ -15,16 +15,16 @@ import javax.swing.KeyStroke;
 import javax.swing.border.LineBorder;
 
 public class GameForm extends JFrame {
+	private final static int WIDTH = 600;
+	private final static int HEIGHT = 450;
 	private JPanel gameAreaPlaceholder;
 	private GameArea ga;
 	private GameThread gt;
-
-	private final static int WIDTH = 600;
-	private final static int HEIGHT = 450;
-
+	private NextBlockArea nba;
 	private JLabel scoreDisplay;
 	private JLabel levelDisplay;
 	private JTextArea keyDisplay;
+	private boolean isPaused = false;
 
 	// Create the frame.
 	public GameForm() {
@@ -42,42 +42,62 @@ public class GameForm extends JFrame {
 		im.put(KeyStroke.getKeyStroke("UP"), "up");
 		im.put(KeyStroke.getKeyStroke("DOWN"), "downOneLine");
 		im.put(KeyStroke.getKeyStroke("SPACE"), "downToEnd");
+		im.put(KeyStroke.getKeyStroke("Q"), "pause");
 		im.put(KeyStroke.getKeyStroke("ESCAPE"), "back");
 
 		am.put("right", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				ga.moveBlockRight();
+				if (!isPaused)
+					ga.moveBlockRight();
 			}
 		});
 
 		am.put("left", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				ga.moveBlockLeft();
+				if (!isPaused)
+					ga.moveBlockLeft();
 			}
 		});
 
 		am.put("up", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				ga.rotateBlock();
+				if (!isPaused)
+					ga.rotateBlock();
 			}
 		});
 
 		am.put("downOneLine", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				ga.moveBlockDown();
+				if (!isPaused)
+					ga.moveBlockDown();
 			}
 		});
 
 		am.put("downToEnd", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				ga.dropBlock();
+				if (!isPaused)
+					ga.dropBlock();
 			}
 		});
+		
+		am.put("pause", new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (!isPaused) {
+					isPaused = true;
+					gt.pause();
+				} else {
+					isPaused = false;
+					gt.reStart();
+				}
+			}
+		});
+		
 		am.put("back", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -90,7 +110,9 @@ public class GameForm extends JFrame {
 	public void startGame() {
 		// 시작 할때마다 배경 초기화
 		ga.initBackgroundArray();
-		gt = new GameThread(ga, this);
+		// 다음 블럭 초기화, 
+		ga.setNextBlock();
+		gt = new GameThread(ga, this, nba);
 		gt.start();
 	}
 
@@ -104,8 +126,13 @@ public class GameForm extends JFrame {
 	
 	private void initComponents() {
 		initThisFrame();
-		initGameAreaPlaceholder();
 		initDisplay();
+		
+		ga = new GameArea(10);
+		this.add(ga);
+		
+		nba = new NextBlockArea(ga);
+		this.add(nba);
 	}
 
 	// 이 판넬 화면 설정
@@ -117,18 +144,7 @@ public class GameForm extends JFrame {
 		this.setLocationRelativeTo(null);
 		this.setVisible(false);
 	}
-
-	// 게임 영역 화면 설정
-	private void initGameAreaPlaceholder() {
-		gameAreaPlaceholder = new JPanel();
-		gameAreaPlaceholder.setBounds(200, 0, 200, 400);
-		gameAreaPlaceholder.setBackground(new Color(238, 238, 238));
-		gameAreaPlaceholder.setBorder(LineBorder.createBlackLineBorder());
-		
-		ga = new GameArea(gameAreaPlaceholder, 10);
-		this.add(ga); 
-	}
-
+	
 	private void initDisplay() {
 		scoreDisplay = new JLabel("Score: 0");
 		levelDisplay = new JLabel("Level: 0");
@@ -138,7 +154,7 @@ public class GameForm extends JFrame {
 		this.add(levelDisplay);
 
 		keyDisplay = new JTextArea(" ← : 블럭 왼쪽 이동 \n → : 블럭 오른쪽 이동 \n"
-				+ " ↓ : 블럭 아래 한 칸 이동\n ↑ : 블럭 회전\n Enter : 블럭 맨 아래 이동\n" + " ESC : 뒤로 가기\n");
+				+ " ↓ : 블럭 아래 한 칸 이동\n ↑ : 블럭 회전\n Space : 블럭 맨 아래 이동\n" + " q : 게임 일시 정지\n ESC : 뒤로 가기\n");
 		keyDisplay.setBounds(20, 210, 160, 120);
 		this.add(keyDisplay);
 	}
