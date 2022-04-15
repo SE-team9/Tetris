@@ -15,6 +15,7 @@ import javax.swing.KeyStroke;
 import javax.swing.border.LineBorder;
 
 public class GameForm extends JFrame {
+	
 	private JPanel gameAreaPlaceholder;
 	private GameArea ga;
 	private GameThread gt;
@@ -33,10 +34,9 @@ public class GameForm extends JFrame {
 	// Create the frame.
 	public GameForm() {
 		initThisFrame();
-		initGameAreaPlaceholder();
 		initDisplay();
 
-		ga = new GameArea(gameAreaPlaceholder, 10);
+		ga = new GameArea(10);
 		this.add(ga); // JFrame에 JPanel 추가하기
 		nba = new NextBlockArea(ga);
 		this.add(nba);
@@ -142,14 +142,6 @@ public class GameForm extends JFrame {
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setLocationRelativeTo(null);
 		this.setVisible(false);
-	}
-
-	// 게임 영역 화면 설정
-	private void initGameAreaPlaceholder() {
-		gameAreaPlaceholder = new JPanel();
-		gameAreaPlaceholder.setBounds(200, 0, 200, 400);
-		gameAreaPlaceholder.setBackground(new Color(238, 238, 238));
-		gameAreaPlaceholder.setBorder(LineBorder.createBlackLineBorder());
 	}
 
 	private void initDisplay() {

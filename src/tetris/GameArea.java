@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.util.Random;
 
 import javax.swing.JPanel;
+import javax.swing.border.LineBorder;
 
 import tetrisblocks.IShape;
 import tetrisblocks.JShape;
@@ -14,26 +15,23 @@ import tetrisblocks.SShape;
 import tetrisblocks.ZShape;
 
 public class GameArea extends JPanel {
+
 	private int gridRows;
 	private int gridColumns;
 	private int gridCellSize;
+
 	private Color[][] background;
-	private TetrisBlock block;
 
 	private TetrisBlock[] blocks;
-
+	private TetrisBlock block;
 	private TetrisBlock nextBlock;
 
-	public GameArea(JPanel placeholder, int columns) {
-		this.setBounds(placeholder.getBounds());
-		this.setBackground(placeholder.getBackground());
-		this.setBorder(placeholder.getBorder());
+	public GameArea(int columns) {
+		initThisPanel();
 
 		gridColumns = columns;
-
 		// WIDTH divisible by the numbers of columns
 		gridCellSize = this.getBounds().width / gridColumns;
-
 		// HEIGHT divisible by grid-cell size
 		gridRows = this.getBounds().height / gridCellSize;
 
@@ -41,41 +39,49 @@ public class GameArea extends JPanel {
 		setNextBlock();
 	}
 
+	// ---------------------------------------------------------------------초기화관련동작
+	private void initThisPanel() {
+		this.setBounds(200, 0, 200, 400);
+		this.setBackground(new Color(238, 238, 238));
+		this.setBorder(LineBorder.createBlackLineBorder());
+	}
+
 	// 배경 초기화
 	public void initBackgroundArray() {
 		background = new Color[gridRows][gridColumns];
 	}
 
+	// 각각의 블럭 초기화
 	public void initBlocks() {
-		// 각각의 블럭 종류
 		blocks = new TetrisBlock[] { new IShape(), new JShape(), new LShape(), new OShape(), new ZShape(),
 				new SShape() };
 	}
-	
+
+	public int getGridCellSize() {
+		return gridCellSize;
+	}
+
+	// ---------------------------------------------------------------------블록관련동작
 	// 다음 블럭 설정
 	public void setNextBlock() {
 		Random r = new Random();
 		nextBlock = blocks[r.nextInt(blocks.length)];
 	}
 
-	// 다음 블럭을 현재 블럭으로 가져오기 
+	public TetrisBlock getNextBlock() {
+		return nextBlock;
+	}
+
+	// 다음 블럭을 현재 블럭으로 가져오기
 	public void spawnBlock() {
 		block = nextBlock;
 		block.spawn(gridColumns);
 	}
-	
-	public TetrisBlock getNextBlock() {
-		return nextBlock;
-	}
-	
-	public int getGridCellSize() {
-		return gridCellSize;
-	}
 
+	// ---------------------------------------------------------------------블록조작/경계확인
 	// 블럭이 위쪽 경계를 벗어 났으면 게임 종료
 	public boolean isBlockOutOfBounds() {
 		if (block.getY() < 0) {
-
 			block = null;
 			return true;
 		}
@@ -267,6 +273,7 @@ public class GameArea extends JPanel {
 		return true;
 	}
 
+	// ---------------------------------------------------------------------배경관련동작
 	public void moveBlockToBackground() {
 		// 움직이고 있던 블록에 대한 참조
 		int[][] shape = block.getShape();
@@ -336,6 +343,7 @@ public class GameArea extends JPanel {
 		}
 	}
 
+	// ---------------------------------------------------------------------그리기
 	private void drawBlock(Graphics g) {
 
 		if (block == null)

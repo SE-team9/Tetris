@@ -12,7 +12,6 @@ public class TetrisBlock {
 	
 	// 블럭 색 지정에 사용할 변수들
 	private Color[] availableColors = {Color.green, Color.red, Color.blue, Color.orange, Color.yellow, Color.magenta, Color.pink};
-	private int colorNum;
 	
 	public TetrisBlock(int[][] shape) {
 		this.shape = shape;
@@ -33,7 +32,6 @@ public class TetrisBlock {
 					shapes[i][y][x] = shape[c - x - 1][y];
 				}
 			}
-			
 			shape = shapes[i];
 		}
 	}
