@@ -2,6 +2,8 @@ package tetris;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 import javax.swing.JPanel;
@@ -22,12 +24,15 @@ public class GameArea extends JPanel {
 	private TetrisBlock[] blocks;
 	private TetrisBlock block;
 	private TetrisBlock nextBlock;
-	
+	private ModeForm mf;
+
 	boolean paused = false;
 
 	public GameArea(int columns) {
 		initThisPanel();
 
+		mf = new ModeForm();
+		
 		gridColumns = columns;
 		gridCellSize = this.getBounds().width / gridColumns;
 		gridRows = this.getBounds().height / gridCellSize;
@@ -58,11 +63,66 @@ public class GameArea extends JPanel {
 		return gridCellSize;
 	}
 
-	// --------------------------------------------------------------------- 블록 관련 동작
-	// 다음 블럭 설정
-	public void updateNextBlock() {
+	// --------------------------------------------------------------------- 난이도 모드 관련
+	
+
+	// weighted random 함수 생성
+	public static <E> E getWeightedRandom(Map<E, Double> weights, Random random) {
+		E result = null;
+		double bestValue = Double.MAX_VALUE;
+
+		for (E element : weights.keySet()) {
+			double value = -Math.log(random.nextDouble()) / weights.get(element);
+			if (value < bestValue) {
+				bestValue = value;
+				result = element;
+			}
+		}
+		return result;
+	}
+
+	// weighted에 기반하여 random 함수
+	public int makeRandom() {
+		Map<String, Double> w = new HashMap<String, Double>();
 		Random r = new Random();
-		nextBlock = blocks[r.nextInt(blocks.length)];
+		
+		int mode = mf.getMode();		
+		
+		double weight, iWeight;
+		int blockNum;
+
+		if (mode == 1) {
+			weight = 14.0;
+			iWeight = 16.0;
+			w.put("0", iWeight);
+			for (int i = 1; i < blocks.length; i++) {
+				w.put(Integer.toString(i), weight);
+			}
+			blockNum = Integer.parseInt(getWeightedRandom(w, r));
+		} else if (mode == 3) {
+			weight = 15.0;
+			iWeight = 10.0;
+			w.put("0", iWeight);
+			for (int i = 1; i < blocks.length; i++) {
+				w.put(Integer.toString(i), weight);
+			}
+			blockNum = Integer.parseInt(getWeightedRandom(w, r));
+		} else {
+			blockNum = r.nextInt(blocks.length);
+		}
+		return blockNum;
+	}
+	
+	int getMode() {
+		return mf.getMode();
+	}
+
+	// --------------------------------------------------------------------- 블록 관련 동작
+	// 다음 블럭 설정 + 난이도에 따른
+	public void updateNextBlock() {
+		// Random r = new Random();
+		int value = makeRandom();
+		nextBlock = blocks[value];
 	}
 
 	public TetrisBlock getNextBlock() {
@@ -75,7 +135,8 @@ public class GameArea extends JPanel {
 		block.spawn(gridColumns);
 	}
 
-	// --------------------------------------------------------------------- 블록 조작 / 경계 확인
+	// --------------------------------------------------------------------- 블록 조작 /
+	// 경계 확인
 	// 블럭이 위쪽 경계를 벗어 났으면 게임 종료
 	public boolean isBlockOutOfBounds() {
 		if (block.getY() < 0) {
@@ -90,21 +151,21 @@ public class GameArea extends JPanel {
 		if (!checkBottom()) {
 			return false;
 		}
-		
-		// GameForm에서 입력된 키에 따라 블록 일시정지 및 재개 
-		if(paused) {
+
+		// GameForm에서 입력된 키에 따라 블록 일시정지 및 재개
+		if (paused) {
 			blocking();
 		}
-		
+
 		block.moveDown();
 		repaint(); // 일정한 시간 간격마다 업데이트 (스레드 사용)
 		// repaint 잊지 말자! (안 해주면 입력에 느리게 반응함)
 
 		return true;
 	}
-	
+
 	private void blocking() {
-		while(paused) {
+		while (paused) {
 			try {
 				Thread.sleep(1);
 			} catch (InterruptedException e) {
@@ -116,7 +177,7 @@ public class GameArea extends JPanel {
 	public void moveBlockRight() {
 		if (block == null)
 			return;
-		
+
 		if (!checkRight())
 			return;
 
@@ -127,7 +188,7 @@ public class GameArea extends JPanel {
 	public void moveBlockLeft() {
 		if (block == null)
 			return;
-		
+
 		if (!checkLeft())
 			return;
 
@@ -138,19 +199,19 @@ public class GameArea extends JPanel {
 	public void dropBlock() { // space bar
 		if (block == null)
 			return;
-		
+
 		// 다른 블록을 만나기 직전까지 계속 낙하
 		while (checkBottom()) {
-			block.moveDown(); 
+			block.moveDown();
 		}
-		
+
 		repaint();
 	}
 
 	public void rotateBlock() { // up
 		if (block == null)
 			return;
-		
+
 		// 배경과 겹치는지 확인
 		if (!checkRotate())
 			return;
@@ -160,10 +221,10 @@ public class GameArea extends JPanel {
 		// 회전 시 위치 재설정
 		if (block.getLeftEdge() < 0)
 			block.setX(0);
-		
+
 		if (block.getRightEdge() >= gridColumns)
 			block.setX(gridColumns - block.getWidth());
-		
+
 		if (block.getBottomEdge() >= gridRows)
 			block.setY(gridRows - block.getHeight());
 
@@ -333,7 +394,7 @@ public class GameArea extends JPanel {
 				linesCleared++;
 				clearLine(r);
 				shiftDown(r);
-				
+
 				// 맨 윗줄의 위는 null이므로 따로 지워준다.
 				clearLine(0);
 

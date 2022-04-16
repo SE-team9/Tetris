@@ -6,6 +6,7 @@ public class Tetris {
 	private static GameForm gf;
 	private static StartupForm sf;
 	private static LeaderboardForm lf;
+	private static ModeForm mf;
 	
 	public static void start() {
 		gf.setVisible(true);
@@ -20,6 +21,10 @@ public class Tetris {
 		sf.setVisible(true);
 	}
 	
+	public static void showMode() {
+		mf.setVisible(true);
+	}
+	
 	public static void gameOver(int score) {
 		String playerName = JOptionPane.showInputDialog("Gane Over!\n Please enter your name.");
 		gf.setVisible(false);
@@ -32,6 +37,7 @@ public class Tetris {
 				sf = new StartupForm();
 				gf = new GameForm();
 				lf = new LeaderboardForm();
+				mf = new ModeForm();
 				
 				sf.setVisible(true);
 			}

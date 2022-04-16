@@ -13,18 +13,17 @@ import javax.swing.JLabel;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 
+public class ModeForm extends JFrame {
 
-public class StartupForm extends JFrame {
-	private JLabel title = new JLabel("Tetris");
-	private JLabel guide = new JLabel("메뉴 이동: Up/Down, 메뉴 선택: Enter");
-	private JLabel[] mode = new JLabel[2];
-	private int curMode; // 0이면 일반 모드, 1이면 아이템 모드
+	private JLabel title = new JLabel("Select a Mode");
+	private JLabel guide = new JLabel("모드 이동: Up/Down, 모드 선택: Enter");
+	private static int mode=2;
 
-	private JButton[] menu = new JButton[5];
-	private String[] btnText = { "Start Game", "Mode", "Settings", "ScoreBoard", "Quit" };
+	private JButton[] menu = new JButton[4];
+	private String[] btnText = { "Easy", "Normal", "Hard", "Item"};
 	private static int curPos;
-	
-	public StartupForm() {
+
+	public ModeForm() {
 		initComponents();
 		initControls();
 	}
@@ -36,9 +35,7 @@ public class StartupForm extends JFrame {
 		im.put(KeyStroke.getKeyStroke("UP"), "up");
 		im.put(KeyStroke.getKeyStroke("DOWN"), "down");
 		im.put(KeyStroke.getKeyStroke("ENTER"), "enter");
-		im.put(KeyStroke.getKeyStroke("RIGHT"), "right");
-		im.put(KeyStroke.getKeyStroke("LEFT"), "left");
-
+		
 		am.put("up", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -60,19 +57,6 @@ public class StartupForm extends JFrame {
 			}
 		});
 
-		am.put("right", new AbstractAction() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				moveRight();
-			}
-		});
-
-		am.put("left", new AbstractAction() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				moveLeft();
-			}
-		});
 	}
 
 	// 위로 이동
@@ -102,60 +86,31 @@ public class StartupForm extends JFrame {
 	// 선택한 메뉴에 따라 화면 전환
 	private void selectMenu(int curPos) {
 		switch (curPos) {
-		case 0:
+		case 0: // easy 선택
 			this.setVisible(false);
-			Tetris.start(); // 게임 시작
+			this.mode = 1;
+			Tetris.showStartup(); 
 			break;
-		case 1:
+		case 1: // normal 선택
 			this.setVisible(false);
-			Tetris.showMode();
+			this.mode = 2;
+			Tetris.showStartup(); 
 			break;
-		case 2:
-			// todo: 설정 화면으로 이동
-			System.out.println("설정 화면");
-			break;
-		case 3:
+		case 2: // hard 선택
 			this.setVisible(false);
-			Tetris.showLeaderboard(); // 스코어 보드
+			this.mode = 3;
+			Tetris.showStartup(); 
 			break;
-		case 4:
-			System.exit(0); // 게임 종료
+		case 3: // item mode 선택
+			this.setVisible(false);
+			this.mode = 4;
+			Tetris.showStartup(); 
 			break;
 		}
 	}
 
-//	private void selectMode(int curMode) {
-//		if(curMode == 0) { // 일반 모드
-//			
-//		}
-//	}
-
-	// 모드 선택 오른쪽 방향키
-	private void moveRight() {
-		mode[curMode].setVisible(false);
-
-		curMode++;
-		if (curMode > mode.length - 1) {
-			curMode = 0;
-		}
-
-		mode[curMode].setVisible(true);
-	}
-
-	// 모드 선택 왼쪽 방향키
-	private void moveLeft() {
-		mode[curMode].setVisible(false);
-
-		curMode--;
-		if (curMode < 0) {
-			curMode = mode.length - 1;
-		}
-
-		mode[curMode].setVisible(true);
-	}
-
-	public int getCurrentGameMode() {
-		return curMode;
+	public int getMode() {
+		return this.mode;
 	}
 
 	// todo: 설정에서 화면 크기 선택
@@ -176,7 +131,7 @@ public class StartupForm extends JFrame {
 
 		int w = this.getWidth();
 		int h = this.getHeight();
-		Font tetrisFont = new Font("Arial", Font.BOLD, w / 10);
+		Font tetrisFont = new Font("Arial", Font.BOLD, w / 20);
 
 		// 게임 제목
 		title.setFont(tetrisFont);
@@ -184,18 +139,6 @@ public class StartupForm extends JFrame {
 		title.setHorizontalAlignment(JLabel.CENTER);
 		this.add(title);
 
-		// 게임 모드
-		mode[0] = new JLabel("Normal Mode");
-		mode[0].setBounds(w / 3, h / 2, w / 3, h / 15);
-		mode[0].setHorizontalAlignment(JLabel.CENTER);
-		this.add(mode[0]);
-		mode[0].setVisible(false);
-
-		mode[1] = new JLabel("Item Mode");
-		mode[1].setBounds(w / 3, h / 2, w / 3, h / 15);
-		mode[1].setHorizontalAlignment(JLabel.CENTER);
-		this.add(mode[1]);
-		mode[1].setVisible(false);
 	}
 
 	private void initButtons() {
@@ -204,7 +147,7 @@ public class StartupForm extends JFrame {
 
 		for (int i = 0; i < menu.length; i++) {
 			menu[i] = new JButton(btnText[i]);
-			menu[i].setBounds(w / 3, h / 2 + (i ) * (h / 12), w / 3, h / 15);
+			menu[i].setBounds(w / 3, h / 2 + (i + 1) * (h / 12), w / 3, h / 15);
 			menu[i].setBackground(Color.white);
 			this.add(menu[i]);
 		}
@@ -212,28 +155,9 @@ public class StartupForm extends JFrame {
 		menu[curPos].setBackground(Color.lightGray);
 	}
 
-//	// JComboBox를 이용한 난이도 선택
-//	public void initLevelMode() {
-//		int w = this.getWidth();
-//		int h = this.getHeight();
-//		
-//		modeMenu[0] = new JComboBox<String>(modeText);
-//		modeMenu[0].setBounds(w / 3, h / 2 , w / 3, h / 15);
-//		modeMenu[0].setBackground(Color.white);
-//		
-//		modeMenu[0].getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
-//			   public void KeyTyped(KeyEvent ke) {
-//				   modeMenu[0].showPopup();
-//			   }
-//		});
-//
-//		
-//		this.add(modeMenu[0]);
-//	}
-
+	
 	private void initComponents() {
 		initThisFrame();
-		// initLevelMode();
 		initButtons();
 		initLable();
 	}
@@ -242,8 +166,9 @@ public class StartupForm extends JFrame {
 	public static void main(String[] args) {
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				new StartupForm().setVisible(true);
+				new ModeForm().setVisible(true);
 			}
 		});
 	}
+
 }

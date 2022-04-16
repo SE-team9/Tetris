@@ -1,5 +1,10 @@
 package tetris;
 
+import tetris.GameArea;
+import tetris.GameForm;
+import tetris.NextBlockArea;
+import tetris.Tetris;
+
 public class GameThread extends Thread {
 	private GameArea ga;
 	private GameForm gf;
@@ -22,6 +27,7 @@ public class GameThread extends Thread {
 	@Override
 	public void run() {
 		while (true) {
+			
 			ga.spawnBlock(); // 새로운 블록 생성
 			ga.updateNextBlock(); // 다음 블록 미리 보여주기
 			nba.updateNBA(ga.getNextBlock());
@@ -47,7 +53,15 @@ public class GameThread extends Thread {
 			// 삭제된 행의 개수만큼 점수 증가
 			score += ga.clearLines();
 			gf.updateScore(score);
-
+			
+			// 난이도 mode에 따른 속도 조절
+			int mode = ga.getMode();
+			if (mode == 1) {
+                speedupPerLevel = 80;
+            } else if (mode == 3) {
+                speedupPerLevel = 120;
+            }
+			
 			// scorePerLevel만큼 점수 얻으면 레벨 상승 
 		 	int lvl = score / scorePerLevel + 1;
 		 	if(lvl > level) {
