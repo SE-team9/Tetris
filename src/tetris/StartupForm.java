@@ -117,6 +117,7 @@ public class StartupForm extends JFrame {
 			startButtons[i] = new JButton(btnNames[i]);
 			startButtons[i].setBounds(w / 3, h / 2 + (i + 1) * (h / 12), w / 3, h / 15);
 			startButtons[i].setBackground(Color.white);
+			startButtons[i].setFocusable(false);
 			this.add(startButtons[i]);
 		}
 		startButtons[currentButton].setBackground(Color.lightGray);
