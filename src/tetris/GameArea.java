@@ -23,9 +23,11 @@ public class GameArea extends JPanel {
 	private TetrisBlock block;
 	private TetrisBlock nextBlock;
 	
-	boolean paused = false;
-
-	public GameArea(int columns) {
+	private boolean paused;
+	private GameThread gt;
+	private PauseThread pt;
+	
+	public GameArea(int columns, GameThread gt) {
 		initThisPanel();
 
 		gridColumns = columns;
@@ -34,6 +36,18 @@ public class GameArea extends JPanel {
 
 		initBlocks();
 		updateNextBlock();
+		
+		// exit 했다가 다시 시작할 때 블록이 다시 떨어질 수 있도록 생성자에서 초기화!
+		paused = false;
+		this.gt = gt;
+	}
+	
+	public boolean getPaused() {
+		return paused;
+	}
+	
+	public void setPaused(boolean paused) {
+		this.paused = paused;
 	}
 
 	// --------------------------------------------------------------------- 초기화 관련 동작
@@ -85,33 +99,23 @@ public class GameArea extends JPanel {
 		return false;
 	}
 
+	/////////////////////////////////////////////////
 	public boolean moveBlockDown() {
 		// 블록이 바닥에 닿으면, 백그라운드 블록으로 전환
 		if (!checkBottom()) {
 			return false;
 		}
 		
-		// GameForm에서 입력된 키에 따라 블록 일시정지 및 재개 
-		if(paused) {
-			blocking();
+		// not paused가 될 때까지 무한 루프
+		while(paused) {
+			
 		}
 		
 		block.moveDown();
-		repaint(); // 일정한 시간 간격마다 업데이트 (스레드 사용)
-		// repaint 잊지 말자! (안 해주면 입력에 느리게 반응함)
-
+		repaint();
 		return true;
 	}
-	
-	private void blocking() {
-		while(paused) {
-			try {
-				Thread.sleep(1);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-	}
+	//////////////////////////////////////////////////
 
 	public void moveBlockRight() {
 		if (block == null)

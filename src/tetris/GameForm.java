@@ -2,7 +2,10 @@ package tetris;
 
 import java.awt.Color;
 import java.awt.EventQueue;
+import java.awt.KeyEventDispatcher;
+import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
@@ -21,6 +24,7 @@ public class GameForm extends JFrame {
 	private JLabel scoreDisplay;
 	private JLabel levelDisplay;
 	private JTextArea keyDisplay;
+	private boolean toggle = false;
 
 	public GameForm() {
 		initComponents();
@@ -43,66 +47,83 @@ public class GameForm extends JFrame {
 		am.put("right", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				ga.moveBlockRight();
+				if(!ga.getPaused())
+					ga.moveBlockRight();
 			}
 		});
 
 		am.put("left", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				ga.moveBlockLeft();
+				if(!ga.getPaused())
+					ga.moveBlockLeft();
 			}
 		});
 
 		am.put("up", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				ga.rotateBlock();
+				if(!ga.getPaused())
+					ga.rotateBlock();
 			}
 		});
 
 		am.put("downOneLine", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				ga.moveBlockDown();
+				if(!ga.getPaused())
+					ga.moveBlockDown();
 			}
 		});
 
 		am.put("downToEnd", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				ga.dropBlock();
+				if(!ga.getPaused())
+					ga.dropBlock();
 			}
 		});
+		
 		
 		am.put("quit", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// GameArea에서 block.moveDown() 함수 호출하기 전에
 				// paused 상태에 따라 블록 움직임 제어하기
-				ga.paused = !ga.paused;
-				
-				// todo: 모든 키 입력에 반응하지 않도록 
-				
+				toggle = !toggle;
+				ga.setPaused(toggle);
 			}
 		});
 		
 		am.put("exit", new AbstractAction() {
-
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
 				
+				//interrupt
+				
+				interruptThread(); // 게임 스레드 인터럽트
 			}
-			
 		});
 		
 		am.put("back", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				goToMainMenu();
+				interruptThread(); // 게임 스레드 인터럽트 
 			}
 		});
+	}
+	
+	// 게임 종료하고 시작 메뉴로 이동
+	private void interruptThread() {
+		// 게임 스레드 인터럽트 
+		gt.interrupt();
+		
+		// pause 전용 스레드 인터럽트
+		
+		
+		
+		this.setVisible(false);
+		Tetris.showStartup();
 	}
 
 	// 게임 스레드 시작
@@ -116,6 +137,8 @@ public class GameForm extends JFrame {
 		// 게임 스레드 시작
 		gt = new GameThread(ga, this, nba);
 		gt.start();
+		
+		
 	}
 
 	public void updateScore(int score) {
@@ -130,14 +153,13 @@ public class GameForm extends JFrame {
 		initThisFrame();
 		initDisplay();
 		
-		ga = new GameArea(10);
+		ga = new GameArea(10, gt);
 		this.add(ga);
 		
 		nba = new NextBlockArea(ga);
 		this.add(nba);
 	}
 
-	// 이 판넬 화면 설정
 	private void initThisFrame() {
 		this.setSize(600, 450);
 		this.setResizable(false);
@@ -158,14 +180,6 @@ public class GameForm extends JFrame {
 				+ " ↓ : 블럭 아래 한 칸 이동\n ↑ : 블럭 회전\n Space : 블럭 맨 아래 이동\n" + " q : 게임 정지/재개\n ESC : 뒤로 가기\n");
 		keyDisplay.setBounds(20, 210, 160, 150);
 		this.add(keyDisplay);
-	}
-
-	// 시작 메뉴 화면으로 이동
-	private void goToMainMenu() {
-		gt.interrupt(); // 현재 스레드가 완전히 종료되도록 
-		
-		this.setVisible(false);
-		Tetris.showStartup();
 	}
 
 	// GameForm 프레임 실행
