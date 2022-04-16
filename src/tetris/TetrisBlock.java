@@ -53,6 +53,7 @@ public class TetrisBlock {
 	public Color getColor() { return color; }
 	// 블럭 색 설정
 	public void setColor(int colorNum) { this.color = availableColors[colorNum]; }
+	public void setColor(Color color) {	this.color = color; }
 	
 	public int getHeight() { return shape.length; }
 	public int getWidth() { return shape[0].length; }
