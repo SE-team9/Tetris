@@ -131,16 +131,17 @@ public class LeaderboardForm extends JFrame {
 		}
 	}
 	
+	// 게임 종료되면 플레이어 기록 추가하면서, 동시에 스코어보드 보여주기 
 	public void addPlayer(String playerName, int score) {
 		tm.addRow(new Object[] { playerName, score });
 		sorter.sort();
 		saveLeaderboard();
 		
-		this.setVisible(true);
+		this.setVisible(true); // 스코어보드 표시
 	}
 
+	// LeaderboardForm 프레임 실행
 	public static void main(String[] args) {
-
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				new LeaderboardForm().setVisible(true);

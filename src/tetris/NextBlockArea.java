@@ -7,7 +7,6 @@ import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
 public class NextBlockArea extends JPanel {
-
 	private GameArea ga;
 	private TetrisBlock nextBlock;
 	private int gridCellSize;
@@ -26,13 +25,12 @@ public class NextBlockArea extends JPanel {
 		this.setBorder(LineBorder.createBlackLineBorder());
 	}
 
-	public void setNextBlock(TetrisBlock nextblock) {
+	public void updateNBA(TetrisBlock nextblock) {
 		this.nextBlock = nextblock;
 		repaint();
 	}
 
 	private void drawBlock(Graphics g) {
-
 		int h = nextBlock.getHeight();
 		int w = nextBlock.getWidth();
 		Color c = nextBlock.getColor();

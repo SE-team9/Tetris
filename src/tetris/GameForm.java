@@ -15,23 +15,18 @@ import javax.swing.KeyStroke;
 import javax.swing.border.LineBorder;
 
 public class GameForm extends JFrame {
-	private final static int WIDTH = 600;
-	private final static int HEIGHT = 450;
 	private GameArea ga;
 	private GameThread gt;
 	private NextBlockArea nba;
 	private JLabel scoreDisplay;
 	private JLabel levelDisplay;
 	private JTextArea keyDisplay;
-	private boolean isPaused = false;
 
-	// Create the frame.
 	public GameForm() {
 		initComponents();
 		initControls();
 	}
 
-	// key binding
 	private void initControls() {
 		InputMap im = this.getRootPane().getInputMap();
 		ActionMap am = this.getRootPane().getActionMap();
@@ -41,60 +36,65 @@ public class GameForm extends JFrame {
 		im.put(KeyStroke.getKeyStroke("UP"), "up");
 		im.put(KeyStroke.getKeyStroke("DOWN"), "downOneLine");
 		im.put(KeyStroke.getKeyStroke("SPACE"), "downToEnd");
-		im.put(KeyStroke.getKeyStroke("Q"), "pause");
+		im.put(KeyStroke.getKeyStroke("Q"), "quit");
+		im.put(KeyStroke.getKeyStroke("E"), "exit");
 		im.put(KeyStroke.getKeyStroke("ESCAPE"), "back");
 
 		am.put("right", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (!isPaused)
-					ga.moveBlockRight();
+				ga.moveBlockRight();
 			}
 		});
 
 		am.put("left", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (!isPaused)
-					ga.moveBlockLeft();
+				ga.moveBlockLeft();
 			}
 		});
 
 		am.put("up", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (!isPaused)
-					ga.rotateBlock();
+				ga.rotateBlock();
 			}
 		});
 
 		am.put("downOneLine", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (!isPaused)
-					ga.moveBlockDown();
+				ga.moveBlockDown();
 			}
 		});
 
 		am.put("downToEnd", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (!isPaused)
-					ga.dropBlock();
+				ga.dropBlock();
 			}
 		});
 		
-		am.put("pause", new AbstractAction() {
+		am.put("quit", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (!isPaused) {
-					isPaused = true;
-					gt.pause();
-				} else {
-					isPaused = false;
-					gt.reStart();
-				}
+				// GameArea에서 block.moveDown() 함수 호출하기 전에
+				// paused 상태에 따라 블록 움직임 제어하기
+				ga.paused = !ga.paused;
+				
+				// todo: 모든 키 입력에 반응하지 않도록 
+				
 			}
+		});
+		
+		am.put("exit", new AbstractAction() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
 		});
 		
 		am.put("back", new AbstractAction() {
@@ -107,10 +107,13 @@ public class GameForm extends JFrame {
 
 	// 게임 스레드 시작
 	public void startGame() {
-		// 시작 할때마다 배경 초기화
+		// 시작할 때마다 배경 초기화
 		ga.initBackgroundArray();
-		// 다음 블럭 초기화, 
-		ga.setNextBlock();
+		
+		// 다음 블럭 초기화
+		ga.updateNextBlock();
+		
+		// 게임 스레드 시작
 		gt = new GameThread(ga, this, nba);
 		gt.start();
 	}
@@ -140,7 +143,6 @@ public class GameForm extends JFrame {
 		this.setResizable(false);
 		this.setLayout(null);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setLocationRelativeTo(null);
 		this.setVisible(false);
 	}
 	
@@ -166,19 +168,11 @@ public class GameForm extends JFrame {
 		Tetris.showStartup();
 	}
 
-	// Launch the application.
+	// GameForm 프레임 실행
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				try {
-					GameForm f = new GameForm();
-					f.setSize(WIDTH, HEIGHT);
-					f.setLayout(null);
-					f.setVisible(true);
-
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+				new GameForm().setVisible(true);
 			}
 		});
 	}

@@ -212,8 +212,8 @@ public class StartupForm extends JFrame {
 		initLable();
 	}
 	
+	// StartupForm 프레임 실행 
 	public static void main(String[] args) {
-
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				new StartupForm().setVisible(true);
