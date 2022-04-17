@@ -11,14 +11,27 @@ public class TetrisBlock {
 	private int currentRotation;
 	
 	// 블럭 색 지정에 사용할 변수들
-	private Color[] availableColors = {Color.green, Color.red, Color.blue, Color.orange, Color.yellow, Color.magenta, Color.pink};
+	private Color[][] allColors;
+	private Color[] availableColors;
 	
 	public TetrisBlock(int[][] shape) {
 		this.shape = shape;
-		
+		initColors();
 		initShapes();
 	}
 	
+	private void initColors() {
+		allColors = new Color[2][];
+		// 일반 모드 블럭색
+		allColors[0] = new Color[] { Color.green, Color.red, Color.blue, Color.orange, Color.yellow,
+				Color.magenta, Color.pink };
+		// 색맹 모드 블럭색
+		allColors[1] = new Color[] { new Color(230,160,40), new Color(90,180,230), new Color(20,160,120), new Color(240,230,90), new Color(30,30,30),
+				new Color(210, 90, 20), new Color(200, 120, 170) };
+		
+		availableColors = allColors[Tetris.getColorMode()];
+	}
+
 	private void initShapes() {
 		shapes = new int[4][][];
 		

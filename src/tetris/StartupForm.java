@@ -106,8 +106,8 @@ public class StartupForm extends JFrame {
 			Tetris.start(); // 게임 시작 
 			break;
 		case 1:
-			// todo: 설정 화면으로 이동 
-			System.out.println("설정 화면");
+			this.setVisible(false);
+			Tetris.showOption();
 			break;
 		case 2:
 			this.setVisible(false);
