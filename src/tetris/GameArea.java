@@ -78,12 +78,14 @@ public class GameArea extends JPanel {
 	public void updateNextBlock() {
 		Random r = new Random();
 		nextBlock = blocks[r.nextInt(blocks.length)];
+		nextBlock.setShape();
 	}
 
 	// 다음 블럭을 아이템 중에서 설정
 	public void setNextItem() {
 		Random r = new Random();
 		nextBlock = items[r.nextInt(items.length)];
+		nextBlock.setShape();
 	}
 
 	public TetrisBlock getNextBlock() {
