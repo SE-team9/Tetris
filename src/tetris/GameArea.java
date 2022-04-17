@@ -16,19 +16,17 @@ import tetrisblocks.SShape;
 import tetrisblocks.ZShape;
 
 public class GameArea extends JPanel {
-
 	private int gridRows;
 	private int gridColumns;
 	private int gridCellSize;
-
 	private Color[][] background;
-
 	private TetrisBlock[] blocks;
 	private TetrisBlock block;
 	private TetrisBlock nextBlock;
+	
+	boolean paused = false;
 
 	private TetrisBlock[] items;
-	private TetrisBlock item;
 	
 	private boolean isItem = false; // 현재 블럭이 아이템인지 확인하는 변수 
 
@@ -36,17 +34,15 @@ public class GameArea extends JPanel {
 		initThisPanel();
 
 		gridColumns = columns;
-		// WIDTH divisible by the numbers of columns
 		gridCellSize = this.getBounds().width / gridColumns;
-		// HEIGHT divisible by grid-cell size
 		gridRows = this.getBounds().height / gridCellSize;
 
 		initBlocks();
 		initItems();
-		setNextBlock();
+		updateNextBlock();
 	}
 
-	// ---------------------------------------------------------------------초기화관련동작
+	// --------------------------------------------------------------------- 초기화 관련 동작
 	private void initThisPanel() {
 		this.setBounds(200, 0, 200, 400);
 		this.setBackground(new Color(238, 238, 238));
@@ -77,9 +73,9 @@ public class GameArea extends JPanel {
 		isItem = answer;
 	}
 
-	// ---------------------------------------------------------------------블록관련동작
+	// --------------------------------------------------------------------- 블록 관련 동작
 	// 다음 블럭 설정
-	public void setNextBlock() {
+	public void updateNextBlock() {
 		Random r = new Random();
 		nextBlock = blocks[r.nextInt(blocks.length)];
 	}
@@ -104,7 +100,7 @@ public class GameArea extends JPanel {
 		block.spawn(gridColumns);
 	}
 
-	// ---------------------------------------------------------------------블록조작/경계확인
+	// --------------------------------------------------------------------- 블록 조작 / 경계 확인
 	// 블럭이 위쪽 경계를 벗어 났으면 게임 종료
 	public boolean isBlockOutOfBounds() {
 		if (block.getY() < 0) {
@@ -119,18 +115,33 @@ public class GameArea extends JPanel {
 		if (!checkBottom()) {
 			return false;
 		}
-
+		
+		// GameForm에서 입력된 키에 따라 블록 일시정지 및 재개 
+		if(paused) {
+			blocking();
+		}
+		
 		block.moveDown();
 		repaint(); // 일정한 시간 간격마다 업데이트 (스레드 사용)
 		// repaint 잊지 말자! (안 해주면 입력에 느리게 반응함)
 
 		return true;
 	}
+	
+	private void blocking() {
+		while(paused) {
+			try {
+				Thread.sleep(1);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 
 	public void moveBlockRight() {
-
 		if (block == null)
 			return;
+		
 		if (!checkRight())
 			return;
 
@@ -141,6 +152,7 @@ public class GameArea extends JPanel {
 	public void moveBlockLeft() {
 		if (block == null)
 			return;
+		
 		if (!checkLeft())
 			return;
 
@@ -148,19 +160,22 @@ public class GameArea extends JPanel {
 		repaint();
 	}
 
-	public void dropBlock() { // down
+	public void dropBlock() { // space bar
 		if (block == null)
 			return;
+		
+		// 다른 블록을 만나기 직전까지 계속 낙하
 		while (checkBottom()) {
-			block.moveDown();
+			block.moveDown(); 
 		}
+		
 		repaint();
 	}
 
 	public void rotateBlock() { // up
-
 		if (block == null)
 			return;
+		
 		// 배경과 겹치는지 확인
 		if (!checkRotate())
 			return;
@@ -170,8 +185,10 @@ public class GameArea extends JPanel {
 		// 회전 시 위치 재설정
 		if (block.getLeftEdge() < 0)
 			block.setX(0);
+		
 		if (block.getRightEdge() >= gridColumns)
 			block.setX(gridColumns - block.getWidth());
+		
 		if (block.getBottomEdge() >= gridRows)
 			block.setY(gridRows - block.getHeight());
 
@@ -269,7 +286,7 @@ public class GameArea extends JPanel {
 
 	// 회전 시 다른 블록과 겹치지 않도록 확인 (L모양 블럭에서 완전하진 않음 나중에 LShpae 블록은 따로 수정 필요)
 	private boolean checkRotate() {
-		// 복사객체를 생성하고 회전시켜서 확인한다.
+		// 복사 객체를 생성하고 회전시켜서 확인한다.
 		TetrisBlock rotated = new TetrisBlock(block.getShape());
 		rotated.setCurrentRotation(block.getCurrentRotation());
 		rotated.setX(block.getX());
@@ -409,10 +426,11 @@ public class GameArea extends JPanel {
 				linesCleared++;
 				clearLine(r);
 				shiftDown(r);
-				// 맨 윗 줄의 위는 null이므로 따로 지워준다.
+				
+				// 맨 윗줄의 위는 null이므로 따로 지워준다.
 				clearLine(0);
 
-				// 아래로 한 줄 씩 내려왔으므로 지워진 줄 위치에서부터 다시 시작
+				// 아래로 한 줄씩 내려왔으므로 지워진 줄 위치에서부터 다시 시작
 				r++;
 
 				repaint();
@@ -437,7 +455,7 @@ public class GameArea extends JPanel {
 		}
 	}
 
-	// ---------------------------------------------------------------------그리기
+	// --------------------------------------------------------------------- 그리기
 	private void drawBlock(Graphics g) {
 
 		if (block == null)
