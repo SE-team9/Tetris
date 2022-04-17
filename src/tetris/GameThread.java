@@ -1,6 +1,9 @@
 package tetris;
 
 public class GameThread extends Thread {
+
+	private boolean isPaused = false;
+
 	private GameArea ga;
 	private GameForm gf;
 	private NextBlockArea nba;
@@ -47,10 +50,19 @@ public class GameThread extends Thread {
 						score++;
 						gf.updateScore(score);
 
-						Thread.sleep(interval);
+						int i = 0;
+						while (i < interval / 100) {
+							Thread.sleep(100);
+							i++;
+							while (isPaused) {
+								if (!isPaused) {
+									break;
+								}
+							}
+						}
 
-					} catch (InterruptedException e) {
-						return; // 스레드 인터럽트 되면 run 함수 종료
+					} catch (InterruptedException ex) {
+						return;
 					}
 				}
 
@@ -101,10 +113,19 @@ public class GameThread extends Thread {
 						score++;
 						gf.updateScore(score);
 
-						Thread.sleep(interval);
+						int i = 0;
+						while (i < interval / 100) {
+							Thread.sleep(100);
+							i++;
+							while (isPaused) {
+								if (!isPaused) {
+									break;
+								}
+							}
+						}
 
-					} catch (InterruptedException e) {
-						return; // 스레드 인터럽트 되면 run 함수 종료
+					} catch (InterruptedException ex) {
+						return;
 					}
 				}
 
@@ -161,5 +182,13 @@ public class GameThread extends Thread {
 				}
 			}
 		}
+	}
+
+	public void pause() {
+		this.isPaused = true;
+	}
+
+	public void reStart() {
+		this.isPaused = false;
 	}
 }
