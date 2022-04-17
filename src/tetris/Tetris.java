@@ -20,6 +20,13 @@ public class Tetris {
 		sf.setVisible(true);
 	}
 	
+	// 게임 모드 반환 (0은 일반모드 1은 아이템모드)
+	public static int getGameMode() {
+		if(sf==null)
+			return 0;
+		return sf.getCurrentGameMode();
+	}
+	
 	public static void gameOver(int score) {
 		String playerName = JOptionPane.showInputDialog("Gane Over!\n Please enter your name.");
 		gf.setVisible(false);

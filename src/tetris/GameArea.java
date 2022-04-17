@@ -7,6 +7,7 @@ import java.util.Random;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
+import tetrisItems.FillEmpty;
 import tetrisblocks.IShape;
 import tetrisblocks.JShape;
 import tetrisblocks.LShape;
@@ -25,6 +26,10 @@ public class GameArea extends JPanel {
 	
 	boolean paused = false;
 
+	private TetrisBlock[] items;
+	
+	private boolean isItem = false; // 현재 블럭이 아이템인지 확인하는 변수 
+
 	public GameArea(int columns) {
 		initThisPanel();
 
@@ -33,6 +38,7 @@ public class GameArea extends JPanel {
 		gridRows = this.getBounds().height / gridCellSize;
 
 		initBlocks();
+		initItems();
 		updateNextBlock();
 	}
 
@@ -54,8 +60,17 @@ public class GameArea extends JPanel {
 				new SShape() };
 	}
 
+	// 각각의 아이템 초기화
+	public void initItems() {
+		items = new TetrisBlock[] { new FillEmpty() };
+	}
+
 	public int getGridCellSize() {
 		return gridCellSize;
+	}
+	
+	public void setIsItem(boolean answer) {
+		isItem = answer;
 	}
 
 	// --------------------------------------------------------------------- 블록 관련 동작
@@ -63,10 +78,22 @@ public class GameArea extends JPanel {
 	public void updateNextBlock() {
 		Random r = new Random();
 		nextBlock = blocks[r.nextInt(blocks.length)];
+		nextBlock.setShape();
+	}
+
+	// 다음 블럭을 아이템 중에서 설정
+	public void setNextItem() {
+		Random r = new Random();
+		nextBlock = items[r.nextInt(items.length)];
+		nextBlock.setShape();
 	}
 
 	public TetrisBlock getNextBlock() {
 		return nextBlock;
+	}
+	
+	public TetrisBlock getBlock() {
+		return block;
 	}
 
 	// 다음 블럭을 현재 블럭으로 가져오기
@@ -291,7 +318,75 @@ public class GameArea extends JPanel {
 		return true;
 	}
 
-	// --------------------------------------------------------------------- 배경 관련 동작
+	// ---------------------------------------------------------------------아이템관련동작
+	// 여기에 각 아이템들의 동작을 추가하시면 좋을 것 같습니다.
+	
+	// 한 열의 빈칸을 매워주는 아이템의 동작
+	public void fillEmpty() {
+
+		int xPos = block.getX();
+
+		int emptyNum = 0;
+		int currentR;
+		int nextR;
+
+		for (int r = gridRows - 1; r > 0; r--) {
+			if (background[r][xPos] == null) {
+				emptyNum++;
+				nextR = r - 1;
+				while (nextR >= 0 && background[nextR][xPos] == null) {
+					nextR--;
+				}
+				if (nextR == -1) {
+					return;
+				} else {
+					currentR = r;
+					for (; nextR >= 0; nextR--, currentR--) {
+						background[currentR][xPos] = background[nextR][xPos];
+						repaint();
+					}
+				}
+			}
+		}
+		while (emptyNum > 0) {
+			block.moveDown();
+		}
+		repaint();
+	}
+
+	// 각각의 아이템에 따라 해당하는 동작을 하도록 하는 함수
+	public void itemFunction() {
+
+		// 현재 블럭이 빈칸을 매워주는 아이템이면 빈칸 매우기 동작 수행
+		if (this.block instanceof FillEmpty) {
+			fillEmpty();
+		}
+	}
+
+	// 아이템이 반짝거리도록 한다.
+	public void twinkleItem() {
+
+		Color originColor = block.getColor();
+
+		try {
+			block.setColor(Color.white);
+			repaint();
+			Thread.sleep(200);
+			block.setColor(originColor);
+			repaint();
+			Thread.sleep(200);
+			block.setColor(Color.white);
+			repaint();
+			Thread.sleep(200);
+			block.setColor(originColor);
+			repaint();
+			Thread.sleep(200);
+		} catch (InterruptedException ex) {
+			return;
+		}
+	}
+
+	// ---------------------------------------------------------------------배경관련동작
 	public void moveBlockToBackground() {
 		// 움직이고 있던 블록에 대한 참조
 		int[][] shape = block.getShape();
@@ -380,7 +475,12 @@ public class GameArea extends JPanel {
 					int x = (block.getX() + col) * gridCellSize;
 					int y = (block.getY() + row) * gridCellSize;
 
-					drawGridSquare(g, c, x, y);
+					// 현재 블럭이 아이템이면 원형으로 그려주고, 아이템이 아니면 사각형으로 하나씩 그려준다.
+					if (isItem) {
+						drawGridOval(g, c, x, y);
+					} else {
+						drawGridSquare(g, c, x, y);
+					}
 				}
 			}
 		}
@@ -410,6 +510,14 @@ public class GameArea extends JPanel {
 		g.fillRect(x, y, gridCellSize, gridCellSize);
 		g.setColor(Color.black);
 		g.drawRect(x, y, gridCellSize, gridCellSize);
+	}
+	
+	// 원형으로 블럭을 그려준다.
+	private void drawGridOval(Graphics g, Color color, int x, int y) {
+		g.setColor(color);
+		g.fillOval(x, y, gridCellSize, gridCellSize);
+		g.setColor(Color.black);
+		g.drawOval(x, y, gridCellSize, gridCellSize);
 	}
 
 	@Override

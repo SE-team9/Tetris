@@ -10,6 +10,8 @@ public class NextBlockArea extends JPanel {
 	private GameArea ga;
 	private TetrisBlock nextBlock;
 	private int gridCellSize;
+	
+	private boolean isItem = false;  // 아이템 블럭인지 확인하는 변수
 
 	public NextBlockArea(GameArea ga) {
 		initThisPanel();
@@ -29,6 +31,10 @@ public class NextBlockArea extends JPanel {
 		this.nextBlock = nextblock;
 		repaint();
 	}
+	
+	public void setIsItem(boolean answer) {
+		isItem = answer;
+	}
 
 	private void drawBlock(Graphics g) {
 		int h = nextBlock.getHeight();
@@ -46,7 +52,12 @@ public class NextBlockArea extends JPanel {
 					int x = centerX + col * gridCellSize;
 					int y = centerY + row * gridCellSize;
 
-					drawGridSquare(g, c, x, y);
+					// 현재 블럭이 아이템이면 원형으로 그려주고, 아이템이 아니면 사각형으로 하나씩 그려준다.
+					if (isItem) {
+						drawGridOval(g, c, x, y);
+					} else {	
+						drawGridSquare(g, c, x, y);
+					}
 				}
 			}
 		}
@@ -59,6 +70,14 @@ public class NextBlockArea extends JPanel {
 		g.drawRect(x, y, gridCellSize, gridCellSize);
 	}
 
+	// 원형으로 블럭을 그려준다.
+	private void drawGridOval(Graphics g, Color color, int x, int y) {
+		g.setColor(color);
+		g.fillOval(x, y, gridCellSize, gridCellSize);
+		g.setColor(Color.black);
+		g.drawOval(x, y, gridCellSize, gridCellSize);
+	}
+	
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);

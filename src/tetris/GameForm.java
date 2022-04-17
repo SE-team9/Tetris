@@ -109,10 +109,12 @@ public class GameForm extends JFrame {
 	public void startGame() {
 		// 시작할 때마다 배경 초기화
 		ga.initBackgroundArray();
-		
 		// 다음 블럭 초기화
 		ga.updateNextBlock();
-		
+		// 모든 블럭 초기화
+		ga.initBlocks();
+		// 모든 아이템 초기화
+		ga.initItems();
 		// 게임 스레드 시작
 		gt = new GameThread(ga, this, nba);
 		gt.start();
@@ -143,6 +145,7 @@ public class GameForm extends JFrame {
 		this.setResizable(false);
 		this.setLayout(null);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setLocationRelativeTo(null);
 		this.setVisible(false);
 	}
 	

@@ -200,9 +200,9 @@ public class StartupForm extends JFrame {
 			menu[i] = new JButton(btnText[i]);
 			menu[i].setBounds(w / 3, h / 2 + (i + 1) * (h / 12), w / 3, h / 15);
 			menu[i].setBackground(Color.white);
+			menu[i].setFocusable(false);
 			this.add(menu[i]);
 		}
-		
 		menu[curPos].setBackground(Color.lightGray);
 	}
 	
