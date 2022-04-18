@@ -2,6 +2,8 @@ package tetris;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 import javax.swing.JPanel;
@@ -24,6 +26,7 @@ public class GameArea extends JPanel {
 	private TetrisBlock[] blocks;
 	private TetrisBlock block;
 	private TetrisBlock nextBlock;
+	private OptionForm of;
 	
 	boolean paused = false;
 
@@ -33,6 +36,8 @@ public class GameArea extends JPanel {
 
 	public GameArea(int columns) {
 		initThisPanel();
+		
+		of = new OptionForm();
 
 		gridColumns = columns;
 		gridCellSize = this.getBounds().width / gridColumns;
@@ -73,12 +78,65 @@ public class GameArea extends JPanel {
 	public void setIsItem(boolean answer) {
 		isItem = answer;
 	}
+	
+	// --------------------------------------------------------------------- 난이도 조절 추가
+	// 가중치 랜덤 함수 생성
+	public static <E> E getWeightedRandom(Map<E, Double> weights, Random random) {
+		E result = null;
+		double bestValue = Double.MAX_VALUE;
+
+		for (E element : weights.keySet()) {
+			double value = -Math.log(random.nextDouble()) / weights.get(element);
+			if (value < bestValue) {
+				bestValue = value;
+				result = element;
+			}
+		}
+		return result;
+	}
+
+	// level에 따른 가중치 부여
+	public int makeRandom() {
+		Map<String, Double> w = new HashMap<String, Double>();
+		Random r = new Random();
+
+		int level = of.getCurrentGameLevel();
+		double weight, iWeight;
+		int blockNum;
+
+		if (level == 0) {
+			weight = 14.0;
+			iWeight = 16.0;
+			w.put("0", iWeight);
+			for (int i = 1; i < blocks.length; i++) {
+				w.put(Integer.toString(i), weight);
+			}
+			blockNum = Integer.parseInt(getWeightedRandom(w, r));
+		} else if (level == 2) {
+			weight = 15.0;
+			iWeight = 10.0;
+			w.put("0", iWeight);
+			for (int i = 1; i < blocks.length; i++) {
+				w.put(Integer.toString(i), weight);
+			}
+			blockNum = Integer.parseInt(getWeightedRandom(w, r));
+		} else {
+			blockNum = r.nextInt(blocks.length);
+		}
+		return blockNum;
+	}
+
+	public int getCurrentGameLevel() {
+		return of.getCurrentGameLevel();
+	}
 
 	// --------------------------------------------------------------------- 블록 관련 동작
-	// 다음 블럭 설정
+	// 다음 블럭 설정 + 난이도 조절 추가
 	public void updateNextBlock() {
-		Random r = new Random();
-		nextBlock = blocks[r.nextInt(blocks.length)];
+		//Random r = new Random();
+		int r= makeRandom();
+		//nextBlock = blocks[r.nextInt(blocks.length)];
+		nextBlock = blocks[r];
 		nextBlock.setShape();
 	}
 

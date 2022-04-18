@@ -37,6 +37,8 @@ public class GameThread extends Thread {
 
 			// 블록이 1초마다 1칸씩 떨어지도록
 			while (true) {
+				int gameLevel = ga.getCurrentGameLevel();
+				
 				ga.spawnBlock(); // 새로운 블록 생성
 
 				// 다음 블럭 설정
@@ -68,7 +70,7 @@ public class GameThread extends Thread {
 
 				// 블럭이 다 내려왔는데 위쪽 경계를 넘어 있는 경우는 게임 종료
 				if (ga.isBlockOutOfBounds()) {
-					Tetris.gameOver(score);
+					Tetris.gameOver(score, gameLevel);
 					break;
 				}
 
@@ -79,6 +81,13 @@ public class GameThread extends Thread {
 				// 점수 업데이트
 				gf.updateScore(score);
 
+				
+				// 난이도 조절 추가
+				if (gameLevel == 0) {
+					speedupPerLevel = 80;
+				} else if (gameLevel == 2) {
+					speedupPerLevel = 120;
+				}
 				// 레벨 업데이트 레벨이 증가할수록 블럭이 내려오는 속도 증가
 				int lvl = score / scorePerLevel + 1;
 				if (lvl > level) {
@@ -92,7 +101,8 @@ public class GameThread extends Thread {
 		} else { // 아이템모드
 
 			while (true) {
-
+				int gameLevel = ga.getCurrentGameLevel();
+				
 				ga.spawnBlock();
 
 				if (nextIsItemTurn) { // 다음 블럭이 아이템이어야 하면
@@ -131,7 +141,7 @@ public class GameThread extends Thread {
 
 				// 게임 종료 확인
 				if (ga.isBlockOutOfBounds()) {
-					Tetris.gameOver(score);
+					Tetris.gameOver(score, gameLevel);
 					break;
 				}
 
@@ -172,6 +182,12 @@ public class GameThread extends Thread {
 				score += clearedLineNum;
 				gf.updateScore(score);
 
+				// 난이도 조절 추가
+				if (gameLevel == 0) {
+					speedupPerLevel = 80;
+				} else if (gameLevel == 2) {
+					speedupPerLevel = 120;
+				}
 				int lvl = score / scorePerLevel + 1;
 				if (lvl > level) {
 					level = lvl;

@@ -66,12 +66,13 @@ public class LeaderboardForm extends JFrame {
 	
 	// 파일로부터 데이터 가져오기 (de-serialization)
 	private void initTableData() {
-		String header[] = {"Player", "Score"};
+		String header[] = {"Player", "Score", "Level"};
 		Object contents[][] = {};
 		
 		Vector columnIdentifier = new Vector();
 		columnIdentifier.add("Palyer");
 		columnIdentifier.add("Score");
+		columnIdentifier.add("Level");
 		
 		tm = new DefaultTableModel(contents, header){
 			@Override
@@ -132,8 +133,13 @@ public class LeaderboardForm extends JFrame {
 	}
 	
 	// 게임 종료되면 플레이어 기록 추가하면서, 동시에 스코어보드 보여주기 
-	public void addPlayer(String playerName, int score) {
-		tm.addRow(new Object[] { playerName, score });
+	public void addPlayer(String playerName, int score, int gameLevel) {
+		String strGameLevel;
+		if(gameLevel == 0) strGameLevel="Easy";
+		else if (gameLevel == 1) strGameLevel="Normal";
+		else strGameLevel="Hard";
+		
+		tm.addRow(new Object[] { playerName, score, strGameLevel });
 		sorter.sort();
 		saveLeaderboard();
 		
