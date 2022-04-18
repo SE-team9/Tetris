@@ -4,10 +4,10 @@ import java.awt.Color;
 import java.util.Random;
 
 public class TetrisBlock {
-	private int[][] shape;
+	protected int[][] shape;
 	private Color color;
 	private int x, y;
-	private int[][][] shapes;
+	protected int[][][] shapes;
 	private int currentRotation;
 	
 	// 블럭 색 지정에 사용할 변수들
@@ -32,7 +32,7 @@ public class TetrisBlock {
 		availableColors = allColors[Tetris.getColorMode()];
 	}
 
-	private void initShapes() {
+	protected void initShapes() {
 		shapes = new int[4][][];
 		
 		for(int i = 0; i < 4; i++) {

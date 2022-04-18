@@ -8,6 +8,8 @@ import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
 import tetrisItems.FillEmpty;
+import tetrisItems.Weight;
+import tetrisItems.DeleteAroundU;
 import tetrisblocks.IShape;
 import tetrisblocks.JShape;
 import tetrisblocks.LShape;
@@ -62,7 +64,7 @@ public class GameArea extends JPanel {
 
 	// 각각의 아이템 초기화
 	public void initItems() {
-		items = new TetrisBlock[] { new FillEmpty() };
+		items = new TetrisBlock[] { new FillEmpty(), new Weight(), new DeleteAroundU() };
 	}
 
 	public int getGridCellSize() {
@@ -353,6 +355,107 @@ public class GameArea extends JPanel {
 		}
 		repaint();
 	}
+	
+	// 무게추 아이템 기능
+		public void Weight() {
+			for(int row = block.getBottomEdge(); row < gridRows; row++) {
+				for(int col = block.getLeftEdge(); col < block.getRightEdge(); col++) {
+					background[row][col] = null;
+				}
+				block.moveDown();
+				repaint();
+			}
+			moveBlockToBackground();
+		}
+		
+		// 좌우아래 삭제 아이템 기능
+		public void DeleteAroundU() {
+			/*int leftX = block.getX() - 1;
+			int leftY = block.getY() - 1;
+			int rightX = block.getRightEdge();
+			int rightY = block.getY() - 1;*/
+			for(int y = block.getY(); y <= block.getBottomEdge(); y++) {
+				if(y >= gridRows) break;
+				for(int x = block.getX() - 1; x <= block.getRightEdge(); x++) {
+					if(x < 0) continue;
+					if(x >= gridColumns) break;
+					background[y][x] = null;
+				}
+			}
+			
+			/*if(leftX >= 0 && background[leftY][leftX] != null) {
+				try {
+					Thread.sleep(200);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				int xPos = leftX;
+
+				int emptyNum = 0;
+				int currentR;
+				int nextR;
+		
+				for (int r = gridRows - 1; r > 0; r--) {
+					if (background[r][xPos] == null) {
+						emptyNum++;
+						nextR = r - 1;
+						while (nextR >= 0 && background[nextR][xPos] == null) {
+							nextR--;
+						}
+						if (nextR == -1) {
+							return;
+						} else {
+							currentR = r;
+							for (; nextR >= 0; nextR--, currentR--) {
+								background[currentR][xPos] = background[nextR][xPos];
+								repaint();
+							}
+						}
+					}
+				}
+				while (emptyNum > 0) {
+					block.moveDown();
+				}
+				repaint();
+			}
+			if(rightX < gridColumns && background[rightY][rightX] != null) {
+				try {
+					Thread.sleep(200);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				int xPos = rightX;
+
+				int emptyNum = 0;
+				int currentR;
+				int nextR;
+		
+				for (int r = gridRows - 1; r > 0; r--) {
+					if (background[r][xPos] == null) {
+						emptyNum++;
+						nextR = r - 1;
+						while (nextR >= 0 && background[nextR][xPos] == null) {
+							nextR--;
+						}
+						if (nextR == -1) {
+							return;
+						} else {
+							currentR = r;
+							for (; nextR >= 0; nextR--, currentR--) {
+								background[currentR][xPos] = background[nextR][xPos];
+								repaint();
+							}
+						}
+					}
+				}
+				while (emptyNum > 0) {
+					block.moveDown();
+				}
+				repaint();
+			}*/
+		}
 
 	// 각각의 아이템에 따라 해당하는 동작을 하도록 하는 함수
 	public void itemFunction() {
@@ -360,6 +463,12 @@ public class GameArea extends JPanel {
 		// 현재 블럭이 빈칸을 매워주는 아이템이면 빈칸 매우기 동작 수행
 		if (this.block instanceof FillEmpty) {
 			fillEmpty();
+		}
+		else if(this.block instanceof Weight) {
+			Weight();
+		}
+		else if(this.block instanceof DeleteAroundU) {
+			DeleteAroundU();
 		}
 	}
 
@@ -425,6 +534,26 @@ public class GameArea extends JPanel {
 				}
 			}
 			if (lineFilled) {
+				for (int c = 0; c < gridColumns; c++) {
+					background[r][c] = Color.white;
+					repaint();
+				}
+				try {
+					Thread.sleep(150);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				for (int c = 0; c < gridColumns; c++) {
+					background[r][c] = Color.black;
+					repaint();
+				}
+				try {
+					Thread.sleep(150);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				linesCleared++;
 				clearLine(r);
 				shiftDown(r);
