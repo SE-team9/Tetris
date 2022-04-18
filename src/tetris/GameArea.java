@@ -8,6 +8,7 @@ import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
 import tetrisItems.FillEmpty;
+import tetrisItems.TwoLineDelete;
 import tetrisblocks.IShape;
 import tetrisblocks.JShape;
 import tetrisblocks.LShape;
@@ -62,7 +63,7 @@ public class GameArea extends JPanel {
 
 	// 각각의 아이템 초기화
 	public void initItems() {
-		items = new TetrisBlock[] { new FillEmpty() };
+		items = new TetrisBlock[] { new FillEmpty(), new TwoLineDelete() };
 	}
 
 	public int getGridCellSize() {
@@ -353,6 +354,20 @@ public class GameArea extends JPanel {
 		}
 		repaint();
 	}
+	// 두 줄 삭제 아이템의 동작
+	public void twoLineDelete() {
+		int yPos = block.getY();
+		int time = 0;
+
+		for (int r = yPos + 2; r >= yPos+1 && time < 2; r--) {
+			clearLine(r);
+			shiftDown(r);
+			r++;
+			time++;
+
+			repaint();
+		}
+	}
 
 	// 각각의 아이템에 따라 해당하는 동작을 하도록 하는 함수
 	public void itemFunction() {
@@ -360,6 +375,8 @@ public class GameArea extends JPanel {
 		// 현재 블럭이 빈칸을 매워주는 아이템이면 빈칸 매우기 동작 수행
 		if (this.block instanceof FillEmpty) {
 			fillEmpty();
+		} else if(this.block instanceof TwoLineDelete) {
+			twoLineDelete();
 		}
 	}
 
