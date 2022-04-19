@@ -77,7 +77,12 @@ public class GameThread extends Thread {
 				// 현재 블럭위치 배경에 저장
 				ga.moveBlockToBackground();
 				// 완성된 줄 삭제, 점수 추가
-				score += ga.clearLines();
+				if(ga.clearLines() > 1) {
+					score += 2 * ga.clearLines() + level;
+				}
+				else {
+					score += ga.clearLines() + level;
+				}
 				// 점수 업데이트
 				gf.updateScore(score);
 
@@ -179,7 +184,12 @@ public class GameThread extends Thread {
 
 				cumClearedLine += clearedLineNum;
 
-				score += clearedLineNum;
+				if(clearedLineNum > 1) {
+					score += 2* clearedLineNum + level;
+				}
+				else {
+					score += clearedLineNum + level;
+				}
 				gf.updateScore(score);
 
 				// 난이도 조절 추가
