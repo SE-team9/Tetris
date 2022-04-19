@@ -39,10 +39,10 @@ public class Tetris {
 		return sf.getCurrentGameMode();
 	}
 	
-	public static void gameOver(int score) {
+	public static void gameOver(int score, int gameLevel) {
 		String playerName = JOptionPane.showInputDialog("Gane Over!\n Please enter your name.");
 		gf.setVisible(false);
-		lf.addPlayer(playerName, score);
+		lf.addPlayer(playerName, score, gameLevel);
 	}
 
 	public static void main(String[] args) {

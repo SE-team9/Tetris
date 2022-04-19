@@ -17,7 +17,7 @@ public class OptionForm extends JFrame {
 	private JLabel blockColorChange;
 	private JLabel[][] currentOptionArrow;
 
-	private JButton[][] optionButtons = new JButton[2][];
+	private static JButton[][] optionButtons = new JButton[2][];
 	private String[] colorMode = { "변경안함", "색맹모드" };
 	private String[] gameLevel = { "이지모드", "노멀모드","하드모드" };
 
@@ -25,7 +25,7 @@ public class OptionForm extends JFrame {
 	private int optionCol;
 
 	// 한 설정당 하나씩 선택된 값 저장 (한 행당 하나의 열 값을 저장) 
-	private int[] optionSet = new int[optionButtons.length];  
+	private static int[] optionSet = new int[optionButtons.length];  
 
 	public OptionForm() {
 		initThisFrame();
