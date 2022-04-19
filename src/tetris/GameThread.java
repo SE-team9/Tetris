@@ -15,10 +15,10 @@ public class GameThread extends Thread {
 	private int speedupPerLevel = 100;
 
 	// 아이템 생성과 관련된 변수들
-	private int clearedLineNum; // 줄이 삭제된 경우 삭제된 줄 수를 저장하는 변수
-	private int cumClearedLine; // 삭제된 줄 수를 누적저장하는 변수
+	private int clearedLineNum; 			// 줄이 삭제된 경우 삭제된 줄 수를 저장하는 변수
+	private int cumClearedLine; 			// 삭제된 줄 수를 누적저장하는 변수
 	private boolean nextIsItemTurn = false; // 다음 블럭이 아이템 블럭인지 확인하는 변수
-	private boolean isItemTurn = false; // 현재 블럭이 아이템 블럭인지 확인하는 변수
+	private boolean isItemTurn = false; 	// 현재 블럭이 아이템 블럭인지 확인하는 변수
 
 	public GameThread(GameArea ga, GameForm gf, NextBlockArea nba) {
 		this.ga = ga;
@@ -35,20 +35,17 @@ public class GameThread extends Thread {
 		// 일반모드
 		if (Tetris.getGameMode() == 0) {
 
-			// 블록이 1초마다 1칸씩 떨어지도록
 			while (true) {
-				int gameLevel = ga.getCurrentGameLevel();
+				int gameLevel = Tetris.getGameLevel();
 				
-				ga.spawnBlock(); // 새로운 블록 생성
-
-				// 다음 블럭 설정
-				ga.updateNextBlock();
+				ga.spawnBlock(); 						
+					
+				ga.updateNextBlock();					
 				nba.updateNBA(ga.getNextBlock());
 
 				while (ga.moveBlockDown()) {
 
 					try {
-						// 점수 업데이트
 						score++;
 						gf.updateScore(score);
 
@@ -76,7 +73,8 @@ public class GameThread extends Thread {
 
 				// 현재 블럭위치 배경에 저장
 				ga.moveBlockToBackground();
-				// 완성된 줄 삭제, 점수 추가
+				
+				// 완성된 줄 삭제, 삭제된 줄 수에 따라 점수 추가
 				if(ga.clearLines() > 1) {
 					score += 2 * ga.clearLines() + level;
 				}
@@ -93,6 +91,7 @@ public class GameThread extends Thread {
 				} else if (gameLevel == 2) {
 					speedupPerLevel = 120;
 				}
+				
 				// 레벨 업데이트 레벨이 증가할수록 블럭이 내려오는 속도 증가
 				int lvl = score / scorePerLevel + 1;
 				if (lvl > level) {
@@ -106,25 +105,22 @@ public class GameThread extends Thread {
 		} else { // 아이템모드
 
 			while (true) {
-				int gameLevel = ga.getCurrentGameLevel();
+				int gameLevel = Tetris.getGameLevel();
 				
 				ga.spawnBlock();
 
-				if (nextIsItemTurn) { // 다음 블럭이 아이템이어야 하면
-
-					ga.setNextItem(); // 다음 아이템 블럭 선택
-					nba.setIsItem(true); // 아이템은 원형으로 표시하기 위해 아이템 블럭임을 알려주는 용도
-
+				if (nextIsItemTurn) { 		// 다음 블럭이 아이템
+					ga.updateNextItem(); 	// 다음 아이템 블럭 설정
+					nba.setIsItem(true); 	// 아이템은 원형으로 표시하기 위해 아이템 블럭임을 알려주는 용도
 				} else {
-					ga.updateNextBlock(); // 다음 블럭 선택
+					ga.updateNextBlock(); 	
 				}
 
-				nba.updateNBA(ga.getNextBlock()); // 다음 블럭을 표시할 수 있도록 다음 블럭 정보 전달
+				nba.updateNBA(ga.getNextBlock()); 
 
 				while (ga.moveBlockDown()) {
 
 					try {
-						// 점수 업데이트
 						score++;
 						gf.updateScore(score);
 
@@ -165,10 +161,10 @@ public class GameThread extends Thread {
 					// 다음 블럭이 아이템이었다면 이제 현재 블럭이 아이템이 되고, 다음 블럭은 기본 블럭이 되어야 하므로,
 					// 현재 블럭은 원형으로, 다음 블럭은 사각형으로 표시하기 위해 각 불린값들을 조정해준다.
 					if (nextIsItemTurn) {
-						nextIsItemTurn = false; // 다음 블럭은 기본 블럭
-						isItemTurn = true; // 현재 블럭은 아이템
-						nba.setIsItem(false); // 다음 블럭은 아이템이 아님
-						ga.setIsItem(true); // 현재블럭은 아이템
+						nextIsItemTurn = false; 	// 다음 블럭은 기본 블럭
+						isItemTurn = true; 			// 현재 블럭은 아이템
+						nba.setIsItem(false);		// 다음 블럭은 아이템이 아님
+						ga.setIsItem(true); 		// 현재블럭은 아이템
 					}
 				}
 

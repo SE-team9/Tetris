@@ -180,12 +180,13 @@ public class OptionForm extends JFrame {
 			currentOptionArrow[i][1].setHorizontalAlignment(JLabel.CENTER);
 			this.add(currentOptionArrow[i][0]);
 			this.add(currentOptionArrow[i][1]);
-			this.add(currentOptionArrow[i][0]).setVisible(false);
-			this.add(currentOptionArrow[i][1]).setVisible(false);
+	
+			currentOptionArrow[i][0].setVisible(false);
+			currentOptionArrow[i][1].setVisible(false);
 		}
 
-		this.add(currentOptionArrow[0][0]).setVisible(true);
-		this.add(currentOptionArrow[0][1]).setVisible(true);
+		currentOptionArrow[0][0].setVisible(true);
+		currentOptionArrow[0][1].setVisible(true);
 	}
 
 	private void initGameButtons() {
