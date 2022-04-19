@@ -26,6 +26,10 @@ public class NextBlockArea extends JPanel {
 		this.setBackground(new Color(238, 238, 238));
 		this.setBorder(LineBorder.createBlackLineBorder());
 	}
+	
+	public void initNextBlockArea() {
+		this.isItem = false;
+	}
 
 	public void updateNBA(TetrisBlock nextblock) {
 		this.nextBlock = nextblock;
@@ -52,7 +56,6 @@ public class NextBlockArea extends JPanel {
 					int x = centerX + col * gridCellSize;
 					int y = centerY + row * gridCellSize;
 
-					// 현재 블럭이 아이템이면 원형으로 그려주고, 아이템이 아니면 사각형으로 하나씩 그려준다.
 					if (isItem) {
 						drawGridOval(g, c, x, y);
 					} else {	
@@ -70,7 +73,6 @@ public class NextBlockArea extends JPanel {
 		g.drawRect(x, y, gridCellSize, gridCellSize);
 	}
 
-	// 원형으로 블럭을 그려준다.
 	private void drawGridOval(Graphics g, Color color, int x, int y) {
 		g.setColor(color);
 		g.fillOval(x, y, gridCellSize, gridCellSize);

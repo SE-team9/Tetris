@@ -1,7 +1,6 @@
 package tetris;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -40,6 +39,16 @@ public class LeaderboardForm extends JFrame {
 		initControls();
 	}
 
+	// ---------------------------------------------------------------------초기화
+	private void initThisFrame() {
+		this.setSize(600, 450);
+		this.setResizable(false);
+		this.setLayout(null);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setLocationRelativeTo(null);
+		this.setVisible(false);
+	}
+	
 	// ESC를 누르면 시작 화면으로 이동
 	private void initControls() {
 		InputMap im = this.getRootPane().getInputMap();
@@ -58,25 +67,10 @@ public class LeaderboardForm extends JFrame {
 		Tetris.showStartup();
 	}
 
-	private void initThisFrame() {
-		this.setSize(600, 450);
-		this.setResizable(false);
-		this.setLayout(null);
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setLocationRelativeTo(null);
-		this.setVisible(false);
-	}
-
 	// 파일로부터 데이터 가져오기 (de-serialization)
 	private void initTableData() {
 		String header[] = { "Player", "Score", "Level" };
-		// Object contents[][] = {};
 		String contents[][] = {};
-
-		Vector columnIdentifier = new Vector();
-		columnIdentifier.add("Player");
-		columnIdentifier.add("Score");
-		columnIdentifier.add("Level");
 
 		tm = new DefaultTableModel(contents, header) {
 			@Override
@@ -87,9 +81,15 @@ public class LeaderboardForm extends JFrame {
 
 			@Override // score--> Int 형으로
 			public Class<?> getColumnClass(int columnIndex) {
-				return getValueAt(1, columnIndex).getClass();
+				if(columnIndex == 1 ) return Integer.class;
+				return super.getColumnClass(columnIndex).getClass();
 			}
 		};
+		
+		Vector columnIdentifier = new Vector();
+		columnIdentifier.add("Player");
+		columnIdentifier.add("Score");
+		columnIdentifier.add("Level");
 
 		try {
 			FileInputStream fs = new FileInputStream(leaderboardFile);
