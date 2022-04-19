@@ -176,7 +176,7 @@ public class GameThread extends Thread {
 				// 줄이 특정 횟수 삭제되면 아이템 생성
 				// 3을 10으로 고치면 10줄이 삭제될 때마다 아이템이 생성됩니다.
 				// 동작을 쉽게 확인하기 위해 3줄 마다 아이템이 나오도록 3으로 설정해뒀습니다.
-				if (cumClearedLine / 10 != (cumClearedLine + clearedLineNum) / 10) {
+				if (cumClearedLine / 3 != (cumClearedLine + clearedLineNum) / 3) {
 					nextIsItemTurn = true;
 				}
 
