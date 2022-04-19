@@ -205,6 +205,12 @@ public class StartupForm extends JFrame {
 		initButtons();
 		initLable();
 	}
+	
+	public void initComponents(int w, int h) {
+		this.setSize(w, h);
+		initButtons();
+		initLable();
+	}
 
 	// StartupForm 프레임 실행
 	public static void main(String[] args) {
