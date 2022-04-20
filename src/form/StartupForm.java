@@ -1,4 +1,4 @@
-package tetris;
+package form;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -12,6 +12,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
+
+import tetris.Tetris;
 
 public class StartupForm extends JFrame {
 	private JLabel title = new JLabel("Tetris");
@@ -37,7 +39,7 @@ public class StartupForm extends JFrame {
 		im.put(KeyStroke.getKeyStroke("ENTER"), "enter");
 		im.put(KeyStroke.getKeyStroke("RIGHT"), "right");
 		im.put(KeyStroke.getKeyStroke("LEFT"), "left");
-
+		
 		am.put("up", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -106,8 +108,8 @@ public class StartupForm extends JFrame {
 			Tetris.start(); // 게임 시작 
 			break;
 		case 1:
-			// todo: 설정 화면으로 이동 
-			System.out.println("설정 화면");
+			this.setVisible(false);
+			Tetris.showOption(); // 설정 화면 
 			break;
 		case 2:
 			this.setVisible(false);
@@ -118,12 +120,6 @@ public class StartupForm extends JFrame {
 			break;
 		}
 	}
-	
-//	private void selectMode(int curMode) {
-//		if(curMode == 0) { // 일반 모드
-//			
-//		}
-//	}
 	
 	// 모드 선택 오른쪽 방향키
 	private void moveRight() {
@@ -156,7 +152,7 @@ public class StartupForm extends JFrame {
 	// todo: 설정에서 화면 크기 선택
 	private void initThisFrame() {
 		this.setSize(600, 450);
-		this.setResizable(false);
+		this.setResizable(true);
 		this.setLayout(null);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setLocationRelativeTo(null);
@@ -200,9 +196,9 @@ public class StartupForm extends JFrame {
 			menu[i] = new JButton(btnText[i]);
 			menu[i].setBounds(w / 3, h / 2 + (i + 1) * (h / 12), w / 3, h / 15);
 			menu[i].setBackground(Color.white);
+			menu[i].setFocusable(false);
 			this.add(menu[i]);
 		}
-		
 		menu[curPos].setBackground(Color.lightGray);
 	}
 	
