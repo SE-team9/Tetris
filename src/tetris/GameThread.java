@@ -35,8 +35,9 @@ public class GameThread extends Thread {
 		// 일반모드
 		if (Tetris.getGameMode() == 0) {
 
+			int gameLevel = Tetris.getGameLevel();
+			
 			while (true) {
-				int gameLevel = Tetris.getGameLevel();
 				
 				ga.spawnBlock(); 						
 					
@@ -104,8 +105,9 @@ public class GameThread extends Thread {
 			}
 		} else { // 아이템모드
 
+			int gameLevel = Tetris.getGameLevel();
+			
 			while (true) {
-				int gameLevel = Tetris.getGameLevel();
 				
 				ga.spawnBlock();
 

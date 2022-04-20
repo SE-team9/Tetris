@@ -340,9 +340,9 @@ public class GameArea extends JPanel {
 		if (rotated.getLeftEdge() < 0)
 			rotated.setX(0);
 		if (rotated.getRightEdge() >= gridColumns)
-			rotated.setX(gridColumns - block.getWidth());
+			rotated.setX(gridColumns - rotated.getWidth());
 		if (rotated.getBottomEdge() >= gridRows)
-			rotated.setY(gridRows - block.getHeight());
+			rotated.setY(gridRows - rotated.getHeight());
 
 		int[][] shape = rotated.getShape();
 		int w = rotated.getWidth();
