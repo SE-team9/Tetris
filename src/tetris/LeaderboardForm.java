@@ -13,6 +13,7 @@ import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
 import javax.swing.InputMap;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.KeyStroke;
@@ -26,20 +27,31 @@ import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
 public class LeaderboardForm extends JFrame {
+
 	private JTable leaderboard;
+
 	private DefaultTableModel tm;
-	private String leaderboardFile = "leaderboard";
+	private String[] leaderboardFile = { "leaderboardFile_Normal", "leaderboardFile_Item" };
 	private TableRowSorter<TableModel> sorter;
+	JScrollPane scrollLeaderboard;
+
+	private JLabel[] gameModeLabel;
+	private String gameMode[] = { "ì¼ë°˜ëª¨ë“œ", "ì•„ì´í…œëª¨ë“œ" };
+	private int curCol;
 
 	public LeaderboardForm() {
 		initThisFrame();
-		initTableData();
+		initLabel();
+
+		initTableData(0);
+		initLeaderboard(tm);
 		initTableSorter();
+		initScrollLeaderboard();
 
 		initControls();
 	}
 
-	// ---------------------------------------------------------------------ÃÊ±âÈ­
+	// ---------------------------------------------------------------------ì´ˆê¸°í™”
 	private void initThisFrame() {
 		this.setSize(600, 450);
 		this.setResizable(false);
@@ -48,12 +60,41 @@ public class LeaderboardForm extends JFrame {
 		this.setLocationRelativeTo(null);
 		this.setVisible(false);
 	}
-	
-	// ESC¸¦ ´©¸£¸é ½ÃÀÛ È­¸éÀ¸·Î ÀÌµ¿
+
+  // ëª¨ë“œ, ë‚œì´ë„ í‘œì‹œ ë ˆì´ë¸” ì´ˆê¸°í™” 
+	private void initLabel() {
+		gameModeLabel = new JLabel[2];
+		for (int i = 0; i < gameModeLabel.length; i++) {
+			gameModeLabel[i] = new JLabel(gameMode[i]);
+			gameModeLabel[i].setHorizontalAlignment(JLabel.CENTER);
+			gameModeLabel[i].setBounds(200, 10, 200, 30);
+			gameModeLabel[i].setVisible(false);
+			this.add(gameModeLabel[i]);
+		}
+		gameModeLabel[0].setVisible(true);
+	}
+  
+	// ESCë¥¼ ëˆ„ë¥´ë©´ ì‹œì‘ í™”ë©´ìœ¼ë¡œ ì´ë™
 	private void initControls() {
 		InputMap im = this.getRootPane().getInputMap();
 		ActionMap am = this.getRootPane().getActionMap();
+
+		im.put(KeyStroke.getKeyStroke("RIGHT"), "right");
+		im.put(KeyStroke.getKeyStroke("LEFT"), "left");
 		im.put(KeyStroke.getKeyStroke("ESCAPE"), "back");
+
+		am.put("right", new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				moveNextMode();
+			}
+		});
+		am.put("left", new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				movePreviousMode();
+			}
+		});
 		am.put("back", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -62,13 +103,51 @@ public class LeaderboardForm extends JFrame {
 		});
 	}
 
+	private void moveNextMode() {
+		gameModeLabel[curCol].setVisible(false);
+		scrollLeaderboard.setVisible(false);
+
+		curCol++;
+		if (curCol > gameModeLabel.length - 1) {
+			curCol = 0;
+		}
+
+		gameModeLabel[curCol].setVisible(true);
+
+		remakeScrollLeaderboard(curCol);
+	}
+
+	private void movePreviousMode() {
+		gameModeLabel[curCol].setVisible(false);
+		scrollLeaderboard.setVisible(false);
+
+		curCol--;
+		if (curCol < 0) {
+			curCol = gameModeLabel.length - 1;
+		}
+
+		gameModeLabel[curCol].setVisible(true);
+
+		remakeScrollLeaderboard(curCol);
+	}
+
 	private void goToMainMenu() {
 		this.setVisible(false);
 		Tetris.showStartup();
 	}
 
-	// ÆÄÀÏ·ÎºÎÅÍ µ¥ÀÌÅÍ °¡Á®¿À±â (de-serialization)
-	private void initTableData() {
+  // í˜„ì¬ ëª¨ë“œì— ë§ëŠ” íŒŒì¼ì— ë”°ë¼ ë³´ë“œë¥¼ ë‹¤ì‹œ ìƒì„±í•œë‹¤. 
+	private void remakeScrollLeaderboard(int mode) {
+		this.remove(scrollLeaderboard);
+		initTableData(mode);
+		initLeaderboard(tm);
+		initTableSorter();
+		sorter.sort();
+		initScrollLeaderboard();
+	}
+
+	// íŒŒì¼ë¡œë¶€í„° ë°ì´í„° ê°€ì ¸ì˜¤ê¸° (de-serialization)
+	private void initTableData(int mode) {
 		String header[] = { "Player", "Score", "Level" };
 		String contents[][] = {};
 
@@ -79,9 +158,11 @@ public class LeaderboardForm extends JFrame {
 				return false;
 			}
 
-			@Override // score--> Int ÇüÀ¸·Î
+			@Override // score--> Int í˜•ìœ¼ë¡œ
 			public Class<?> getColumnClass(int columnIndex) {
-				if(columnIndex == 1 ) return Integer.class;
+				if (columnIndex == 1)
+					return Integer.class;
+
 				return super.getColumnClass(columnIndex).getClass();
 			}
 		};
@@ -91,39 +172,37 @@ public class LeaderboardForm extends JFrame {
 		columnIdentifier.add("Score");
 		columnIdentifier.add("Level");
 
+		Vector columnIdentifier = new Vector();
+		columnIdentifier.add("Player");
+		columnIdentifier.add("Score");
+		columnIdentifier.add("Level");
+
 		try {
-			FileInputStream fs = new FileInputStream(leaderboardFile);
+			FileInputStream fs = new FileInputStream(leaderboardFile[mode]);
 			ObjectInputStream os = new ObjectInputStream(fs);
 
-			// Á¡¼ö¸¦ ¹®ÀÚ¿­ÀÌ ¾Æ´Ñ int Å¸ÀÔÀ¸·Î ÀĞ¾î¾ß µÎÀÚ¸® ÀÌ»óÀÇ ¼ıÀÚµµ Á¤·Ä °¡´É!
+			// ì ìˆ˜ë¥¼ ë¬¸ìì—´ì´ ì•„ë‹Œ int íƒ€ì…ìœ¼ë¡œ ì½ì–´ì•¼ ë‘ìë¦¬ ì´ìƒì˜ ìˆ«ìë„ ì •ë ¬ ê°€ëŠ¥!
 			tm.setDataVector((Vector<Vector>) os.readObject(), columnIdentifier);
 
 			os.close();
 			fs.close();
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
-		initTable(tm);
 	}
 
-	private void initTable(DefaultTableModel tm) {
+	private void initLeaderboard(DefaultTableModel tm) {
 		leaderboard = new JTable(tm);
-		
-		// ³»¿ë¹° Áß¾Ó Á¤·Ä
+		leaderboard.setFocusable(false);
+
+		// ë‚´ìš©ë¬¼ ì¤‘ì•™ ì •ë ¬
 		DefaultTableCellRenderer tScheduleCellRenderer = new DefaultTableCellRenderer();
 		tScheduleCellRenderer.setHorizontalAlignment(SwingConstants.CENTER);
 		TableColumnModel tcmSchedule = leaderboard.getColumnModel();
 		for (int i = 0; i < tcmSchedule.getColumnCount(); i++) {
 
 			tcmSchedule.getColumn(i).setCellRenderer(tScheduleCellRenderer);
-
 		}
-
-		JScrollPane scrollPane = new JScrollPane(leaderboard);
-		scrollPane.setBounds(20, 70, 542, 314);
-		getContentPane().add(scrollPane, BorderLayout.CENTER);
 	}
 
 	private void initTableSorter() {
@@ -135,10 +214,17 @@ public class LeaderboardForm extends JFrame {
 		sorter.setSortKeys(keys);
 	}
 
-	// ÆÄÀÏ¿¡ µ¥ÀÌÅÍ ÀúÀåÇÏ±â (serialization)
+	// ìƒì„±ëœ í…Œì´ë¸” ë°ì´í„°ë¥¼ ì‚¬ìš©í•˜ì—¬ ë¦¬ë”ë³´ë“œ ìƒì„±
+	private void initScrollLeaderboard() {
+		scrollLeaderboard = new JScrollPane(leaderboard);
+		scrollLeaderboard.setBounds(40, 50, 520, 350);
+		this.add(scrollLeaderboard);
+	}
+
+	// íŒŒì¼ì— ë°ì´í„° ì €ì¥í•˜ê¸° (serialization)
 	private void saveLeaderboard() {
 		try {
-			FileOutputStream fs = new FileOutputStream(leaderboardFile);
+			FileOutputStream fs = new FileOutputStream(leaderboardFile[Tetris.getGameMode()]);
 			ObjectOutputStream os = new ObjectOutputStream(fs);
 
 			os.writeObject(tm.getDataVector());
@@ -151,7 +237,7 @@ public class LeaderboardForm extends JFrame {
 		}
 	}
 
-	// °ÔÀÓ Á¾·áµÇ¸é ÇÃ·¹ÀÌ¾î ±â·Ï Ãß°¡ÇÏ¸é¼­, µ¿½Ã¿¡ ½ºÄÚ¾îº¸µå º¸¿©ÁÖ±â
+	// ê²Œì„ ì¢…ë£Œë˜ë©´ í”Œë ˆì´ì–´ ê¸°ë¡ ì¶”ê°€í•˜ë©´ì„œ, ë™ì‹œì— ìŠ¤ì½”ì–´ë³´ë“œ ë³´ì—¬ì£¼ê¸°
 	public void addPlayer(String playerName, int score, int gameLevel) {
 		String strGameLevel;
 		if (gameLevel == 0)
@@ -161,14 +247,22 @@ public class LeaderboardForm extends JFrame {
 		else
 			strGameLevel = "Hard";
 
-		tm.addRow(new Object[] { playerName, score, strGameLevel });
-		sorter.sort();
-		saveLeaderboard();
+		this.remove(scrollLeaderboard); 				// í˜„ì¬ ë¦¬ë”ë³´ë“œ ì œê±°
+		initTableData(Tetris.getGameMode()); 			// í˜„ì¬ ëª¨ë“œì— ë§ëŠ” íŒŒì¼ ë°ì´í„° ì½ì–´ì˜¤ê¸°
+		tm.addRow(new Object[] { playerName, score, strGameLevel }); 	// ì½ì–´ì˜¨ ë°ì´í„°ì— ê¸°ë¡ ì¶”ê°€
+		initLeaderboard(tm); 							// ì½ì–´ì˜¨ ë°ì´í„°ë¡œ ë¦¬ë”ë³´ë“œ ìƒì„±
+		initTableSorter();								// ë¦¬ë”ë³´ë“œ ì •ë ¬
+		sorter.sort(); 									// ë¦¬ë”ë³´ë“œ ì •ë ¬
+		saveLeaderboard(); 								// íŒŒì¼ì— ì €ì¥
 
-		this.setVisible(true); // ½ºÄÚ¾îº¸µå Ç¥½Ã
+		initScrollLeaderboard(); // leaderboardë¥¼ ê¸°ë°˜ìœ¼ë¡œ ë³´ë“œ ìƒì„±
+
+		curCol = Tetris.getGameMode();
+
+		this.setVisible(true); // ìŠ¤ì½”ì–´ë³´ë“œ í‘œì‹œ
 	}
 
-	// LeaderboardForm ÇÁ·¹ÀÓ ½ÇÇà
+	// LeaderboardForm í”„ë ˆì„ ì‹¤í–‰
 	public static void main(String[] args) {
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {

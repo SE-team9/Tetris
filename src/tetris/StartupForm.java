@@ -15,9 +15,9 @@ import javax.swing.SwingConstants;
 
 public class StartupForm extends JFrame {
 	private JLabel title = new JLabel("Tetris");
-	private JLabel guide = new JLabel("¸Ş´º ÀÌµ¿: Up/Down, ¸Ş´º ¼±ÅÃ: Enter");
+	private JLabel guide = new JLabel("ë©”ë‰´ ì´ë™: Up/Down, ê²Œì„ ëª¨ë“œ ì„ íƒ: Right/Left, ë©”ë‰´ ì„ íƒ: Enter");
 	private JLabel[] mode = new JLabel[2];
-	private int curMode; // 0ÀÌ¸é ÀÏ¹İ ¸ğµå, 1ÀÌ¸é ¾ÆÀÌÅÛ ¸ğµå
+	private int curMode; // 0ì´ë©´ ì¼ë°˜ ëª¨ë“œ, 1ì´ë©´ ì•„ì´í…œ ëª¨ë“œ
 
 	private JButton[] menu = new JButton[4];
 	private String[] btnText = { "Start Game", "Settings", "ScoreBoard", "Quit" };
@@ -32,12 +32,26 @@ public class StartupForm extends JFrame {
 		InputMap im = this.getRootPane().getInputMap();
 		ActionMap am = this.getRootPane().getActionMap();
 
+		// í‚¤ë³´ë“œì˜ í‚¤ë“¤ì„ guide ë™ì‘ê³¼ ì—°ê²° 
+		for (int i = 0; i < 125; i++) {
+			String text = java.awt.event.KeyEvent.getKeyText(i);
+			if (!text.contains("Unknown keyCode: ")) {
+				im.put(KeyStroke.getKeyStroke(text), "guide");
+			}
+		}
+
 		im.put(KeyStroke.getKeyStroke("UP"), "up");
 		im.put(KeyStroke.getKeyStroke("DOWN"), "down");
 		im.put(KeyStroke.getKeyStroke("ENTER"), "enter");
 		im.put(KeyStroke.getKeyStroke("RIGHT"), "right");
 		im.put(KeyStroke.getKeyStroke("LEFT"), "left");
 
+		am.put("guide", new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				displayGuide();
+			}
+		});
 		am.put("up", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -74,7 +88,7 @@ public class StartupForm extends JFrame {
 		});
 	}
 
-	// À§·Î ÀÌµ¿
+	// ìœ„ë¡œ ì´ë™
 	private void moveUp() {
 		menu[curPos].setBackground(Color.white);
 
@@ -86,7 +100,7 @@ public class StartupForm extends JFrame {
 		menu[curPos].setBackground(Color.lightGray);
 	}
 
-	// ¾Æ·¡·Î ÀÌµ¿
+	// ì•„ë˜ë¡œ ì´ë™
 	private void moveDown() {
 		menu[curPos].setBackground(Color.white);
 
@@ -98,7 +112,7 @@ public class StartupForm extends JFrame {
 		menu[curPos].setBackground(Color.lightGray);
 	}
 
-	// ¸ğµå ¼±ÅÃ ¿À¸¥ÂÊ ¹æÇâÅ°
+	// ëª¨ë“œ ì„ íƒ ì˜¤ë¥¸ìª½ ë°©í–¥í‚¤
 	private void moveRight() {
 		mode[curMode].setVisible(false);
 
@@ -110,7 +124,7 @@ public class StartupForm extends JFrame {
 		mode[curMode].setVisible(true);
 	}
 
-	// ¸ğµå ¼±ÅÃ ¿ŞÂÊ ¹æÇâÅ°
+	// ëª¨ë“œ ì„ íƒ ì™¼ìª½ ë°©í–¥í‚¤
 	private void moveLeft() {
 		mode[curMode].setVisible(false);
 
@@ -121,13 +135,19 @@ public class StartupForm extends JFrame {
 
 		mode[curMode].setVisible(true);
 	}
+  
+  // ë‹¤ë¥¸ í‚¤ë¥¼ ëˆŒë €ì„ ê²½ìš° ì‚¬ìš© ê°€ëŠ¥í•œ í‚¤ë¥¼ í‘œì‹œ 
+	// (ì•ŒíŒŒë²³, ìˆ«ì, F1~F12ì—ëŠ” ì‘ë™í•˜ì§€ë§Œ ê·¸ ì™¸ì˜ í‚¤ëŠ” ì‘ë™í•˜ì§€ ì•ŠìŒ. ìˆ˜ì • í•„ìš”)
+	private void displayGuide() {
+		guide.setVisible(true);
+	}
 
-	// ¼±ÅÃÇÑ ¸Ş´º¿¡ µû¶ó È­¸é ÀüÈ¯
+	// ì„ íƒí•œ ë©”ë‰´ì— ë”°ë¼ í™”ë©´ ì „í™˜
 	private void selectMenu(int curPos) {
 		switch (curPos) {
 		case 0:
 			this.setVisible(false);
-			Tetris.start(); // °ÔÀÓ ½ÃÀÛ
+			Tetris.start(); // ê²Œì„ ì‹œì‘
 			break;
 		case 1:
 			this.setVisible(false);
@@ -135,10 +155,10 @@ public class StartupForm extends JFrame {
 			break;
 		case 2:
 			this.setVisible(false);
-			Tetris.showLeaderboard(); // ½ºÄÚ¾î º¸µå
+			Tetris.showLeaderboard(); // ìŠ¤ì½”ì–´ ë³´ë“œ
 			break;
 		case 3:
-			System.exit(0); // °ÔÀÓ Á¾·á
+			System.exit(0); // ê²Œì„ ì¢…ë£Œ
 			break;
 		}
 	}
@@ -147,7 +167,7 @@ public class StartupForm extends JFrame {
 		return curMode;
 	}
 
-	// todo: ¼³Á¤¿¡¼­ È­¸é Å©±â ¼±ÅÃ
+	// todo: ì„¤ì •ì—ì„œ í™”ë©´ í¬ê¸° ì„ íƒ
 	private void initThisFrame() {
 		this.setSize(600, 450);
 		this.setResizable(false);
@@ -158,22 +178,23 @@ public class StartupForm extends JFrame {
 	}
 
 	private void initLable() {
-		// Å° Á¶ÀÛ ¹æ¹ı
+		// í‚¤ ì¡°ì‘ ë°©ë²•
 		guide.setHorizontalAlignment(SwingConstants.CENTER);
-		guide.setBounds(20, 20, 500, 30);
-		this.add(guide);
+		guide.setBounds(50, 20, 500, 30);
+		this.add(guide); 
+		guide.setVisible(false);
 
 		int w = this.getWidth();
 		int h = this.getHeight();
 		Font tetrisFont = new Font("Arial", Font.BOLD, w / 10);
 
-		// °ÔÀÓ Á¦¸ñ
+		// ê²Œì„ ì œëª©
 		title.setFont(tetrisFont);
 		title.setBounds(w / 4, h / 10, w / 2, h / 6);
 		title.setHorizontalAlignment(JLabel.CENTER);
 		this.add(title);
 
-		// °ÔÀÓ ¸ğµå
+		// ê²Œì„ ëª¨ë“œ
 		mode[0] = new JLabel("Normal Mode");
 		mode[0].setBounds(w / 3, h / 2, w / 3, h / 15);
 		mode[0].setHorizontalAlignment(JLabel.CENTER);
@@ -200,13 +221,13 @@ public class StartupForm extends JFrame {
 		menu[curPos].setBackground(Color.lightGray);
 	}
 
-	private void initComponents() {
-		initThisFrame();
+	public void initComponents(int w, int h) {
+		this.setSize(w, h);
 		initButtons();
 		initLable();
 	}
 
-	// StartupForm ÇÁ·¹ÀÓ ½ÇÇà
+	// StartupForm í”„ë ˆì„ ì‹¤í–‰
 	public static void main(String[] args) {
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
