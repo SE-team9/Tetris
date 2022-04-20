@@ -71,8 +71,7 @@ public class GameArea extends JPanel {
 
 	// 아이템블럭초기화
 	public void initItems() {
-		//items = new TetrisBlock[] { new FillEmpty(), new Weight(), new DeleteAroundU(), new TwoLineDelete(), new OneLineDelete()};
-		items = new TetrisBlock[] { new OneLineDelete()};
+		items = new TetrisBlock[] { new FillEmpty(), new Weight(), new DeleteAroundU(), new TwoLineDelete(), new OneLineDelete()};
 	}
 
 	// 격자 크기 반환
