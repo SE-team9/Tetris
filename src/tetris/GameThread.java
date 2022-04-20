@@ -9,7 +9,7 @@ public class GameThread extends Thread {
 	private NextBlockArea nba;
 	private int score = 0;
 	private int level = 1;
-	private int scorePerLevel = 30; // 30점마다 레벨 상승
+	private int linePerLevel = 7; // 7줄마다 레벨 상승
 
 	private int interval = 1000;
 	private int speedupPerLevel = 100;
@@ -94,7 +94,7 @@ public class GameThread extends Thread {
 				}
 				
 				// 레벨 업데이트 레벨이 증가할수록 블럭이 내려오는 속도 증가
-				int lvl = score / scorePerLevel + 1;
+				int lvl = cumClearedLine / linePerLevel + 1;
 				if (lvl > level) {
 					level = lvl;
 					gf.updateLevel(level);
@@ -196,7 +196,7 @@ public class GameThread extends Thread {
 				} else if (gameLevel == 2) {
 					speedupPerLevel = 120;
 				}
-				int lvl = score / scorePerLevel + 1;
+				int lvl = cumClearedLine / linePerLevel + 1;
 				if (lvl > level) {
 					level = lvl;
 					gf.updateLevel(level);
