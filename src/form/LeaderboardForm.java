@@ -28,7 +28,7 @@ import javax.swing.table.TableRowSorter;
 
 import tetris.Tetris;
 
-public class ScoreboardForm extends JFrame {
+public class LeaderboardForm extends JFrame {
 	private JTable leaderboard;
 	private DefaultTableModel tm;
 	private String leaderboardFile = "learderboard";
@@ -37,7 +37,7 @@ public class ScoreboardForm extends JFrame {
 	//private List<Integer> highRank = new ArrayList<Integer>();
 	private final static int MAX = 3;
 
-	public ScoreboardForm() {
+	public LeaderboardForm() {
 		initThisFrame();
 		initControls();
 		
@@ -170,7 +170,7 @@ public class ScoreboardForm extends JFrame {
 	public static void main(String[] args) {
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				new ScoreboardForm().setVisible(true);
+				new LeaderboardForm().setVisible(true);
 			}
 		});
 	}

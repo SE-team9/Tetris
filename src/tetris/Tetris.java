@@ -3,14 +3,14 @@ package tetris;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import form.GameForm;
-import form.ScoreboardForm;
+import form.LeaderboardForm;
 import form.OptionForm;
 import form.StartupForm;
 
 public class Tetris {
 	private static GameForm gf;
 	private static StartupForm sf;
-	private static ScoreboardForm lf;
+	private static LeaderboardForm lf;
 	private static OptionForm of;
 	
 	public static void start() {
@@ -56,7 +56,7 @@ public class Tetris {
 			public void run() {
 				sf = new StartupForm();
 				gf = new GameForm();
-				lf = new ScoreboardForm();
+				lf = new LeaderboardForm();
 				of = new OptionForm();
 				
 				sf.setVisible(true);
