@@ -18,7 +18,7 @@ public class StartupForm extends JFrame {
 	private JLabel guide = new JLabel("메뉴 이동: Up/Down, 메뉴 선택: Enter");
 	private JLabel[] mode = new JLabel[2];
 	private int curMode; // 0이면 일반 모드, 1이면 아이템 모드
-	
+
 	private JButton[] menu = new JButton[4];
 	private String[] btnText = { "Start Game", "Settings", "ScoreBoard", "Quit" };
 	private static int curPos;
@@ -44,28 +44,28 @@ public class StartupForm extends JFrame {
 				moveUp();
 			}
 		});
-		
+
 		am.put("down", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				moveDown();
 			}
 		});
-		
+
 		am.put("enter", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				selectMenu(curPos);
 			}
 		});
-		
+
 		am.put("right", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				moveRight();
 			}
 		});
-		
+
 		am.put("left", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -73,58 +73,31 @@ public class StartupForm extends JFrame {
 			}
 		});
 	}
-	
-	// 위로 이동 
+
+	// 위로 이동
 	private void moveUp() {
 		menu[curPos].setBackground(Color.white);
-		
-		curPos--;	
+
+		curPos--;
 		if (curPos < 0) {
 			curPos = menu.length - 1;
 		}
 
 		menu[curPos].setBackground(Color.lightGray);
 	}
-	
+
 	// 아래로 이동
 	private void moveDown() {
 		menu[curPos].setBackground(Color.white);
-		
+
 		curPos++;
 		if (curPos > menu.length - 1) {
 			curPos = 0;
 		}
-	
+
 		menu[curPos].setBackground(Color.lightGray);
 	}
 
-	// 선택한 메뉴에 따라 화면 전환
-	private void selectMenu(int curPos) {
-		switch (curPos) {
-		case 0:
-			this.setVisible(false);
-			Tetris.start(); // 게임 시작 
-			break;
-		case 1:
-			this.setVisible(false);
-			Tetris.showOption();
-			break;
-		case 2:
-			this.setVisible(false);
-			Tetris.showLeaderboard(); // 스코어 보드 
-			break;
-		case 3:
-			System.exit(0); // 게임 종료 
-			break;
-		}
-	}
-	
-//	private void selectMode(int curMode) {
-//		if(curMode == 0) { // 일반 모드
-//			
-//		}
-//	}
-	
 	// 모드 선택 오른쪽 방향키
 	private void moveRight() {
 		mode[curMode].setVisible(false);
@@ -133,7 +106,7 @@ public class StartupForm extends JFrame {
 		if (curMode > mode.length - 1) {
 			curMode = 0;
 		}
-		
+
 		mode[curMode].setVisible(true);
 	}
 
@@ -148,11 +121,32 @@ public class StartupForm extends JFrame {
 
 		mode[curMode].setVisible(true);
 	}
-	
+
+	// 선택한 메뉴에 따라 화면 전환
+	private void selectMenu(int curPos) {
+		switch (curPos) {
+		case 0:
+			this.setVisible(false);
+			Tetris.start(); // 게임 시작
+			break;
+		case 1:
+			this.setVisible(false);
+			Tetris.showOption();
+			break;
+		case 2:
+			this.setVisible(false);
+			Tetris.showLeaderboard(); // 스코어 보드
+			break;
+		case 3:
+			System.exit(0); // 게임 종료
+			break;
+		}
+	}
+
 	public int getCurrentGameMode() {
 		return curMode;
 	}
-	
+
 	// todo: 설정에서 화면 크기 선택
 	private void initThisFrame() {
 		this.setSize(600, 450);
@@ -162,13 +156,13 @@ public class StartupForm extends JFrame {
 		this.setLocationRelativeTo(null);
 		this.setVisible(false);
 	}
-	
+
 	private void initLable() {
 		// 키 조작 방법
 		guide.setHorizontalAlignment(SwingConstants.CENTER);
 		guide.setBounds(20, 20, 500, 30);
 		this.add(guide);
-		
+
 		int w = this.getWidth();
 		int h = this.getHeight();
 		Font tetrisFont = new Font("Arial", Font.BOLD, w / 10);
@@ -205,14 +199,14 @@ public class StartupForm extends JFrame {
 		}
 		menu[curPos].setBackground(Color.lightGray);
 	}
-	
+
 	private void initComponents() {
 		initThisFrame();
 		initButtons();
 		initLable();
 	}
-	
-	// StartupForm 프레임 실행 
+
+	// StartupForm 프레임 실행
 	public static void main(String[] args) {
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -221,5 +215,3 @@ public class StartupForm extends JFrame {
 		});
 	}
 }
-
-

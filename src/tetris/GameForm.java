@@ -1,6 +1,5 @@
 package tetris;
 
-import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 
@@ -9,10 +8,8 @@ import javax.swing.ActionMap;
 import javax.swing.InputMap;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.KeyStroke;
-import javax.swing.border.LineBorder;
 
 public class GameForm extends JFrame {
 
@@ -21,6 +18,7 @@ public class GameForm extends JFrame {
 	private GameArea ga;
 	private GameThread gt;
 	private NextBlockArea nba;
+
 	private JLabel scoreDisplay;
 	private JLabel levelDisplay;
 	private JTextArea keyDisplay;
@@ -96,13 +94,11 @@ public class GameForm extends JFrame {
 			}
 		});
 		am.put("exit", new AbstractAction() {
-
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 
 			}
-
 		});
 		am.put("back", new AbstractAction() {
 			@Override
@@ -112,16 +108,20 @@ public class GameForm extends JFrame {
 		});
 	}
 
+	// 시작 메뉴 화면으로 이동
+	private void goToMainMenu() {
+		gt.interrupt(); // 현재 스레드가 완전히 종료되도록
+
+		this.setVisible(false);
+		Tetris.showStartup();
+	}
+
 	// 게임 스레드 시작
 	public void startGame() {
-		// 시작할 때마다 배경 초기화
-		ga.initBackgroundArray();
-		// 다음 블럭 초기화
-		ga.initBlocks();
-		// 모든 아이템 초기화
-		ga.updateNextBlock();
-		// 모든 블럭 초기화
-		ga.initItems();
+		// 게임이 다시 시작될 때마다 초기화 되어야 하는 것들을 초기화한다. 
+		ga.initGameArea(); 
+		nba.initNextBlockArea(); 
+		
 		// 게임 스레드 시작
 		gt = new GameThread(ga, this, nba);
 		gt.start();
@@ -167,15 +167,8 @@ public class GameForm extends JFrame {
 		keyDisplay = new JTextArea(" ← : 블럭 왼쪽 이동 \n → : 블럭 오른쪽 이동 \n"
 				+ " ↓ : 블럭 아래 한 칸 이동\n ↑ : 블럭 회전\n Space : 블럭 맨 아래 이동\n" + " q : 게임 정지/재개\n ESC : 뒤로 가기\n");
 		keyDisplay.setBounds(20, 210, 160, 150);
+		keyDisplay.setFocusable(false);
 		this.add(keyDisplay);
-	}
-
-	// 시작 메뉴 화면으로 이동
-	private void goToMainMenu() {
-		gt.interrupt(); // 현재 스레드가 완전히 종료되도록
-
-		this.setVisible(false);
-		Tetris.showStartup();
 	}
 
 	// GameForm 프레임 실행

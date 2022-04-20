@@ -25,14 +25,21 @@ public class Tetris {
 		of.setVisible(true);
 	}
 	
-	// 블럭 색 설정 반환 (0은 일반모드 1은 색맹모드)
+	// 현재 게임 모드 반환
 	public static int getColorMode() {
 		if (of == null)
 			return 0;
 		return of.getCurrentColorMode();
 	}
 	
-	// 게임 모드 반환 (0은 일반모드 1은 아이템모드)
+	// 현재 게임 난이도 반환
+	public static int getGameLevel() {
+		if(of==null)
+			return 0;
+		return of.getCurrentGameLevel();
+	}
+	
+	// 현재 블럭 색 모드 반환
 	public static int getGameMode() {
 		if(sf==null)
 			return 0;
@@ -40,7 +47,7 @@ public class Tetris {
 	}
 	
 	public static void gameOver(int score, int gameLevel) {
-		String playerName = JOptionPane.showInputDialog("Gane Over!\n Please enter your name.");
+		String playerName = JOptionPane.showInputDialog("Game Over!\n Please enter your name.");
 		gf.setVisible(false);
 		lf.addPlayer(playerName, score, gameLevel);
 	}
