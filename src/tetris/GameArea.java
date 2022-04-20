@@ -99,7 +99,9 @@ public class GameArea extends JPanel {
 		}
 		return result;
 	}
-
+	
+	public int level = Tetris.getGameLevel();
+	
 	// level에 따른 가중치 부여
 	public int makeRandom() {
 		Map<String, Double> w = new HashMap<String, Double>();
