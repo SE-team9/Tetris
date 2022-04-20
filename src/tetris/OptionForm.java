@@ -141,7 +141,8 @@ public class OptionForm extends JFrame {
 		Tetris.showStartup();
 	}
 
-	public int getCurrentGameLevel() {
+	public int getCurrentGameLevel() {	
+		
 		return optionSet[0];
 	}
 
