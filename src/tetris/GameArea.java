@@ -1,6 +1,7 @@
 package tetris;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.util.HashMap;
 import java.util.Map;
@@ -9,16 +10,8 @@ import java.util.Random;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
-import tetrisItems.DeleteAroundU;
-import tetrisItems.FillEmpty;
-import tetrisItems.TwoLineDelete;
-import tetrisItems.Weight;
-import tetrisblocks.IShape;
-import tetrisblocks.JShape;
-import tetrisblocks.LShape;
-import tetrisblocks.OShape;
-import tetrisblocks.SShape;
-import tetrisblocks.ZShape;
+import tetrisItems.*;
+import tetrisblocks.*;
 
 public class GameArea extends JPanel {
 	
@@ -69,7 +62,8 @@ public class GameArea extends JPanel {
 
 	// 아이템블럭초기화
 	public void initItems() {
-		items = new TetrisBlock[] { new FillEmpty(), new Weight(), new DeleteAroundU(), new TwoLineDelete()};
+		//items = new TetrisBlock[] { new FillEmpty(), new Weight(), new DeleteAroundU(), new TwoLineDelete(), new OneLineDelete()};
+		items = new TetrisBlock[] { new OneLineDelete()};
 	}
 
 	// 격자 크기 반환
@@ -340,9 +334,9 @@ public class GameArea extends JPanel {
 		if (rotated.getLeftEdge() < 0)
 			rotated.setX(0);
 		if (rotated.getRightEdge() >= gridColumns)
-			rotated.setX(gridColumns - rotated.getWidth());
+			rotated.setX(gridColumns - block.getWidth());
 		if (rotated.getBottomEdge() >= gridRows)
-			rotated.setY(gridRows - rotated.getHeight());
+			rotated.setY(gridRows - block.getHeight());
 
 		int[][] shape = rotated.getShape();
 		int w = rotated.getWidth();
@@ -398,7 +392,17 @@ public class GameArea extends JPanel {
 		}
 		repaint();
 	}
-	
+  
+	//한 줄을 삭제한다.
+	public void oneLineDelte() {
+		int yPos = block.getY();
+
+		clearLine(yPos);
+		shiftDown(yPos);
+		repaint();
+
+	}
+  
 	// 두 줄을 삭제한다.
 	public void twoLineDelete() {
 		int yPos = block.getY();
@@ -449,7 +453,6 @@ public class GameArea extends JPanel {
 					e.printStackTrace();
 				}
 				int xPos = leftX;
-
 				int emptyNum = 0;
 				int currentR;
 				int nextR;
@@ -485,7 +488,6 @@ public class GameArea extends JPanel {
 					e.printStackTrace();
 				}
 				int xPos = rightX;
-
 				int emptyNum = 0;
 				int currentR;
 				int nextR;
@@ -528,6 +530,9 @@ public class GameArea extends JPanel {
 		}
 		else if(this.block instanceof DeleteAroundU) {
 			DeleteAroundU();
+		}
+		else if(this.block instanceof OneLineDelete) {
+			oneLineDelte();
 		}
 	}
 
@@ -664,8 +669,11 @@ public class GameArea extends JPanel {
 					int x = (block.getX() + col) * gridCellSize;
 					int y = (block.getY() + row) * gridCellSize;
 
-					// 현재 블럭이 아이템블럭이면 원으로, 기본블럭이면 사각형으로 그려준다.
-					if (isItem) {
+          if(this.block instanceof OneLineDelete) {
+						drawGridL(g, c, x, y);
+					}
+          // 현재 블럭이 아이템블럭이면 원으로, 기본블럭이면 사각형으로 그려준다.
+					else if (isItem) {
 						drawGridOval(g, c, x, y);
 					} else {
 						drawGridSquare(g, c, x, y);
@@ -702,6 +710,19 @@ public class GameArea extends JPanel {
 	}
 	
 	private void drawGridOval(Graphics g, Color color, int x, int y) {
+		g.setColor(color);
+		g.fillOval(x, y, gridCellSize, gridCellSize);
+		g.setColor(Color.black);
+		g.drawOval(x, y, gridCellSize, gridCellSize);
+	}
+	
+	// 문자 L을 포함한 블럭을 그려준다.
+	private void drawGridL(Graphics g, Color color, int x, int y) {
+		String letterL = "L";
+		g.setFont(new Font("Arial", Font.BOLD, 20));
+		g.setColor(Color.black);
+		g.drawString(letterL, x, y);
+
 		g.setColor(color);
 		g.fillOval(x, y, gridCellSize, gridCellSize);
 		g.setColor(Color.black);

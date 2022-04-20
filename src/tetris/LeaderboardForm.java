@@ -1,5 +1,6 @@
 package tetris;
 
+import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -35,7 +36,7 @@ public class LeaderboardForm extends JFrame {
 	JScrollPane scrollLeaderboard;
 
 	private JLabel[] gameModeLabel;
-	private String gameMode[] = { "ÀÏ¹İ¸ğµå", "¾ÆÀÌÅÛ¸ğµå" };
+	private String gameMode[] = { "ì¼ë°˜ëª¨ë“œ", "ì•„ì´í…œëª¨ë“œ" };
 	private int curCol;
 
 	public LeaderboardForm() {
@@ -50,7 +51,7 @@ public class LeaderboardForm extends JFrame {
 		initControls();
 	}
 
-	// ---------------------------------------------------------------------ÃÊ±âÈ­
+	// ---------------------------------------------------------------------ì´ˆê¸°í™”
 	private void initThisFrame() {
 		this.setSize(600, 450);
 		this.setResizable(false);
@@ -60,7 +61,7 @@ public class LeaderboardForm extends JFrame {
 		this.setVisible(false);
 	}
 
-	// ¸ğµå, ³­ÀÌµµ Ç¥½Ã ·¹ÀÌºí ÃÊ±âÈ­
+  // ëª¨ë“œ, ë‚œì´ë„ í‘œì‹œ ë ˆì´ë¸” ì´ˆê¸°í™” 
 	private void initLabel() {
 		gameModeLabel = new JLabel[2];
 		for (int i = 0; i < gameModeLabel.length; i++) {
@@ -72,8 +73,8 @@ public class LeaderboardForm extends JFrame {
 		}
 		gameModeLabel[0].setVisible(true);
 	}
-
-	// ESC¸¦ ´©¸£¸é ½ÃÀÛ È­¸éÀ¸·Î ÀÌµ¿
+  
+	// ESCë¥¼ ëˆ„ë¥´ë©´ ì‹œì‘ í™”ë©´ìœ¼ë¡œ ì´ë™
 	private void initControls() {
 		InputMap im = this.getRootPane().getInputMap();
 		ActionMap am = this.getRootPane().getActionMap();
@@ -135,7 +136,7 @@ public class LeaderboardForm extends JFrame {
 		Tetris.showStartup();
 	}
 
-	// ÇöÀç ¸ğµå¿¡ ¸Â´Â ÆÄÀÏ¿¡ µû¶ó º¸µå¸¦ ´Ù½Ã »ı¼ºÇÑ´Ù.
+  // í˜„ì¬ ëª¨ë“œì— ë§ëŠ” íŒŒì¼ì— ë”°ë¼ ë³´ë“œë¥¼ ë‹¤ì‹œ ìƒì„±í•œë‹¤. 
 	private void remakeScrollLeaderboard(int mode) {
 		this.remove(scrollLeaderboard);
 		initTableData(mode);
@@ -145,7 +146,7 @@ public class LeaderboardForm extends JFrame {
 		initScrollLeaderboard();
 	}
 
-	// ÆÄÀÏ·ÎºÎÅÍ µ¥ÀÌÅÍ °¡Á®¿À±â (de-serialization)
+	// íŒŒì¼ë¡œë¶€í„° ë°ì´í„° ê°€ì ¸ì˜¤ê¸° (de-serialization)
 	private void initTableData(int mode) {
 		String header[] = { "Player", "Score", "Level" };
 		String contents[][] = {};
@@ -157,13 +158,19 @@ public class LeaderboardForm extends JFrame {
 				return false;
 			}
 
-			@Override // score--> Int ÇüÀ¸·Î
+			@Override // score--> Int í˜•ìœ¼ë¡œ
 			public Class<?> getColumnClass(int columnIndex) {
 				if (columnIndex == 1)
 					return Integer.class;
+
 				return super.getColumnClass(columnIndex).getClass();
 			}
 		};
+		
+		Vector columnIdentifier = new Vector();
+		columnIdentifier.add("Player");
+		columnIdentifier.add("Score");
+		columnIdentifier.add("Level");
 
 		Vector columnIdentifier = new Vector();
 		columnIdentifier.add("Player");
@@ -174,7 +181,7 @@ public class LeaderboardForm extends JFrame {
 			FileInputStream fs = new FileInputStream(leaderboardFile[mode]);
 			ObjectInputStream os = new ObjectInputStream(fs);
 
-			// Á¡¼ö¸¦ ¹®ÀÚ¿­ÀÌ ¾Æ´Ñ int Å¸ÀÔÀ¸·Î ÀĞ¾î¾ß µÎÀÚ¸® ÀÌ»óÀÇ ¼ıÀÚµµ Á¤·Ä °¡´É!
+			// ì ìˆ˜ë¥¼ ë¬¸ìì—´ì´ ì•„ë‹Œ int íƒ€ì…ìœ¼ë¡œ ì½ì–´ì•¼ ë‘ìë¦¬ ì´ìƒì˜ ìˆ«ìë„ ì •ë ¬ ê°€ëŠ¥!
 			tm.setDataVector((Vector<Vector>) os.readObject(), columnIdentifier);
 
 			os.close();
@@ -188,7 +195,7 @@ public class LeaderboardForm extends JFrame {
 		leaderboard = new JTable(tm);
 		leaderboard.setFocusable(false);
 
-		// ³»¿ë¹° Áß¾Ó Á¤·Ä
+		// ë‚´ìš©ë¬¼ ì¤‘ì•™ ì •ë ¬
 		DefaultTableCellRenderer tScheduleCellRenderer = new DefaultTableCellRenderer();
 		tScheduleCellRenderer.setHorizontalAlignment(SwingConstants.CENTER);
 		TableColumnModel tcmSchedule = leaderboard.getColumnModel();
@@ -207,14 +214,14 @@ public class LeaderboardForm extends JFrame {
 		sorter.setSortKeys(keys);
 	}
 
-	// »ı¼ºµÈ Å×ÀÌºí µ¥ÀÌÅÍ¸¦ »ç¿ëÇÏ¿© ¸®´õº¸µå »ı¼º
+	// ìƒì„±ëœ í…Œì´ë¸” ë°ì´í„°ë¥¼ ì‚¬ìš©í•˜ì—¬ ë¦¬ë”ë³´ë“œ ìƒì„±
 	private void initScrollLeaderboard() {
 		scrollLeaderboard = new JScrollPane(leaderboard);
 		scrollLeaderboard.setBounds(40, 50, 520, 350);
 		this.add(scrollLeaderboard);
 	}
 
-	// ÆÄÀÏ¿¡ µ¥ÀÌÅÍ ÀúÀåÇÏ±â (serialization)
+	// íŒŒì¼ì— ë°ì´í„° ì €ì¥í•˜ê¸° (serialization)
 	private void saveLeaderboard() {
 		try {
 			FileOutputStream fs = new FileOutputStream(leaderboardFile[Tetris.getGameMode()]);
@@ -230,7 +237,7 @@ public class LeaderboardForm extends JFrame {
 		}
 	}
 
-	// °ÔÀÓ Á¾·áµÇ¸é ÇÃ·¹ÀÌ¾î ±â·Ï Ãß°¡ÇÏ¸é¼­, µ¿½Ã¿¡ ½ºÄÚ¾îº¸µå º¸¿©ÁÖ±â
+	// ê²Œì„ ì¢…ë£Œë˜ë©´ í”Œë ˆì´ì–´ ê¸°ë¡ ì¶”ê°€í•˜ë©´ì„œ, ë™ì‹œì— ìŠ¤ì½”ì–´ë³´ë“œ ë³´ì—¬ì£¼ê¸°
 	public void addPlayer(String playerName, int score, int gameLevel) {
 		String strGameLevel;
 		if (gameLevel == 0)
@@ -240,22 +247,22 @@ public class LeaderboardForm extends JFrame {
 		else
 			strGameLevel = "Hard";
 
-		this.remove(scrollLeaderboard); 				// ÇöÀç ¸®´õº¸µå Á¦°Å
-		initTableData(Tetris.getGameMode()); 			// ÇöÀç ¸ğµå¿¡ ¸Â´Â ÆÄÀÏ µ¥ÀÌÅÍ ÀĞ¾î¿À±â
-		tm.addRow(new Object[] { playerName, score, strGameLevel }); 	// ÀĞ¾î¿Â µ¥ÀÌÅÍ¿¡ ±â·Ï Ãß°¡
-		initLeaderboard(tm); 							// ÀĞ¾î¿Â µ¥ÀÌÅÍ·Î ¸®´õº¸µå »ı¼º
-		initTableSorter();								// ¸®´õº¸µå Á¤·Ä
-		sorter.sort(); 									// ¸®´õº¸µå Á¤·Ä
-		saveLeaderboard(); 								// ÆÄÀÏ¿¡ ÀúÀå
+		this.remove(scrollLeaderboard); 				// í˜„ì¬ ë¦¬ë”ë³´ë“œ ì œê±°
+		initTableData(Tetris.getGameMode()); 			// í˜„ì¬ ëª¨ë“œì— ë§ëŠ” íŒŒì¼ ë°ì´í„° ì½ì–´ì˜¤ê¸°
+		tm.addRow(new Object[] { playerName, score, strGameLevel }); 	// ì½ì–´ì˜¨ ë°ì´í„°ì— ê¸°ë¡ ì¶”ê°€
+		initLeaderboard(tm); 							// ì½ì–´ì˜¨ ë°ì´í„°ë¡œ ë¦¬ë”ë³´ë“œ ìƒì„±
+		initTableSorter();								// ë¦¬ë”ë³´ë“œ ì •ë ¬
+		sorter.sort(); 									// ë¦¬ë”ë³´ë“œ ì •ë ¬
+		saveLeaderboard(); 								// íŒŒì¼ì— ì €ì¥
 
-		initScrollLeaderboard(); // leaderboard¸¦ ±â¹İÀ¸·Î º¸µå »ı¼º
+		initScrollLeaderboard(); // leaderboardë¥¼ ê¸°ë°˜ìœ¼ë¡œ ë³´ë“œ ìƒì„±
 
 		curCol = Tetris.getGameMode();
 
-		this.setVisible(true); // ½ºÄÚ¾îº¸µå Ç¥½Ã
+		this.setVisible(true); // ìŠ¤ì½”ì–´ë³´ë“œ í‘œì‹œ
 	}
 
-	// LeaderboardForm ÇÁ·¹ÀÓ ½ÇÇà
+	// LeaderboardForm í”„ë ˆì„ ì‹¤í–‰
 	public static void main(String[] args) {
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
