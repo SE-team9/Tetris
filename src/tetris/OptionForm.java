@@ -15,23 +15,29 @@ public class OptionForm extends JFrame {
 
 	private JLabel gameLevelChange;
 	private JLabel blockColorChange;
+	private JLabel frameSizeChange;
 	private JLabel[][] currentOptionArrow;
+	private static StartupForm sf;
 
-	private static JButton[][] optionButtons = new JButton[2][];
-	private String[] colorMode = { "º¯°æ¾ÈÇÔ", "»ö¸Í¸ğµå" };
-	private String[] gameLevel = { "ÀÌÁö¸ğµå", "³ë¸Ö¸ğµå","ÇÏµå¸ğµå" };
+	private static JButton[][] optionButtons = new JButton[3][];
+	private String[] colorMode = { "ë³€ê²½ì•ˆí•¨", "ìƒ‰ë§¹ëª¨ë“œ" };
+	private String[] gameLevel = { "ì´ì§€ëª¨ë“œ", "ë…¸ë©€ëª¨ë“œ", "í•˜ë“œëª¨ë“œ" };
+	private String[] frameSize = { "ì‘ì€ í™”ë©´", "ì¼ë°˜ í™”ë©´", "í° í™”ë©´" };
+	
+	private int[][] size = {{600, 450}, {700, 500}, {900, 600}};
 
 	private int optionRow;
 	private int optionCol;
 
-	// ÇÑ ¼³Á¤´ç ÇÏ³ª¾¿ ¼±ÅÃµÈ °ª ÀúÀå (ÇÑ Çà´ç ÇÏ³ªÀÇ ¿­ °ªÀ» ÀúÀå) 
+	// í•œ ì„¤ì •ë‹¹ í•˜ë‚˜ì”© ì„ íƒëœ ê°’ ì €ì¥ (í•œ í–‰ë‹¹ í•˜ë‚˜ì˜ ì—´ ê°’ì„ ì €ì¥) 
 	private static int[] optionSet = new int[optionButtons.length];  
 
 	public OptionForm() {
-		initThisFrame();
-		initLabel();
-		initColorButtons();
-		initGameButtons();
+		initThisFrame(600, 450);
+		initLabel(600, 450);
+		initColorButtons(600, 450);
+		initGameButtons(600, 450);
+		initSizeButtons(600, 450);
 
 		initControls();
 	}
@@ -78,7 +84,7 @@ public class OptionForm extends JFrame {
 		});
 	}
 
-	// ´ÙÀ½ ¿É¼ÇÀ¸·Î Çà ÀÌµ¿
+	// ë‹¤ìŒ ì˜µì…˜ìœ¼ë¡œ í–‰ ì´ë™
 	private void nextOption() {
 		currentOptionArrow[optionRow][0].setVisible(false);
 		currentOptionArrow[optionRow][1].setVisible(false);
@@ -93,7 +99,7 @@ public class OptionForm extends JFrame {
 		currentOptionArrow[optionRow][1].setVisible(true);
 	}
 
-	// ÀÌÀü ¿É¼ÇÀ¸·Î Çà ÀÌµ¿
+	// ì´ì „ ì˜µì…˜ìœ¼ë¡œ í–‰ ì´ë™
 	private void movePreviousOption() {
 		currentOptionArrow[optionRow][0].setVisible(false);
 		currentOptionArrow[optionRow][1].setVisible(false);
@@ -108,7 +114,7 @@ public class OptionForm extends JFrame {
 		currentOptionArrow[optionRow][1].setVisible(true);
 	}
 
-	// ¿É¼Ç ¼±ÅÃ ¿­ ÀÌµ¿
+	// ì˜µì…˜ ì„ íƒ ì—´ ì´ë™
 	private void modeChangeRight() {
 
 		optionButtons[optionRow][optionCol].setVisible(false);
@@ -120,9 +126,12 @@ public class OptionForm extends JFrame {
 
 		optionSet[optionRow] = optionCol;
 		optionButtons[optionRow][optionCol].setVisible(true);
+		if(optionRow == 2) {
+			changeSize(size[optionCol][0], size[optionCol][1]);
+		}
 	}
 
-	// ¿É¼Ç ¼±ÅÃ ¿­ ÀÌµ¿
+	// ì˜µì…˜ ì„ íƒ ì—´ ì´ë™
 	private void modeChangeLeft() {
 
 		optionButtons[optionRow][optionCol].setVisible(false);
@@ -131,9 +140,12 @@ public class OptionForm extends JFrame {
 		if (optionCol < 0)
 			optionCol = optionButtons[optionRow].length - 1;
 
-		// ÇöÀç ¿É¼Ç ¼±ÅÃ ÀúÀå
+		// í˜„ì¬ ì˜µì…˜ ì„ íƒ ì €ì¥
 		optionSet[optionRow] = optionCol;
 		optionButtons[optionRow][optionCol].setVisible(true);
+		if(optionRow == 2) {
+			changeSize(size[optionCol][0], size[optionCol][1]);
+		}
 	}
 
 	private void back() {
@@ -149,34 +161,69 @@ public class OptionForm extends JFrame {
 	public int getCurrentColorMode() {
 		return optionSet[1];
 	}
+	
+	public int getFrameWidth() {
+		return size[optionSet[2]][0];
+	}
+	
+	public int getFrameHeight() {
+		return size[optionSet[2]][1];
+	}
+	
+	//ì‚¬ì´ì¦ˆ ë³€ê²½
+	// ë²„íŠ¼ ë“± í™”ë©´ êµ¬ì„± ìš”ì†Œë“¤ invisible -> visible
+	private void changeSize(int w, int h) {
+		this.setSize(w, h);
+		gameLevelChange.setVisible(false);
+		blockColorChange.setVisible(false);
+		frameSizeChange.setVisible(false);
+		optionButtons[0][optionSet[0]].setVisible(false);
+		optionButtons[1][optionSet[1]].setVisible(false);
+		optionButtons[2][optionSet[2]].setVisible(false);
+		currentOptionArrow[2][0].setVisible(false);
+		currentOptionArrow[2][1].setVisible(false);
+		initLabel(w, h);
+		currentOptionArrow[0][0].setVisible(false);
+		currentOptionArrow[0][1].setVisible(false);
+		currentOptionArrow[2][0].setVisible(true);
+		currentOptionArrow[2][1].setVisible(true);
+		initColorButtons(w, h);
+		initGameButtons(w, h);
+		initSizeButtons(w, h);
+	}
 
-	private void initThisFrame() {
-		this.setSize(600, 450);
-		this.setResizable(false);
+	private void initThisFrame(int w, int h) {
+		this.setSize(w, h);
+		this.setResizable(true);
 		this.setLayout(null);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setLocationRelativeTo(null);
-		this.setVisible(false);
+		this.setVisible(true);
 	}
 
-	private void initLabel() {
-		gameLevelChange = new JLabel("°ÔÀÓ ³­ÀÌµµ º¯°æ");
-		gameLevelChange.setBounds(200, 100, 200, 30);
+	private void initLabel(int w, int h) {
+		gameLevelChange = new JLabel("ê²Œì„ ë‚œì´ë„ ë³€ê²½");
+		gameLevelChange.setBounds(w / 3, h / 15, w / 3, h / 20);
 		gameLevelChange.setHorizontalAlignment(JLabel.CENTER);
 		this.add(gameLevelChange);
 
-		blockColorChange = new JLabel("ºí·Ï »ö º¯°æ");
-		blockColorChange.setBounds(200, 200, 200, 30);
+		blockColorChange = new JLabel("ë¸”ë¡ ìƒ‰ ë³€ê²½");
+		blockColorChange.setBounds(w / 3, (h / 15) * 3, w / 3, h / 20);
 		blockColorChange.setHorizontalAlignment(JLabel.CENTER);
 		this.add(blockColorChange);
+		
+		frameSizeChange = new JLabel("ì‚¬ì´ì¦ˆ ë³€ê²½");
+		frameSizeChange.setBounds(w / 3, (h / 15) * 5, w / 3, h / 20);
+		frameSizeChange.setHorizontalAlignment(JLabel.CENTER);
+		this.add(frameSizeChange);
 
-		// ÇöÀç À§Ä¡ÇÑ ¹öÆ° ¾ç ¿· < > Ç¥½Ã
-		currentOptionArrow = new JLabel[2][2];
+		// í˜„ì¬ ìœ„ì¹˜í•œ ë²„íŠ¼ ì–‘ ì˜† < > í‘œì‹œ
+		currentOptionArrow = new JLabel[3][2];
 		for (int i = 0; i < currentOptionArrow.length; i++) {
 			currentOptionArrow[i][0] = new JLabel("<");
 			currentOptionArrow[i][1] = new JLabel(">");
-			currentOptionArrow[i][0].setBounds(180, 130 + (100 * i), 20, 30);
-			currentOptionArrow[i][1].setBounds(400, 130 + (100 * i), 20, 30);
+			currentOptionArrow[i][0].setBounds(w / 4 - 20, h / 20 + (h / 15) * (2 * i + 1), 20, h / 15);
+			currentOptionArrow[i][1].setBounds(w / 4 * 3, h / 20 + (h / 15) * (2 * i + 1), 20, h / 15);
 			currentOptionArrow[i][0].setHorizontalAlignment(JLabel.CENTER);
 			currentOptionArrow[i][1].setHorizontalAlignment(JLabel.CENTER);
 			this.add(currentOptionArrow[i][0]);
@@ -190,11 +237,11 @@ public class OptionForm extends JFrame {
 		currentOptionArrow[0][1].setVisible(true);
 	}
 
-	private void initGameButtons() {
+	private void initGameButtons(int w, int h) {
 		optionButtons[0] = new JButton[3];
 		for (int i = 0; i < optionButtons[0].length; i++) {
 			optionButtons[0][i] = new JButton(gameLevel[i]);
-			optionButtons[0][i].setBounds(200, 130, 200, 30);
+			optionButtons[0][i].setBounds(w / 4, h / 15 + h / 20, w / 2, h / 15);
 			optionButtons[0][i].setBackground(Color.white);
 			optionButtons[0][i].setVisible(false);
 			this.add(optionButtons[0][i]);
@@ -202,11 +249,11 @@ public class OptionForm extends JFrame {
 		optionButtons[0][optionSet[0]].setVisible(true);
 	}
 
-	private void initColorButtons() {
+	private void initColorButtons(int w, int h) {
 		optionButtons[1] = new JButton[2];
 		for (int i = 0; i < optionButtons[1].length; i++) {
 			optionButtons[1][i] = new JButton(colorMode[i]);
-			optionButtons[1][i].setBounds(200, 230, 200, 30);
+			optionButtons[1][i].setBounds(w / 4, (h / 15) * 3 + h / 20, w / 2, h / 15);
 			optionButtons[1][i].setBackground(Color.white);
 			optionButtons[1][i].setVisible(false);
 			this.add(optionButtons[1][i]);
@@ -214,4 +261,15 @@ public class OptionForm extends JFrame {
 		optionButtons[1][optionSet[1]].setVisible(true);
 	}
 	
+	private void initSizeButtons(int w, int h) {
+		optionButtons[2] = new JButton[3];
+		for (int i = 0; i < optionButtons[2].length; i++) {
+			optionButtons[2][i] = new JButton(frameSize[i]);
+			optionButtons[2][i].setBounds(w / 4, (h / 15) * 5 + h / 20, w / 2, h / 15);
+			optionButtons[2][i].setBackground(Color.white);
+			optionButtons[2][i].setVisible(false);
+			this.add(optionButtons[2][i]);
+		}
+		optionButtons[2][optionSet[2]].setVisible(true);
+	}	
 }
