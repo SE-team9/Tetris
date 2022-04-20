@@ -15,7 +15,7 @@ import javax.swing.SwingConstants;
 
 public class StartupForm extends JFrame {
 	private JLabel title = new JLabel("Tetris");
-	private JLabel guide = new JLabel("메뉴 이동: Up/Down, 메뉴 선택: Enter");
+	private JLabel guide = new JLabel("메뉴 이동: Up/Down, 게임 모드 선택: Right/Left, 메뉴 선택: Enter");
 	private JLabel[] mode = new JLabel[2];
 	private int curMode; // 0이면 일반 모드, 1이면 아이템 모드
 
@@ -32,12 +32,26 @@ public class StartupForm extends JFrame {
 		InputMap im = this.getRootPane().getInputMap();
 		ActionMap am = this.getRootPane().getActionMap();
 
+		// 키보드의 키들을 guide 동작과 연결 
+		for (int i = 0; i < 125; i++) {
+			String text = java.awt.event.KeyEvent.getKeyText(i);
+			if (!text.contains("Unknown keyCode: ")) {
+				im.put(KeyStroke.getKeyStroke(text), "guide");
+			}
+		}
+
 		im.put(KeyStroke.getKeyStroke("UP"), "up");
 		im.put(KeyStroke.getKeyStroke("DOWN"), "down");
 		im.put(KeyStroke.getKeyStroke("ENTER"), "enter");
 		im.put(KeyStroke.getKeyStroke("RIGHT"), "right");
 		im.put(KeyStroke.getKeyStroke("LEFT"), "left");
 
+		am.put("guide", new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				displayGuide();
+			}
+		});
 		am.put("up", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -121,6 +135,12 @@ public class StartupForm extends JFrame {
 
 		mode[curMode].setVisible(true);
 	}
+	
+	// 다른 키를 눌렀을 경우 사용가능한 키를 표시 
+	// (알파벳, 숫자, F1~F12 에는 작동하지만 그 외의 키는 작동하지 않음. 수정필요
+	private void displayGuide() {
+		guide.setVisible(true);
+	}
 
 	// 선택한 메뉴에 따라 화면 전환
 	private void selectMenu(int curPos) {
@@ -160,8 +180,9 @@ public class StartupForm extends JFrame {
 	private void initLable() {
 		// 키 조작 방법
 		guide.setHorizontalAlignment(SwingConstants.CENTER);
-		guide.setBounds(20, 20, 500, 30);
+		guide.setBounds(50, 20, 500, 30);
 		this.add(guide);
+		guide.setVisible(false);
 
 		int w = this.getWidth();
 		int h = this.getHeight();
