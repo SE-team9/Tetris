@@ -28,15 +28,6 @@ import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
-/*
- * 원래는 게임 종료되면 하나의 고정된 스코어보드를 visibility만 조절하여 보여줬지만,
- * 
- * 이제는 게임이 종료되었을 때, 시작 화면에서 어떤 모드를 선택했느냐에 따라 다른 파일을 보여줘야 한다!!
- * 
- * 그리고 추가적으로 좌우 키 입력에 따라 서로 다른 파일을 보여줘야 한다. 
- * 
- */
-
 public class LeaderboardForm extends JFrame {
 	private int w, h;
 	private JTable leaderboard;

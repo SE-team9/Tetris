@@ -13,8 +13,6 @@ import javax.swing.JLabel;
 import javax.swing.JTextArea;
 import javax.swing.KeyStroke;
 
-// TODO: 조작 키 설정 
-
 public class GameForm extends JFrame {
 	private int w, h;
 	
