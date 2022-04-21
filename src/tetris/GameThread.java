@@ -176,7 +176,6 @@ public class GameThread extends Thread {
 			}
 
 			// 현재 블럭이 바닥에 닿았을 때, 완성된 줄을 삭제하고, 삭제된 줄 수 저장
-			//clearedLineNum = ga.clearLines() + ga.oneLineDelte();
 			clearedLineNum = ga.clearLines();
 
 			// 줄이 특정 횟수 삭제되면 아이템 생성
@@ -224,5 +223,15 @@ public class GameThread extends Thread {
 	
 	public boolean getIsPaused() {
 		return this.isPaused;
+	}
+	
+	public void scorePlus1() {
+		score++;
+		gf.updateScore(score);
+	}
+	
+	public void scorePlus15() {
+		score+=15;
+		gf.updateScore(score);
 	}
 }

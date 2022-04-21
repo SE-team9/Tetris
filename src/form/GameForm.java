@@ -78,7 +78,7 @@ public class GameForm extends JFrame {
 			im.put(KeyStroke.getKeyStroke("UP"), "up");
 			im.put(KeyStroke.getKeyStroke("DOWN"), "downOneLine");
 			im.put(KeyStroke.getKeyStroke("SPACE"), "downToEnd");
-			
+
 			keyManual = new JTextArea(" 왼쪽 이동: ← \n"
 					+ " 오른쪽 이동: → \n"
 					+ " 한칸 아래로 이동: ↓ \n"

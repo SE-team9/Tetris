@@ -13,16 +13,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.KeyStroke;
 
-/*  
-	화면 크기 조절 - 3개 -> 이 화면에서 바로 적용 
-	기본 설정으로 되돌리기 on/off -> 이 화면에서 바로 적용 
-	스코어보드 기록 초기화 on/off -> LeaderboardForm에서 사용 
-  
-    조작 키 설정 - 2개 -> GameForm에서 참조
-	난이도 선택 - 3개 -> GameThread에서 참조 (낙하 속도 조절, 블럭 생성 확률 조절)
-	색맹 모드 on/off -> 블럭 색상 초기화 할 때 사용 
- */
-
 public class OptionForm extends JFrame {
 	public class Pair<W, H> {
 		public W width;
