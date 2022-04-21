@@ -18,7 +18,7 @@ import javax.swing.KeyStroke;
 	기본 설정으로 되돌리기 on/off -> 이 화면에서 바로 적용 
 	스코어보드 기록 초기화 on/off -> LeaderboardForm에서 사용 
 	
-	조작 키 설정 - 2개 -> GameForm에서 참조
+	조작 키 설정 - 2개 -> GameForm에서 참조 
 	난이도 선택 - 3개 -> GameThread에서 참조 (낙하 속도 조절, 블럭 생성 확률 조절)
 	색맹 모드 on/off -> 블럭 색상 초기화 할 때 사용 
  */
@@ -55,6 +55,8 @@ public class OptionForm extends JFrame {
 	
 	// 엔터 눌러서 확정된 칼럼 값을 저장 (다른 곳에서 참조 가능)
 	private int[] confirmedColumn = new int[ROW]; 
+	
+	private LeaderboardForm lf = new LeaderboardForm();
 
 	public OptionForm() {
 		this.w = 600;
@@ -204,11 +206,14 @@ public class OptionForm extends JFrame {
 					if(confirmedColumn[row] == 1) {
 						initScoreboard();						
 					}
+					break;
 				case 5: // 기본 설정 on/off
 					if(confirmedColumn[row] == 1) {
 						initDefaultSettings(); // 첫번째 칼럼으로 옵션 초기화
 						updateFrameSize(600, 450); // 모든 컴포넌트 크기 조정
 					}
+					break;
+				default: break;
 				}
 			}
 		});
@@ -306,9 +311,9 @@ public class OptionForm extends JFrame {
 		return confirmedColumn[3];
 	}
 	
-	// 이 화면 자체에서 파일 삭제할 수 있을 듯 (다만 JTable은 리더보드폼에 있음)
+	// 스코어보드 기록 초기화
 	private void initScoreboard() {
-		
+		lf.deleteLeaderboard();
 	}
 	
 	// OptionForm 프레임 실행
