@@ -19,8 +19,8 @@ public class Tetris {
 		w = of.getFrameSize().width;
 		h = of.getFrameSize().height;
 		
-		sf.initComponents(w, h); // í¬ê¸° ì¡°ì ˆ 
-		sf.setVisible(true); // ì‹œì‘ í™”ë©´ ë„ìš°ê¸°
+		sf.initComponents(w, h); // Å©±â Á¶Àı 
+		sf.setVisible(true); // ½ÃÀÛ È­¸é ¶ç¿ì±â
 		sf.getContentPane().repaint();
 	}
 	
@@ -29,13 +29,13 @@ public class Tetris {
 		w = of.getFrameSize().width;
 		h = of.getFrameSize().height;
 		
-		gf.initComponents(w, h); // í¬ê¸° ì¡°ì ˆ 
-		gf.initControls(of.getCurrentKeyMode()); // ì¡°ì‘í‚¤ ì„¤ì •
-		gf.setVisible(true); // ê²Œì„ í™”ë©´ ë„ìš°ê¸°
+		gf.initComponents(w, h); // Å©±â Á¶Àı 
+		gf.initControls(of.getCurrentKeyMode()); // Á¶ÀÛÅ° ¼³Á¤
+		gf.setVisible(true); // °ÔÀÓ È­¸é ¶ç¿ì±â
 		
 		gf.getContentPane().repaint();
 		
-		gf.startGame(); // ê²Œì„ ìŠ¤ë ˆë“œ ì‹œì‘ 
+		gf.startGame(); // °ÔÀÓ ½º·¹µå ½ÃÀÛ 
 	}
 	
 	public static void showOption() {
@@ -43,22 +43,10 @@ public class Tetris {
 		w = of.getFrameSize().width;
 		h = of.getFrameSize().height;
 		
-		of.initComponents(w, h); // í¬ê¸° ì¡°ì ˆ 
-		of.showConfirmedOption(); // í™•ì •ëœ ì„¤ì •ê°’ìœ¼ë¡œ ë³´ì—¬ì£¼ê¸°
-		of.setVisible(true); // ì„¤ì • í™”ë©´ ë„ìš°ê¸°
+		of.initComponents(w, h); // Å©±â Á¶Àı 
+		of.showConfirmedOption(); // È®Á¤µÈ ¼³Á¤°ªÀ¸·Î º¸¿©ÁÖ±â
+		of.setVisible(true); // ¼³Á¤ È­¸é ¶ç¿ì±â
 		
-		of.getContentPane().repaint();
-	}
-	
-	public static void showOption() {
-		of.getContentPane().removeAll();
-		w = of.getFrameSize().width;
-		h = of.getFrameSize().height;
-		
-		of.initComponents(w, h);
-		of.showConfirmedOption();
-		
-		of.setVisible(true);
 		of.getContentPane().repaint();
 	}
 	
@@ -67,43 +55,43 @@ public class Tetris {
 		w = of.getFrameSize().width;
 		h = of.getFrameSize().height;
 		
-		lf.initComponents(w, h, 0); // í”„ë ˆì„ í¬ê¸°, ì¹¼ëŸ¼ ìœ„ì¹˜
-		lf.updateTableWithMode(0); // ì¼ë°˜ ëª¨ë“œ
+		lf.initComponents(w, h, 0); // ÇÁ·¹ÀÓ Å©±â, Ä®·³ À§Ä¡
+		lf.updateTableWithMode(0); // ÀÏ¹İ ¸ğµå
 		lf.setVisible(true);
 		lf.getContentPane().repaint();
 	}
 	
-	// ê²Œì„ ëª¨ë“œ
+	// °ÔÀÓ ¸ğµå
 	public static int getGameMode() {
 		if(sf == null) return 0;
 		return sf.getCurrentGameMode();
 	}
 	
-	// ì¡°ì‘ í‚¤ 
+	// Á¶ÀÛ Å° 
 	public static int getKeyMode() {
 		if(of == null) return 0;
 		return of.getCurrentKeyMode();
 	}
 	
-	// ê²Œì„ ë‚œì´ë„
+	// °ÔÀÓ ³­ÀÌµµ
 	public static int getGameLevel() {
 		if(of == null) return 0;
 		return of.getCurrentGameLevel();
 	}
 	
-	// ìƒ‰ìƒ ëª¨ë“œ
+	// »ö»ó ¸ğµå
 	public static int getColorMode() {
 		if (of == null) return 0;
 		return of.getCurrentColorMode();
 	}
 
-	// ê²Œì„ ì¢…ë£Œ (í˜„ì¬ ëª¨ë“œ, ì´ë¦„, ì ìˆ˜, ë‚œì´ë„)
+	// °ÔÀÓ Á¾·á (ÇöÀç ¸ğµå, ÀÌ¸§, Á¡¼ö, ³­ÀÌµµ)
 	public static void gameOver(int gameMode, int score, int levelMode) {
-		// ìœ ì € ì´ë¦„ ì…ë ¥ ë°›ê¸°
+		// À¯Àú ÀÌ¸§ ÀÔ·Â ¹Ş±â
 		String playerName = JOptionPane.showInputDialog("Game Over!\n Please enter your name.");
 		gf.setVisible(false);
 		
-		// í…Œì´ë¸”ì— ë°ì´í„° ì¶”ê°€
+		// Å×ÀÌºí¿¡ µ¥ÀÌÅÍ Ãß°¡
 		switch(levelMode) {
 		case 0:
 			lf.addPlayer(gameMode, playerName, score, "Easy");
@@ -121,7 +109,7 @@ public class Tetris {
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				
-				// ì—¬ê¸°ì„œ ëª¨ë“  Form ê°ì²´ ìƒì„± (ìƒì„±ì í˜¸ì¶œí•˜ì—¬ ì´ˆê¸°í™”)
+				// ¿©±â¼­ ¸ğµç Form °´Ã¼ »ı¼º (»ı¼ºÀÚ È£ÃâÇÏ¿© ÃÊ±âÈ­)
 				sf = new StartupForm();
 				of = new OptionForm();				
 				gf = new GameForm();

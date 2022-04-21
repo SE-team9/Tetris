@@ -52,7 +52,7 @@ public class TetrisBlock {
 	public void spawn(int gridWidth) {
 		Random r =new Random();
 		// 보드판 맨 윗줄의 가운데에서 새 블록이 떨어지도록
-		y = 0 - getHeight();
+		y = - getHeight();
 		x = r.nextInt(gridWidth-getWidth());
 	}
 	
