@@ -13,15 +13,15 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.KeyStroke;
 
-/* optionRerRow에 행마다 선택된 값을 저장하자.
- * 
+/*  
 	화면 크기 조절 - 3개 -> 이 화면에서 바로 적용 
+	기본 설정으로 되돌리기 on/off -> 이 화면에서 바로 적용 
+	
 	조작 키 설정 - 2개 -> GameForm에서 참조
 	난이도 선택 - 3개 -> GameThread에서 참조 (낙하 속도 조절, 블럭 생성 확률 조절)
-	
 	색맹 모드 on/off -> 블럭 색상 초기화 할 때 사용 
+	
 	스코어보드 기록 초기화 on/off -> LeaderboardForm에서 사용 
-	기본 설정으로 되돌리기 on/off -> 이 화면에서 바로 적용 
  */
 
 public class OptionForm extends JFrame {
@@ -33,15 +33,13 @@ public class OptionForm extends JFrame {
 			this.height = h;
 		}
 	}
+	private int w, h;
 	
 	private static final int ROW = 6;
 	private JLabel[] lblOption = new JLabel[ROW]; 
 	private String[] options = { "화면 크기", "조작 키", "난이도", "색맹 모드", "스코어보드 기록 초기화", "기본 설정으로 되돌리기"};
 	private JLabel[] lblArrow = { new JLabel("<"), new JLabel(">") };
 	private JButton[] btnOption = new JButton[ROW];
-	
-	private int w, h;
-	private JLabel lblKey = new JLabel("left, right, down, rotate, drop, quit, exit");
 	
 	private String[][] optionArray = {
 		 { "Small (default)", "Medium", "Large" }, // 화면 크기
@@ -52,14 +50,12 @@ public class OptionForm extends JFrame {
 		 { "NO", "YES" } // 기본 설정으로 되돌리기
 	};
 	
-	
-	// 행마다 포커스가 놓인 칼럼 위치가 다르기 때문에 배열로 만든 것이다!!!
-	// 현재 행의 칼럼이 어떤 옵션에 포커스가 놓여 있는지 알려주는 배열
+	// 행마다 포커스가 놓인 칼럼 위치가 다르기 때문에 배열로 만들었다.
 	private int row = 0;
-	private int[] focusPerRow = new int[ROW];
+	private int[] focusColumn = new int[ROW];
 	
 	// 엔터 눌러서 확정된 칼럼 값을 저장 (다른 곳에서 참조 가능)
-	private int[] confirmPerRow = new int[ROW]; 
+	private int[] confirmedColumn = new int[ROW]; 
 
 	public OptionForm() {
 		this.w = 600;
@@ -77,8 +73,8 @@ public class OptionForm extends JFrame {
 	// 기본 설정으로 초기화
 	private void initDefaultSettings() {
 		for(int i = 0; i < ROW; i++) {
-			focusPerRow[i] = 0;
-			confirmPerRow[i] = 0;
+			focusColumn[i] = 0;
+			confirmedColumn[i] = 0;
 		}
 	}
 	
@@ -91,7 +87,7 @@ public class OptionForm extends JFrame {
 		this.setVisible(false);
 	}
 	
-	// TODO: 외부에서 이 함수를 호출하여 크기 설정할 수 있도록 하려면 인자에 w, h 넣어줘야 할 듯.
+	// 다른 화면에서 설정 화면 진입할 때마다 w, h값 받아와서 멤버변수 초기화!!
 	public void initComponents(int w, int h) {
 		this.w = w;
 		this.h = h;
@@ -106,7 +102,7 @@ public class OptionForm extends JFrame {
 			
 			// 버튼 6개 초기화
 			// repaint로 화면 다시 그려도, 현재 포커스가 놓인 칼럼으로 텍스트 초기화!!!
-			btnOption[i] = new JButton(optionArray[i][focusPerRow[i]]);
+			btnOption[i] = new JButton(optionArray[i][focusColumn[i]]);
 			btnOption[i].setBounds(w/4, h/30 + i * 60 + 25, w/2, 25);
 			btnOption[i].setBackground(Color.white);
 			btnOption[i].setFocusable(false);
@@ -168,12 +164,12 @@ public class OptionForm extends JFrame {
 		am.put("enter", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				confirmPerRow[row] = focusPerRow[row];
+				confirmedColumn[row] = focusColumn[row];
+				System.out.println(row + " " + confirmedColumn[row]); // 디버깅 용도
 				
-				System.out.println(row + " " + confirmPerRow[row]);
-				
-				if(row == 0) {
-					switch(confirmPerRow[row]) {
+				switch(row) {
+				case 0: // 화면 크기 설정 
+					switch(confirmedColumn[row]) {
 					case 0: 
 						updateFrameSize(600, 450);
 						break;
@@ -184,12 +180,16 @@ public class OptionForm extends JFrame {
 						updateFrameSize(800, 650);
 						break;
 					}
-				}
-				else if(row == 5 && confirmPerRow[row] == 1) {
-					initDefaultSettings(); // 첫번째 칼럼으로 옵션 초기화
-					updateFrameSize(600, 450); // 모든 컴포넌트 크기 조정
-			
-					// 기본 설정으로 되돌리기 NO인 경우에는 현재 설정 그대로 유지
+					break;
+				case 4: // 스코어보드 초기화 on/off
+					if(confirmedColumn[row] == 1) {
+						initScoreboard();						
+					}
+				case 5: // 기본 설정 on/off
+					if(confirmedColumn[row] == 1) {
+						initDefaultSettings(); // 첫번째 칼럼으로 옵션 초기화
+						updateFrameSize(600, 450); // 모든 컴포넌트 크기 조정
+					}
 				}
 			}
 		});
@@ -229,24 +229,24 @@ public class OptionForm extends JFrame {
 
 	private void moveRight() {
 		// 처음에는 칼럼 위치가 0으로 초기화 되어 있음.
-		focusPerRow[row]++;
+		focusColumn[row]++;
 		
 		// 현재 행의 최대 옵션 길이를 넘으면 0으로 초기화
-		if(focusPerRow[row] >= optionArray[row].length) {
-			focusPerRow[row] = 0;
+		if(focusColumn[row] >= optionArray[row].length) {
+			focusColumn[row] = 0;
 		}
 		
-		btnOption[row].setText(optionArray[row][focusPerRow[row]]);
+		btnOption[row].setText(optionArray[row][focusColumn[row]]);
 	}
 
 	private void moveLeft() {
-		focusPerRow[row]--;
+		focusColumn[row]--;
 		
-		if(focusPerRow[row] < 0) {
-			focusPerRow[row] = optionArray[row].length - 1;
+		if(focusColumn[row] < 0) {
+			focusColumn[row] = optionArray[row].length - 1;
 		}
 		
-		btnOption[row].setText(optionArray[row][focusPerRow[row]]);
+		btnOption[row].setText(optionArray[row][focusColumn[row]]);
 	}
 	
 	// 프레임 크기 변경 (현재 설정된 옵션값은 화면에서 그대로 유지되어야 함)
@@ -266,21 +266,24 @@ public class OptionForm extends JFrame {
 		return new Pair<>(w, h);
 	}
 	
-	// leaderboard 파일 삭제하기 (JTable 데이터 지우기)
+	// 조작 키
+	public int getCurrentKeyMode() {
+		return confirmedColumn[1];
+	}
+	
+	// 난이도 
+	public int getCurrentGameLevel() {
+		return confirmedColumn[2];
+	}
+	
+	// 색맹 모드 
+	public int getCurrentColorMode() {
+		return confirmedColumn[3];
+	}
+	
+	// 이 화면 자체에서 파일 삭제할 수 있을 듯 (다만 JTable은 리더보드폼에 있음)
 	private void initScoreboard() {
 		
-	}
-	
-	public int getCurrentKeyMode() {
-		return 0;
-	}
-	
-	public int getCurrentColorMode() {
-		return 0;
-	}
-	
-	public int getCurrentGameLevel() {
-		return 0;
 	}
 	
 	// OptionForm 프레임 실행

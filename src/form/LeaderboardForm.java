@@ -28,8 +28,10 @@ import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
+// TODO: 스코어 보드 기록 초기화
+
 public class LeaderboardForm extends JFrame {
-	private static int w, h;
+	private int w, h;
 	private JTable leaderboard;
 	private DefaultTableModel tm;
 	private String[] leaderboardFile = { "leaderboardFile_Normal", "leaderboardFile_Item" };

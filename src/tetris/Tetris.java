@@ -30,7 +30,9 @@ public class Tetris {
 		w = of.getFrameSize().width;
 		h = of.getFrameSize().height;
 		
+		// 크기와 조작키 설정 
 		gf.initComponents(w, h);
+		gf.initControls(of.getCurrentKeyMode());
 		
 		gf.setVisible(true);
 		gf.getContentPane().repaint();
@@ -60,22 +62,28 @@ public class Tetris {
 		lf.getContentPane().repaint();
 	}
 	
-	// 현재 게임 모드 반환 (기본, 아이템) 
+	// 게임 모드
 	public static int getGameMode() {
 		if(sf == null) return 0;
 		return sf.getCurrentGameMode();
 	}
-
-	// 현재 색상 모드 반환 
-	public static int getColorMode() {
-		if (of == null) return 0;
-		return of.getCurrentColorMode();
+	
+	// 조작 키 
+	public static int getKeyMode() {
+		if(of == null) return 0;
+		return of.getCurrentKeyMode();
 	}
 	
-	// 현재 게임 난이도 반환
+	// 게임 난이도
 	public static int getGameLevel() {
 		if(of == null) return 0;
 		return of.getCurrentGameLevel();
+	}
+	
+	// 색상 모드
+	public static int getColorMode() {
+		if (of == null) return 0;
+		return of.getCurrentColorMode();
 	}
 	
 	// 게임 종료 시, 현재 유저의 기록 스코어보드에 추가

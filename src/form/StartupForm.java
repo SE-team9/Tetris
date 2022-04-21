@@ -15,6 +15,8 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 
 public class StartupForm extends JFrame {
+	private int w, h;
+	
 	private JLabel title = new JLabel("SE Team9 Tetris");
 	
 	// 0이면 일반 모드, 1이면 아이템 모드 
@@ -25,8 +27,6 @@ public class StartupForm extends JFrame {
 	private JButton[] menu = new JButton[4];
 	private String[] btnText = { "Start Game", "Settings", "ScoreBoard", "Quit" };
 	private int curPos;
-
-	private int w, h;
 	
 	public StartupForm() {
 		this.w = 600;
@@ -84,6 +84,27 @@ public class StartupForm extends JFrame {
 		});
 	}
 
+	// 선택한 메뉴에 따라 화면 전환
+	private void selectMenu(int curPos) {
+		switch (curPos) {
+		case 0:
+			this.setVisible(false);
+			Tetris.start(); // 게임 시작
+			break;
+		case 1:
+			this.setVisible(false);
+			Tetris.showOption(); // 설정 화면 
+			break;
+		case 2:
+			this.setVisible(false);
+			Tetris.showLeaderboard(); // 스코어 보드
+			break;
+		case 3:
+			System.exit(0); // 게임 종료
+			break;
+		}
+	}
+
 	private void moveUp() {
 		menu[curPos].setBackground(Color.white);
 		curPos--;
@@ -122,27 +143,6 @@ public class StartupForm extends JFrame {
 
 	public int getCurrentGameMode() {
 		return curGameMode;
-	}
-
-	// 선택한 메뉴에 따라 화면 전환
-	private void selectMenu(int curPos) {
-		switch (curPos) {
-		case 0:
-			this.setVisible(false);
-			Tetris.start(); // 게임 시작
-			break;
-		case 1:
-			this.setVisible(false);
-			Tetris.showOption(); // 설정 화면 
-			break;
-		case 2:
-			this.setVisible(false);
-			Tetris.showLeaderboard(); // 스코어 보드
-			break;
-		case 3:
-			System.exit(0); // 게임 종료
-			break;
-		}
 	}
 	
 	// 다른 곳에서 이 form을 띄울 때 이 함수로 크기 초기화
