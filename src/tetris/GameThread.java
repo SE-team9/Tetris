@@ -6,8 +6,8 @@ public class GameThread extends Thread {
 	private GameForm gf;
 	private NextBlockArea nba;
 	private int score = 0; // 한 단위씩 계속 증가 
-	private int level = 1; 
-	private int linePerLevel = 7; // 7줄 삭제할 때마다 레벨 상승
+	private int level = 1; // 삭제한 줄 개수에 따라 레벨 상승
+	private int linePerLevel = 7;
 	private int interval = 1000; // sleep 시간 
 	private int speedupPerLevel = 100; 
 	private boolean isPaused = false;
@@ -33,9 +33,9 @@ public class GameThread extends Thread {
 	@Override
 	public void run() {
 		if(Tetris.getGameMode() == 0) {
-			startDefaultMode(); 
+			startDefaultMode(); // 일반 모드 
 		}else {
-			startItemMode();
+			startItemMode(); // 아이템 모드
 		}
 	}
 
@@ -70,20 +70,20 @@ public class GameThread extends Thread {
 
 			// 블럭이 다 내려왔는데 위쪽 경계를 넘어 있는 경우는 게임 종료
 			if (ga.isBlockOutOfBounds()) {
-				Tetris.gameOver(score, levelMode);
+				int gameMode = Tetris.getGameMode();
+				Tetris.gameOver(gameMode, score, levelMode);
 				break;
 			}
 
 			// 현재 블럭위치 배경에 저장
 			ga.moveBlockToBackground();
 			
-			
-			
-			// 완성된 줄 삭제, 삭제된 줄 수에 따라 점수 추가
+			// 두 줄 이상 삭제되면 추가 점수 획득 
 			if(ga.clearLines() > 1) {
 				score += 2 * ga.clearLines() + level;
 			}
 			else {
+				// 기본 점수 (+ 레벨에 따라 추가 점수 획득)
 				score += ga.clearLines() + level;
 			}
 			
@@ -97,7 +97,7 @@ public class GameThread extends Thread {
 				speedupPerLevel = 120;
 			}
 			
-			// 레벨 업데이트 레벨이 증가할수록 블럭이 내려오는 속도 증가
+			// 레벨 업데이트, 레벨이 증가할수록 블럭이 내려오는 속도 증가
 			int lvl = totalClearedLine / linePerLevel + 1;
 			if (lvl > level) {
 				level = lvl;
@@ -147,8 +147,10 @@ public class GameThread extends Thread {
 
 			// 게임 종료 확인
 			if (ga.isBlockOutOfBounds()) {
-				Tetris.gameOver(score, levelMode);
-				break;
+				int gameMode = Tetris.getGameMode();
+				Tetris.gameOver(gameMode, score, levelMode);
+
+				break; // 루프 탈출
 			}
 
 			// 현재 블럭이 아이템이면 아이템을 반짝거리고 해당 아이템의 동작을 수행한다.
@@ -199,6 +201,7 @@ public class GameThread extends Thread {
 			} else if (levelMode == 2) {
 				speedupPerLevel = 120;
 			}
+			
 			int lvl = totalClearedLine / linePerLevel + 1;
 			if (lvl > level) {
 				level = lvl;

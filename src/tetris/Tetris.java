@@ -19,9 +19,8 @@ public class Tetris {
 		w = of.getFrameSize().width;
 		h = of.getFrameSize().height;
 		
-		sf.initComponents(w, h);
-		
-		sf.setVisible(true);
+		sf.initComponents(w, h); // 크기 조절 
+		sf.setVisible(true); // 시작 화면 띄우기
 		sf.getContentPane().repaint();
 	}
 	
@@ -30,14 +29,13 @@ public class Tetris {
 		w = of.getFrameSize().width;
 		h = of.getFrameSize().height;
 		
-		// 크기와 조작키 설정 
-		gf.initComponents(w, h);
-		gf.initControls(of.getCurrentKeyMode());
+		gf.initComponents(w, h); // 크기 조절 
+		gf.initControls(of.getCurrentKeyMode()); // 조작키 설정
+		gf.setVisible(true); // 게임 화면 띄우기
 		
-		gf.setVisible(true);
 		gf.getContentPane().repaint();
 		
-		gf.startGame();
+		gf.startGame(); // 게임 스레드 시작 
 	}
 	
 	public static void showOption() {
@@ -45,10 +43,10 @@ public class Tetris {
 		w = of.getFrameSize().width;
 		h = of.getFrameSize().height;
 		
-		of.initComponents(w, h);
-		of.showConfirmedOption();
+		of.initComponents(w, h); // 크기 조절 
+		of.showConfirmedOption(); // 확정된 설정값으로 보여주기
+		of.setVisible(true); // 설정 화면 띄우기
 		
-		of.setVisible(true);
 		of.getContentPane().repaint();
 	}
 	
@@ -57,9 +55,10 @@ public class Tetris {
 		w = of.getFrameSize().width;
 		h = of.getFrameSize().height;
 		
-		lf.initComponents(w, h);
-		
+		lf.initComponents(w, h, 0); // 프레임 크기, 칼럼 위치
+		lf.updateTableWithMode(0); // 일반 모드
 		lf.setVisible(true);
+		
 		lf.getContentPane().repaint();
 	}
 	
@@ -87,18 +86,31 @@ public class Tetris {
 		return of.getCurrentColorMode();
 	}
 	
-	// 게임 종료 시, 현재 유저의 기록 스코어보드에 추가
-	public static void gameOver(int score, int gameLevel) {
+	// 게임 종료 (현재 모드, 이름, 점수, 난이도)
+		public static void gameOver(int gameMode, int score, int levelMode) {
+			// 유저 이름 입력 받기
 		String playerName = JOptionPane.showInputDialog("Game Over!\n Please enter your name.");
 		gf.setVisible(false);
-		lf.addPlayer(playerName, score, gameLevel);
+
+		// 테이블에 데이터 추가
+		switch(levelMode) {
+		case 0:
+			lf.addPlayer(gameMode, playerName, score, "Easy");
+			break;
+		case 1:
+			lf.addPlayer(gameMode, playerName, score, "Normal");
+			break;
+		case 2:
+			lf.addPlayer(gameMode, playerName, score, "Hard");
+			break;
+		}
 	}
 
 	public static void main(String[] args) {
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				// 처음에 객체 생성할 때는 기본 크기! 
-				// 함수를 호출하여 화면을 띄울 때마다 설정에서 세팅된 너비와 높이 값 가져오기
+
+				// 여기서 모든 Form 객체 생성 (생성자 호출하여 초기화)
 				sf = new StartupForm();
 				of = new OptionForm();				
 				gf = new GameForm();

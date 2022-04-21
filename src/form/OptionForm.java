@@ -50,14 +50,14 @@ public class OptionForm extends JFrame {
 		 { "NO", "YES" } // 기본 설정으로 되돌리기
 	};
 	
-	LeaderboardForm lf = new LeaderboardForm();
-	
 	// 행마다 포커스가 놓인 칼럼 위치가 다르기 때문에 배열 만들기
 	private int row = 0;
 	private int[] focusColumn = new int[ROW];
 	
 	// 엔터 눌러서 확정된 칼럼 값을 저장 (다른 곳에서 참조 가능)
 	private int[] confirmedColumn = new int[ROW]; 
+
+	private LeaderboardForm lf = new LeaderboardForm();
 
 	public OptionForm() {
 		this.w = 600;
@@ -207,11 +207,14 @@ public class OptionForm extends JFrame {
 					if(confirmedColumn[row] == 1) {
 						initScoreboard();						
 					}
+					break;
 				case 5: // 기본 설정 on/off
 					if(confirmedColumn[row] == 1) {
 						initDefaultSettings(); // 첫번째 칼럼으로 옵션 초기화
 						updateFrameSize(600, 450); // 모든 컴포넌트 크기 조정
 					}
+					break;
+					default: break;
 				}
 			}
 		});
@@ -309,7 +312,7 @@ public class OptionForm extends JFrame {
 		return confirmedColumn[3];
 	}
 	
-	// 이 화면 자체에서 파일 삭제할 수 있을 듯 (다만 JTable은 리더보드폼에 있음)
+	// 스코어보드 기록 초기화
 	private void initScoreboard() {
 		lf.deleteLeaderboard();
 	}
