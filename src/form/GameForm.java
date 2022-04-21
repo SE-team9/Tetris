@@ -2,6 +2,7 @@ package form;
 import tetris.*;
 
 import java.awt.EventQueue;
+import java.awt.TextArea;
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
@@ -12,36 +13,106 @@ import javax.swing.JLabel;
 import javax.swing.JTextArea;
 import javax.swing.KeyStroke;
 
+// TODO: 조작 키 설정 
+
 public class GameForm extends JFrame {
-
-	private boolean isPaused = false;
-
+	private int w, h;
+	
 	private GameArea ga;
 	private GameThread gt;
 	private NextBlockArea nba;
+	private JLabel lblScore, lblLevel;
+	private JTextArea keyManual;
+	private boolean isPaused = false;
 
-	private JLabel scoreDisplay;
-	private JLabel levelDisplay;
-	private JTextArea keyDisplay;
-
+	// 처음에 생성자 호출할 때는 모두 기본 값으로 
 	public GameForm() {
-		initComponents();
-		initControls();
+		initComponents(600, 450);
+		initControls(0); 
+	}
+	
+	// Tetris에서 전달 받은 인자 값에 따라 크기 조정 
+	public void initComponents(int w, int h) {
+		this.w = w;
+		this.h = h;
+		
+		initThisFrame();
+		initDisplay();
+		
+		ga = new GameArea(w, h, 10);
+		this.add(ga);
+
+		nba = new NextBlockArea(w, h, ga);
+		this.add(nba);
 	}
 
-	private void initControls() {
+	private void initThisFrame() {
+		this.setSize(w, h);
+		this.setResizable(false);
+		this.setLayout(null);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setLocationRelativeTo(null);
+		this.setVisible(false);
+	}
+
+	private void initDisplay() {
+		lblScore = new JLabel("Score: 0");
+		lblLevel = new JLabel("Level: 0");
+		lblScore.setBounds(w - (w/5), h / 20, 100, 30);
+		lblLevel.setBounds(w - (w/5), h / 20 + 20, 100, 30);
+		this.add(lblScore);
+		this.add(lblLevel);
+	}
+
+	// Tetris에서 전달 받은 인자 값에 따라 조작 키 변경하기
+	public void initControls(int keyMode) {
 		InputMap im = this.getRootPane().getInputMap();
 		ActionMap am = this.getRootPane().getActionMap();
-
-		im.put(KeyStroke.getKeyStroke("RIGHT"), "right");
-		im.put(KeyStroke.getKeyStroke("LEFT"), "left");
-		im.put(KeyStroke.getKeyStroke("UP"), "up");
-		im.put(KeyStroke.getKeyStroke("DOWN"), "downOneLine");
-		im.put(KeyStroke.getKeyStroke("SPACE"), "downToEnd");
+	
+		if(keyMode == 0) {
+			im.clear();
+			
+			im.put(KeyStroke.getKeyStroke("RIGHT"), "right");
+			im.put(KeyStroke.getKeyStroke("LEFT"), "left");
+			im.put(KeyStroke.getKeyStroke("UP"), "up");
+			im.put(KeyStroke.getKeyStroke("DOWN"), "downOneLine");
+			im.put(KeyStroke.getKeyStroke("SPACE"), "downToEnd");
+			
+			keyManual = new JTextArea("왼쪽 이동: ← \n"
+					+ "오른쪽 이동: → \n"
+					+ "한칸 아래로 이동: ↓ \n"
+					+ "블럭 회전: ↑ \n"
+					+ "한번에 밑으로 이동: SPACE \n"
+					+ "게임 정지/재개: q \n"
+					+ "게임 종료: e  \n");
+		}
+		else {
+			im.clear(); // 다른 키모드에서 설정했던 거 초기화
+			
+			im.put(KeyStroke.getKeyStroke("D"), "right");
+			im.put(KeyStroke.getKeyStroke("A"), "left");
+			im.put(KeyStroke.getKeyStroke("W"), "up");
+			im.put(KeyStroke.getKeyStroke("S"), "downOneLine");
+			im.put(KeyStroke.getKeyStroke("ENTER"), "downToEnd");
+			
+			keyManual = new JTextArea("왼쪽 이동: a \n"
+					+ "오른쪽 이동: d \n"
+					+ "한칸 아래로 이동: s \n"
+					+ "블럭 회전: w \n"
+					+ "한번에 밑으로 이동: ENTER \n"
+					+ "게임 정지/재개: q \n"
+					+ "게임 종료: e  \n");
+		}
+		
+		// 공통 (중지, 종료, 뒤로가기)
 		im.put(KeyStroke.getKeyStroke("Q"), "quit");
 		im.put(KeyStroke.getKeyStroke("E"), "exit");
 		im.put(KeyStroke.getKeyStroke("ESCAPE"), "back");
-
+		
+		keyManual.setBounds(w/30, h-300, 160, 140);
+		keyManual.setFocusable(false);
+		this.add(keyManual);
+		
 		am.put("right", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -131,47 +202,11 @@ public class GameForm extends JFrame {
 	}
 
 	public void updateScore(int score) {
-		scoreDisplay.setText("Score: " + score);
+		lblScore.setText("Score: " + score);
 	}
 
 	public void updateLevel(int level) {
-		levelDisplay.setText("Level: " + level);
-	}
-
-	private void initComponents() {
-		initThisFrame();
-		initDisplay();
-
-		ga = new GameArea(10);
-		this.add(ga);
-
-		nba = new NextBlockArea(ga);
-		this.add(nba);
-	}
-
-	// 이 판넬 화면 설정
-	private void initThisFrame() {
-		this.setSize(600, 450);
-		this.setResizable(false);
-		this.setLayout(null);
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setLocationRelativeTo(null);
-		this.setVisible(false);
-	}
-
-	private void initDisplay() {
-		scoreDisplay = new JLabel("Score: 0");
-		levelDisplay = new JLabel("Level: 0");
-		scoreDisplay.setBounds(420, 10, 100, 30);
-		levelDisplay.setBounds(420, 40, 100, 30);
-		this.add(scoreDisplay);
-		this.add(levelDisplay);
-
-		keyDisplay = new JTextArea(" ← : 블럭 왼쪽 이동 \n → : 블럭 오른쪽 이동 \n"
-				+ " ↓ : 블럭 아래 한 칸 이동\n ↑ : 블럭 회전\n Space : 블럭 맨 아래 이동\n" + " q : 게임 정지/재개\n ESC : 뒤로 가기\n");
-		keyDisplay.setBounds(20, 210, 160, 150);
-		keyDisplay.setFocusable(false);
-		//this.add(keyDisplay);
+		lblLevel.setText("Level: " + level);
 	}
 
 	// GameForm 프레임 실행

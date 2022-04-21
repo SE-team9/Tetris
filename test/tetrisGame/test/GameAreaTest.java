@@ -18,7 +18,7 @@ import tetris.TetrisBlock;
 
 class GameAreaTest {
 
-	private final GameArea ga = new GameArea(10);
+	private final GameArea ga = new GameArea(600,450,10);
 
 	@AfterEach
 	void tearDown() throws Exception {
