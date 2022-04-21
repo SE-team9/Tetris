@@ -213,7 +213,7 @@ public class GameForm extends JFrame {
 	public void updateLevel(int level) {
 		lblLevel.setText("Level: " + level);
 	}
-
+	
 	// GameForm 프레임 실행
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {

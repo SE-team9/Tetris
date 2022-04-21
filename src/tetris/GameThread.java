@@ -1,5 +1,4 @@
 package tetris;
-
 import form.GameForm;
 
 public class GameThread extends Thread {
@@ -15,10 +14,10 @@ public class GameThread extends Thread {
 	private int levelMode; // 설정 화면에서 정한 게임 난이도
 
 	// 아이템 생성과 관련된 변수들
-	private int clearedLineNum; // 줄이 삭제된 경우 삭제된 줄 수를 저장하는 변수
-	private int totalClearedLine; // 삭제된 줄 수를 누적 저장하는 변수
+	private int clearedLineNum; 	    // 줄이 삭제된 경우 삭제된 줄 수를 저장하는 변수
+	private int totalClearedLine; 	    // 삭제된 줄 수를 누적 저장하는 변수
 	private boolean nextIsItem = false; // 다음 블럭이 아이템 블럭인지 확인하는 변수
-	private boolean isItem = false; // 현재 블럭이 아이템 블럭인지 확인하는 변수
+	private boolean isItem = false; 	// 현재 블럭이 아이템 블럭인지 확인하는 변수
 
 	public GameThread(GameArea ga, GameForm gf, NextBlockArea nba) {
 		this.ga = ga;
@@ -42,20 +41,20 @@ public class GameThread extends Thread {
 
 	private void startDefaultMode() {
 		while (true) {
-			ga.spawnBlock(); // 새로운 블럭 생성
-			ga.updateNextBlock(); // 다음 블럭 표시
+			ga.spawnBlock(); // 새로운 블럭 생성 
+			ga.updateNextBlock(); // 다음 블럭 표시 	
 			nba.updateNBA(ga.getNextBlock());
 
 			while (ga.moveBlockDown()) {
-
 				try {
-					scorePlus1();	// 1점 추가
+					score++;
+					gf.updateScore(score);
 
 					int i = 0;
 					while (i < interval / 100) {
-						Thread.sleep(100);
+						Thread.sleep(100); // 0.1초마다 pause키가 눌렸는지 확인
 						i++;
-
+						
 						// 눌렸으면 루프 돌면서 대기
 						while (isPaused) {
 							if (!isPaused) {
@@ -63,6 +62,7 @@ public class GameThread extends Thread {
 							}
 						}
 					}
+
 				} catch (InterruptedException ex) {
 					return; // 게임 스레드 종료
 				}
@@ -86,17 +86,17 @@ public class GameThread extends Thread {
 				// 기본 점수 (+ 레벨에 따라 추가 점수 획득)
 				score += ga.clearLines() + level;
 			}
-
+			
 			// 점수 업데이트
 			gf.updateScore(score);
-
+			
 			// 난이도 조절 추가
 			if (levelMode == 0) {
 				speedupPerLevel = 80;
 			} else if (levelMode == 2) {
 				speedupPerLevel = 120;
 			}
-
+			
 			// 레벨 업데이트, 레벨이 증가할수록 블럭이 내려오는 속도 증가
 			int lvl = totalClearedLine / linePerLevel + 1;
 			if (lvl > level) {
@@ -107,26 +107,27 @@ public class GameThread extends Thread {
 				}
 			}
 		}
-
+		
 	}
 
 	private void startItemMode() {
 		while (true) {
 			ga.spawnBlock();
 
-			if (nextIsItem) { // 다음 블럭이 아이템
-				ga.updateNextItem(); // 다음 아이템 블럭 설정
-				nba.setIsItem(true); // 아이템은 원형으로 표시하기 위해 아이템 블럭임을 알려주는 용도
+			if (nextIsItem) { 		// 다음 블럭이 아이템
+				ga.updateNextItem(); 	// 다음 아이템 블럭 설정
+				nba.setIsItem(true); 	// 아이템은 원형으로 표시하기 위해 아이템 블럭임을 알려주는 용도
 			} else {
-				ga.updateNextBlock();
+				ga.updateNextBlock(); 	
 			}
 
-			nba.updateNBA(ga.getNextBlock());
+			nba.updateNBA(ga.getNextBlock()); 
 
 			while (ga.moveBlockDown()) {
 
 				try {
-					scorePlus1();
+					score++;
+					gf.updateScore(score);
 
 					int i = 0;
 					while (i < interval / 100) {
@@ -167,14 +168,15 @@ public class GameThread extends Thread {
 				// 다음 블럭이 아이템이었다면 이제 현재 블럭이 아이템이 되고, 다음 블럭은 기본 블럭이 되어야 하므로,
 				// 현재 블럭은 원형으로, 다음 블럭은 사각형으로 표시하기 위해 각 불린값들을 조정해준다.
 				if (nextIsItem) {
-					nextIsItem = false; // 다음 블럭은 기본 블럭
-					isItem = true; // 현재 블럭은 아이템
-					nba.setIsItem(false); // 다음 블럭은 아이템이 아님
-					ga.setIsItem(true); // 현재블럭은 아이템
+					nextIsItem = false; 	// 다음 블럭은 기본 블럭
+					isItem = true; 			// 현재 블럭은 아이템
+					nba.setIsItem(false);		// 다음 블럭은 아이템이 아님
+					ga.setIsItem(true); 		// 현재블럭은 아이템
 				}
 			}
 
 			// 현재 블럭이 바닥에 닿았을 때, 완성된 줄을 삭제하고, 삭제된 줄 수 저장
+			//clearedLineNum = ga.clearLines() + ga.oneLineDelte();
 			clearedLineNum = ga.clearLines();
 
 			// 줄이 특정 횟수 삭제되면 아이템 생성
@@ -186,12 +188,12 @@ public class GameThread extends Thread {
 
 			totalClearedLine += clearedLineNum;
 
-			if (clearedLineNum > 1) {
-				score += 2 * clearedLineNum + level;
-			} else {
+			if(clearedLineNum > 1) {
+				score += 2* clearedLineNum + level;
+			}
+			else {
 				score += clearedLineNum + level;
 			}
-
 			gf.updateScore(score);
 
 			// 난이도 조절 추가
@@ -219,7 +221,11 @@ public class GameThread extends Thread {
 	public void reStart() {
 		this.isPaused = false;
 	}
-
+	
+	public boolean getIsPaused() {
+		return this.isPaused;
+	}
+	
 	public void scorePlus1() {
 		score++;
 		gf.updateScore(score);

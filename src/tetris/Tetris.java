@@ -57,9 +57,7 @@ public class Tetris {
 		
 		lf.initComponents(w, h, 0); // 프레임 크기, 칼럼 위치
 		lf.updateTableWithMode(0); // 일반 모드
-		lf.updateTableWithMode(getGameMode());
 		lf.setVisible(true);
-		
 		lf.getContentPane().repaint();
 	}
 	
@@ -86,7 +84,7 @@ public class Tetris {
 		if (of == null) return 0;
 		return of.getCurrentColorMode();
 	}
-	
+
 	// 게임 종료 (현재 모드, 이름, 점수, 난이도)
 	public static void gameOver(int gameMode, int score, int levelMode) {
 		// 유저 이름 입력 받기
@@ -115,7 +113,6 @@ public class Tetris {
 				sf = new StartupForm();
 				of = new OptionForm();				
 				gf = new GameForm();
-				sf = new StartupForm();
 				lf = new LeaderboardForm();
 				
 				sf.setVisible(true);

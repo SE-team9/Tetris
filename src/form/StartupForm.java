@@ -103,7 +103,7 @@ public class StartupForm extends JFrame {
 		im.put(KeyStroke.getKeyStroke("ENTER"), "enter");
 		im.put(KeyStroke.getKeyStroke("RIGHT"), "right");
 		im.put(KeyStroke.getKeyStroke("LEFT"), "left");
-
+		
 		am.put("up", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {

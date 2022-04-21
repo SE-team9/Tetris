@@ -1,5 +1,8 @@
 package form;
+import tetris.*;
 
+import java.awt.BorderLayout;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -24,8 +27,6 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
-
-import tetris.Tetris;
 
 /*
  * 원래는 게임 종료되면 하나의 고정된 스코어보드를 visibility만 조절하여 보여줬지만,
@@ -75,7 +76,7 @@ public class LeaderboardForm extends JFrame {
 		this.setVisible(false);
 		
 		// 현재 모드에 따라 레이블 초기화 (시작 메뉴에서는 일반 모드)
-		lblGameMode = new JLabel(gameMode[Tetris.getGameMode()]);
+		lblGameMode = new JLabel(gameMode[col]);
 		
 		lblGameMode.setHorizontalAlignment(JLabel.CENTER);
 		lblGameMode.setBounds(w / 3, h / 30, 200, 30);
@@ -92,9 +93,7 @@ public class LeaderboardForm extends JFrame {
 		this.curMode = mode;
 		
 		initTableData();
-		
 		initTableSorter();
-		
 		initScrollLeaderboard();
 	}
 
