@@ -32,7 +32,7 @@ public class GameArea extends JPanel {
 	private TetrisBlock block;
 	private TetrisBlock nextBlock;
 	private TetrisBlock[] items;
-  private boolean isItem = false; // ÇöÀç ºí·°ÀÌ ¾ÆÀÌÅÛ ºí·°ÀÎÁö È®ÀÎÇÏ±â À§ÇÑ º¯¼ö
+  private boolean isItem = false; // í˜„ì¬ ë¸”ëŸ­ì´ ì•„ì´í…œ ë¸”ëŸ­ì¸ì§€ í™•ì¸í•˜ê¸° ìœ„í•œ ë³€ìˆ˜
 
 	public GameArea(int w, int h, int columns) {
 		this.gfW = w;
@@ -48,15 +48,15 @@ public class GameArea extends JPanel {
 		gridRows = this.getBounds().height / gridCellSize;
 	}
 
-  // --------------------------------------------------------------------- ÃÊ±âÈ­°ü·Ãµ¿ÀÛ
-	// TODO: ÇÁ·¹ÀÓ Å©±â¿¡ µû¶ó GameAreaÀÇ x, y À§Ä¡°¡ ¹Ù²î¾î¾ß ÇÔ. 
+  // --------------------------------------------------------------------- ì´ˆê¸°í™”ê´€ë ¨ë™ì‘
+	// TODO: í”„ë ˆì„ í¬ê¸°ì— ë”°ë¼ GameAreaì˜ x, y ìœ„ì¹˜ê°€ ë°”ë€Œì–´ì•¼ í•¨. 
 	private void initThisPanel() {
 		this.setBounds(gfW / 3, gfH / 60, 200, 400);
 		this.setBackground(new Color(238, 238, 238));
 		this.setBorder(LineBorder.createBlackLineBorder());
 	}
 
-	// ¹è°æÃÊ±âÈ­
+	// ë°°ê²½ì´ˆê¸°í™”
 	public void initBackgroundArray() {
 		background = new Color[gridRows][gridColumns];
 	}
@@ -65,7 +65,7 @@ public class GameArea extends JPanel {
 		return background;
 	}
 
-	// ºí·°ÃÊ±âÈ­
+	// ë¸”ëŸ­ì´ˆê¸°í™”
 	public void initBlocks() {
 		blocks = new TetrisBlock[] { new IShape(), new JShape(), new LShape(), new OShape(), new ZShape(),
 				new SShape() };
@@ -75,7 +75,7 @@ public class GameArea extends JPanel {
 		return blocks;
 	}
 
-	// ¾ÆÀÌÅÛºí·°ÃÊ±âÈ­
+	// ì•„ì´í…œë¸”ëŸ­ì´ˆê¸°í™”
 	public void initItems() {
 		items = new TetrisBlock[] { new FillEmpty(), new Weight(), new DeleteAroundU(), new TwoLineDelete(), new OneLineDelete()};
 	}
@@ -84,7 +84,7 @@ public class GameArea extends JPanel {
 		return items;
 	}
 
-	// °İÀÚ Å©±â ¹İÈ¯
+	// ê²©ì í¬ê¸° ë°˜í™˜
 	public int getGridCellSize() {
 		return gridCellSize;
 	}
@@ -93,7 +93,7 @@ public class GameArea extends JPanel {
 		return gridColumns;
 	}
 	
-	// ÇöÀç ºí·°ÀÌ ¾ÆÀÌÅÛÀÌ¸é º¯¼ö°ªÀ» true·Î ¼³Á¤ ¾Æ´Ï¸é false·Î ¼³Á¤
+	// í˜„ì¬ ë¸”ëŸ­ì´ ì•„ì´í…œì´ë©´ ë³€ìˆ˜ê°’ì„ trueë¡œ ì„¤ì • ì•„ë‹ˆë©´ falseë¡œ ì„¤ì •
 	public void setIsItem(boolean answer) {
 		isItem = answer;
 	}
@@ -103,14 +103,14 @@ public class GameArea extends JPanel {
 		
 		this.isItem = false;
 		
-		initBackgroundArray(); 	// ½ÃÀÛÇÒ ¶§¸¶´Ù ¹è°æ ÃÊ±âÈ­
-		initBlocks(); 			// ´ÙÀ½ ºí·° ÃÊ±âÈ­
-		updateNextBlock(); 		// ¸ğµç ¾ÆÀÌÅÛ ÃÊ±âÈ­
-		initItems(); 			// ¸ğµç ºí·° ÃÊ±âÈ­
+		initBackgroundArray(); 	// ì‹œì‘í•  ë•Œë§ˆë‹¤ ë°°ê²½ ì´ˆê¸°í™”
+		initBlocks(); 			// ë‹¤ìŒ ë¸”ëŸ­ ì´ˆê¸°í™”
+		updateNextBlock(); 		// ëª¨ë“  ì•„ì´í…œ ì´ˆê¸°í™”
+		initItems(); 			// ëª¨ë“  ë¸”ëŸ­ ì´ˆê¸°í™”
 	}
 	
-	// --------------------------------------------------------------------- ³­ÀÌµµÁ¶Àı°ü·Ãµ¿ÀÛ
-	// °¡ÁßÄ¡ ·£´ı ÇÔ¼ö »ı¼º
+	// --------------------------------------------------------------------- ë‚œì´ë„ì¡°ì ˆê´€ë ¨ë™ì‘
+	// ê°€ì¤‘ì¹˜ ëœë¤ í•¨ìˆ˜ ìƒì„±
 	public static <E> E getWeightedRandom(Map<E, Double> weights, Random random) {
 		E result = null;
 		double bestValue = Double.MAX_VALUE;
@@ -124,13 +124,13 @@ public class GameArea extends JPanel {
 		}
 		return result;
 	}
-	public int level = Tetris.getGameLevel();
-	// level¿¡ µû¸¥ °¡ÁßÄ¡ ºÎ¿©
+
+	// levelì— ë”°ë¥¸ ê°€ì¤‘ì¹˜ ë¶€ì—¬
 	public int makeRandom() {
 		Map<String, Double> w = new HashMap<String, Double>();
 		Random r = new Random();
 
-		//int level = Tetris.getGameLevel();
+		int level = Tetris.getGameLevel();
 		double weight, iWeight;
 		int blockNum;
 
@@ -156,15 +156,15 @@ public class GameArea extends JPanel {
 		return blockNum;
 	}
 
-	// --------------------------------------------------------------------- ºí·°»ı¼º°ü·Ãµ¿ÀÛ
-	// ³­ÀÌµµ¿¡ µû¶ó ´ÙÀ½ ºí·°À» Á¤ÇÑ´Ù.
+	// --------------------------------------------------------------------- ë¸”ëŸ­ìƒì„±ê´€ë ¨ë™ì‘
+	// ë‚œì´ë„ì— ë”°ë¼ ë‹¤ìŒ ë¸”ëŸ­ì„ ì •í•œë‹¤.
 	public void updateNextBlock() {
 		int r= makeRandom();
 		nextBlock = blocks[r];
 		nextBlock.setShape();
 	}
 
-	// ´ÙÀ½ ºí·° ¾ÆÀÌÅÛÀ» Á¤ÇÑ´Ù.
+	// ë‹¤ìŒ ë¸”ëŸ­ ì•„ì´í…œì„ ì •í•œë‹¤.
 	public void updateNextItem() {
 		Random r = new Random();
 		nextBlock = items[r.nextInt(items.length)];
@@ -179,14 +179,14 @@ public class GameArea extends JPanel {
 		return block;
 	}
 
-	// ´ÙÀ½ ºí·°À» ÇöÀç ºí·°À¸·Î ¹Ş¾Æ¼­ ½ºÆùÇÑ´Ù.
+	// ë‹¤ìŒ ë¸”ëŸ­ì„ í˜„ì¬ ë¸”ëŸ­ìœ¼ë¡œ ë°›ì•„ì„œ ìŠ¤í°í•œë‹¤.
 	public void spawnBlock() {
 		block = nextBlock;
 		block.spawn(gridColumns);
 	}
 
-	// --------------------------------------------------------------------- ºí·°Á¶ÀÛ/°æ°èÈ®ÀÎ °ü·Ãµ¿ÀÛ
-	// ºí·°ÀÌ À§ÂÊ °æ°è¸¦ ³Ñ¾î°¬´ÂÁö È®ÀÎÇÑ´Ù. (°ÔÀÓ Á¾·á È®ÀÎ)
+	// --------------------------------------------------------------------- ë¸”ëŸ­ì¡°ì‘/ê²½ê³„í™•ì¸ ê´€ë ¨ë™ì‘
+	// ë¸”ëŸ­ì´ ìœ„ìª½ ê²½ê³„ë¥¼ ë„˜ì–´ê°”ëŠ”ì§€ í™•ì¸í•œë‹¤. (ê²Œì„ ì¢…ë£Œ í™•ì¸)
 	public boolean isBlockOutOfBounds() {
 		if (block.getY() < 0) {
 			block = null;
@@ -248,7 +248,7 @@ public class GameArea extends JPanel {
 
 		block.rotate();
 
-		// È¸Àü ½Ã °æ°è¸¦ ³Ñ¾î°¡Áö ¾Êµµ·Ï À§Ä¡ Á¶Á¤
+		// íšŒì „ ì‹œ ê²½ê³„ë¥¼ ë„˜ì–´ê°€ì§€ ì•Šë„ë¡ ìœ„ì¹˜ ì¡°ì •
 		if (block.getLeftEdge() < 0)
 			block.setX(0);
 		
@@ -272,17 +272,17 @@ public class GameArea extends JPanel {
 
 		for (int col = 0; col < w; col++) {
 			for (int row = h - 1; row >= 0; row--) {
-				if (shape[row][col] != 0) {			// ÇØ´ç À§Ä¡°¡ ÇöÀç ºí·°ÀÌ Â÷ÁöÇÏ´Â °ø°£ÀÌ¶ó¸é
+				if (shape[row][col] != 0) {			// í•´ë‹¹ ìœ„ì¹˜ê°€ í˜„ì¬ ë¸”ëŸ­ì´ ì°¨ì§€í•˜ëŠ” ê³µê°„ì´ë¼ë©´
 					int x = col + block.getX();
-					int y = row + block.getY() + 1; // ÇöÀç ºí·° À§Ä¡ÀÇ ÇÑ Ä­ ¾Æ·¡ È®ÀÎ
+					int y = row + block.getY() + 1; // í˜„ì¬ ë¸”ëŸ­ ìœ„ì¹˜ì˜ í•œ ì¹¸ ì•„ë˜ í™•ì¸
 
 					if (y < 0)
-						break; 						// ÇöÀç ºí·°ÀÌ À§ÂÊ °æ°è¸¦ ³Ñ¾úÀ¸¸é È®ÀÎ Á¾·á
+						break; 						// í˜„ì¬ ë¸”ëŸ­ì´ ìœ„ìª½ ê²½ê³„ë¥¼ ë„˜ì—ˆìœ¼ë©´ í™•ì¸ ì¢…ë£Œ
 
-					if (background[y][x] != null) { // ¾Æ·¡¿¡ ºí·°ÀÌ Á¸ÀçÇÏ¸é
+					if (background[y][x] != null) { // ì•„ë˜ì— ë¸”ëŸ­ì´ ì¡´ì¬í•˜ë©´
 						return false; // stop
 					}
-					break; 							// ÇÑ Ä­ ¾Æ·¡¸¸ È®ÀÎÇÏ¸é µÇ¹Ç·Î ¹Ù·Î ´ÙÀ½ ¿­À» È®ÀÎÇÑ´Ù.
+					break; 							// í•œ ì¹¸ ì•„ë˜ë§Œ í™•ì¸í•˜ë©´ ë˜ë¯€ë¡œ ë°”ë¡œ ë‹¤ìŒ ì—´ì„ í™•ì¸í•œë‹¤.
 				}
 			}
 		}
@@ -301,13 +301,13 @@ public class GameArea extends JPanel {
 		for (int row = 0; row < h; row++) {
 			for (int col = 0; col < w; col++) {
 				if (shape[row][col] != 0) { 
-					int x = col + block.getX() - 1; // ÇöÀç ºí·° À§Ä¡ÀÇ ÇÑ Ä­ ¿ŞÂÊ È®ÀÎ
+					int x = col + block.getX() - 1; // í˜„ì¬ ë¸”ëŸ­ ìœ„ì¹˜ì˜ í•œ ì¹¸ ì™¼ìª½ í™•ì¸
 					int y = row + block.getY();
 
 					if (y < 0)
 						break; 
 
-					if (background[y][x] != null) { // ¿ŞÂÊ¿¡ ºí·°ÀÌ Á¸ÀçÇÏ¸é
+					if (background[y][x] != null) { // ì™¼ìª½ì— ë¸”ëŸ­ì´ ì¡´ì¬í•˜ë©´
 						return false; // stop
 					}
 					break; 
@@ -329,13 +329,13 @@ public class GameArea extends JPanel {
 		for (int row = 0; row < h; row++) {
 			for (int col = w - 1; col >= 0; col--) {
 				if (shape[row][col] != 0) {
-					int x = col + block.getX() + 1; // ÇöÀç ºí·° À§Ä¡ÀÇ ÇÑ Ä­ ¿À¸¥ÂÊ È®ÀÎ
+					int x = col + block.getX() + 1; // í˜„ì¬ ë¸”ëŸ­ ìœ„ì¹˜ì˜ í•œ ì¹¸ ì˜¤ë¥¸ìª½ í™•ì¸
 					int y = row + block.getY();
 
 					if (y < 0)
 						break; 
 
-					if (background[y][x] != null) { // ¿À¸¥ÂÊ¿¡ ºí·°ÀÌ Á¸ÀçÇÏ¸é
+					if (background[y][x] != null) { // ì˜¤ë¥¸ìª½ì— ë¸”ëŸ­ì´ ì¡´ì¬í•˜ë©´
 						return false; // stop
 					}
 					break; 
@@ -345,8 +345,8 @@ public class GameArea extends JPanel {
 		return true; // keep going
 	}
 
-	// ÇöÀç ºí·°À» È¸Àü½ÃÄ×À» ¶§ÀÇ °´Ã¼¸¦ »ı¼ºÇÏ¿© °æ°è¸¦ ³Ñ´ÂÁö È®ÀÎÇÑ´Ù. 
-	// ºí·°ÀÌ ¿ÏÀüÈ÷ ¹Ù´Ú¿¡ ´êÀ½°ú µ¿½Ã¿¡ È¸Àü½ÃÅ°¸é ¹è°æ°ú ÇöÀç ºí·°ÀÌ °ãÄ¡´Â µî ±â´ÉÀÌ ¿ÏÀüÇÏÁö ¾ÊÀ¸¹Ç·Î ¼öÁ¤ ÇÊ¿ä 
+	// í˜„ì¬ ë¸”ëŸ­ì„ íšŒì „ì‹œì¼°ì„ ë•Œì˜ ê°ì²´ë¥¼ ìƒì„±í•˜ì—¬ ê²½ê³„ë¥¼ ë„˜ëŠ”ì§€ í™•ì¸í•œë‹¤. 
+	// ë¸”ëŸ­ì´ ì™„ì „íˆ ë°”ë‹¥ì— ë‹¿ìŒê³¼ ë™ì‹œì— íšŒì „ì‹œí‚¤ë©´ ë°°ê²½ê³¼ í˜„ì¬ ë¸”ëŸ­ì´ ê²¹ì¹˜ëŠ” ë“± ê¸°ëŠ¥ì´ ì™„ì „í•˜ì§€ ì•Šìœ¼ë¯€ë¡œ ìˆ˜ì • í•„ìš” 
 	public boolean checkRotate() {
 		TetrisBlock rotated = new TetrisBlock(block.getShape());
 		rotated.setCurrentRotation(block.getCurrentRotation());
@@ -383,8 +383,8 @@ public class GameArea extends JPanel {
 		return true;
 	}
 
-	// --------------------------------------------------------------------- ¾ÆÀÌÅÛ°ü·Ãµ¿ÀÛ
-	// ºóÄ­À» ¸Ş¿öÁØ´Ù.
+	// --------------------------------------------------------------------- ì•„ì´í…œê´€ë ¨ë™ì‘
+	// ë¹ˆì¹¸ì„ ë©”ì›Œì¤€ë‹¤.
 	public void fillEmpty() {
 
 		int xPos = block.getX();
@@ -417,7 +417,7 @@ public class GameArea extends JPanel {
 		repaint();
 	}
   
-	//ÇÑ ÁÙÀ» »èÁ¦ÇÑ´Ù.
+	//í•œ ì¤„ì„ ì‚­ì œí•œë‹¤.
 	public void oneLineDelte() {
 		int yPos = block.getY();
 
@@ -426,7 +426,7 @@ public class GameArea extends JPanel {
 		repaint();
 	}
   
-	// µÎ ÁÙÀ» »èÁ¦ÇÑ´Ù.
+	// ë‘ ì¤„ì„ ì‚­ì œí•œë‹¤.
 	public void twoLineDelete() {
 		int yPos = block.getY();
 		int time = 0;
@@ -441,7 +441,7 @@ public class GameArea extends JPanel {
 		}
 	}
 	
-	// ¹«°ÔÃß ¾ÆÀÌÅÛ ±â´ÉÀ» ¼öÇàÇÑ´Ù.
+	// ë¬´ê²Œì¶” ì•„ì´í…œ ê¸°ëŠ¥ì„ ìˆ˜í–‰í•œë‹¤.
 		public void Weight() {
 			for(int row = block.getBottomEdge(); row < gridRows; row++) {
 				for(int col = block.getLeftEdge(); col < block.getRightEdge(); col++) {
@@ -453,7 +453,7 @@ public class GameArea extends JPanel {
 			moveBlockToBackground();
 		}
 		
-		// ¾ÆÀÌÅÛÀÇ ÁÂ¿ì¾Æ·¡¸¦ »èÁ¦ÇÑ´Ù.
+		// ì•„ì´í…œì˜ ì¢Œìš°ì•„ë˜ë¥¼ ì‚­ì œí•œë‹¤.
 		public void DeleteAroundU() {
 			/*int leftX = block.getX() - 1;
 			int leftY = block.getY() - 1;
@@ -540,7 +540,7 @@ public class GameArea extends JPanel {
 			}*/
 		}
 
-	// ÇöÀç ºí·° ¾ÆÀÌÅÛÀÇ ±â´ÉÀ» ¼öÇàÇÑ´Ù.
+	// í˜„ì¬ ë¸”ëŸ­ ì•„ì´í…œì˜ ê¸°ëŠ¥ì„ ìˆ˜í–‰í•œë‹¤.
 	public void itemFunction() {
 
 		if (this.block instanceof FillEmpty) {
@@ -559,15 +559,7 @@ public class GameArea extends JPanel {
 		}
 	}
 
-	// Ãß°¡ Á¡¼ö
-	public int specialScore() {
-		if (this.block instanceof OneLineDelete)
-			return 1;
-		else
-			return 0;
-	}
-
-	// ¾ÆÀÌÅÛÀ» ¹İÂ¦°Å¸°´Ù.
+	// ì•„ì´í…œì„ ë°˜ì§ê±°ë¦°ë‹¤.
 	public void twinkleItem() {
 
 		Color originColor = block.getColor();
@@ -590,8 +582,8 @@ public class GameArea extends JPanel {
 		}
 	}
 
-	// --------------------------------------------------------------------- ¹è°æ°ü·Ãµ¿ÀÛ
-	// ÇöÀç ºí·°À» ¹è°æ¿¡ Ãß°¡ÇÑ´Ù.
+	// --------------------------------------------------------------------- ë°°ê²½ê´€ë ¨ë™ì‘
+	// í˜„ì¬ ë¸”ëŸ­ì„ ë°°ê²½ì— ì¶”ê°€í•œë‹¤.
 	public void moveBlockToBackground() {
 		
 		int[][] shape = block.getShape();
@@ -605,7 +597,7 @@ public class GameArea extends JPanel {
 
 		for (int r = 0; r < h; r++) {
 			for (int c = 0; c < w; c++) {
-				if (shape[r][c] == 1) {		// ÇØ´ç À§Ä¡°¡ ÇöÀç ºí·°ÀÌ Â÷ÁöÇÏ´Â °ø°£ÀÌ¶ó¸é
+				if (shape[r][c] == 1) {		// í•´ë‹¹ ìœ„ì¹˜ê°€ í˜„ì¬ ë¸”ëŸ­ì´ ì°¨ì§€í•˜ëŠ” ê³µê°„ì´ë¼ë©´
 					background[r + yPos][c + xPos] = color;
 				}
 			}
@@ -613,13 +605,13 @@ public class GameArea extends JPanel {
 		block = null;
 	}
 
-	// ¿Ï¼ºµÈ ÁÙÀ» »èÁ¦ÇÑ´Ù.
+	// ì™„ì„±ëœ ì¤„ì„ ì‚­ì œí•œë‹¤.
 	public int clearLines() {
 
 		boolean lineFilled;
 		int linesCleared = 0;
 
-		// ¸Ç ¾Æ·¡ ÁÙºÎÅÍ
+		// ë§¨ ì•„ë˜ ì¤„ë¶€í„°
 		for (int r = gridRows - 1; r >= 0; r--) {
 			lineFilled = true;
 
@@ -652,26 +644,26 @@ public class GameArea extends JPanel {
 				clearLine(r);
 				shiftDown(r);
 				
-				// ¸Ç À­ ÁÙÀÇ À§´Â nullÀÌ¹Ç·Î µû·Î Áö¿öÁØ´Ù. 
+				// ë§¨ ìœ— ì¤„ì˜ ìœ„ëŠ” nullì´ë¯€ë¡œ ë”°ë¡œ ì§€ì›Œì¤€ë‹¤. 
 				clearLine(0);
 
-				// ¾Æ·¡·Î ÇÑ ÁÙ ¾¿ ³»·Á¿ÔÀ¸¹Ç·Î Áö¿öÁø ÁÙ À§Ä¡¿¡¼­ºÎÅÍ ´Ù½Ã ½ÃÀÛÇÑ´Ù.
+				// ì•„ë˜ë¡œ í•œ ì¤„ ì”© ë‚´ë ¤ì™”ìœ¼ë¯€ë¡œ ì§€ì›Œì§„ ì¤„ ìœ„ì¹˜ì—ì„œë¶€í„° ë‹¤ì‹œ ì‹œì‘í•œë‹¤.
 				r++;
 
 				repaint();
 			}
 		}
-		return linesCleared + specialScore();
+		return linesCleared;
 	}
 
-	// ¹è°æ¿¡¼­ rÇà ÁÙÀ» Áö¿î´Ù.
+	// ë°°ê²½ì—ì„œ rí–‰ ì¤„ì„ ì§€ìš´ë‹¤.
 	private void clearLine(int r) {
 		for (int i = 0; i < gridColumns; i++) {
 			background[r][i] = null;
 		}
 	}
 
-	// rÇà À§ÀÇ ¸ğµç ÁÙÀ» ÇÑÄ­¾¿ ³»·ÁÁØ´Ù.
+	// rí–‰ ìœ„ì˜ ëª¨ë“  ì¤„ì„ í•œì¹¸ì”© ë‚´ë ¤ì¤€ë‹¤.
 	private void shiftDown(int r) {
 		for (int row = r; row > 0; row--) {
 			for (int col = 0; col < gridColumns; col++) {
@@ -680,8 +672,8 @@ public class GameArea extends JPanel {
 		}
 	}
 
-	// --------------------------------------------------------------------- ±×¸®±â
-	// ÇöÀç ºí·°À» ±×·ÁÁØ´Ù.
+	// --------------------------------------------------------------------- ê·¸ë¦¬ê¸°
+	// í˜„ì¬ ë¸”ëŸ­ì„ ê·¸ë ¤ì¤€ë‹¤.
 	private void drawBlock(Graphics g) {
 
 		if (block == null)
@@ -702,7 +694,7 @@ public class GameArea extends JPanel {
           if(this.block instanceof OneLineDelete) {
 						drawGridL(g, c, x, y);
 					}
-          // ÇöÀç ºí·°ÀÌ ¾ÆÀÌÅÛºí·°ÀÌ¸é ¿øÀ¸·Î, ±âº»ºí·°ÀÌ¸é »ç°¢ÇüÀ¸·Î ±×·ÁÁØ´Ù.
+          // í˜„ì¬ ë¸”ëŸ­ì´ ì•„ì´í…œë¸”ëŸ­ì´ë©´ ì›ìœ¼ë¡œ, ê¸°ë³¸ë¸”ëŸ­ì´ë©´ ì‚¬ê°í˜•ìœ¼ë¡œ ê·¸ë ¤ì¤€ë‹¤.
 					else if (isItem) {
 						drawGridOval(g, c, x, y);
 					} else {
@@ -713,7 +705,7 @@ public class GameArea extends JPanel {
 		}
 	}
 
-	// ¹è°æÀ» ±×·ÁÁØ´Ù.
+	// ë°°ê²½ì„ ê·¸ë ¤ì¤€ë‹¤.
 	private void drawBackground(Graphics g) {
 		Color color; 
 
@@ -746,7 +738,7 @@ public class GameArea extends JPanel {
 		g.drawOval(x, y, gridCellSize, gridCellSize);
 	}
 	
-	// ¹®ÀÚ LÀ» Æ÷ÇÔÇÑ ºí·°À» ±×·ÁÁØ´Ù.
+	// ë¬¸ì Lì„ í¬í•¨í•œ ë¸”ëŸ­ì„ ê·¸ë ¤ì¤€ë‹¤.
 	private void drawGridL(Graphics g, Color color, int x, int y) {
 		String letterL = "L";
 		g.setFont(new Font("Arial", Font.BOLD, 20));
