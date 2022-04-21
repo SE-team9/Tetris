@@ -89,4 +89,8 @@ public class NextBlockArea extends JPanel {
 		super.paintComponent(g);
 		drawBlock(g);
 	}
+	
+	public boolean getIsItem() {
+		return this.isItem;
+	}
 }

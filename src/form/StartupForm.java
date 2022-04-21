@@ -40,58 +40,58 @@ public class StartupForm extends JFrame {
 	}
 	
 	// 다른 곳에서 이 form을 띄울 때 이 함수로 크기 초기화
-		public void initComponents(int w, int h) {
-			// 멤버 변수 값 업데이트
-			this.w = w;
-			this.h = h;
-
-			initThisFrame();
-			initLable();
-			initButtons();
+	public void initComponents(int w, int h) {
+		// 멤버 변수 값 업데이트
+		this.w = w;
+		this.h = h;
+		
+		initThisFrame();
+		initLable();
+		initButtons();
+	}
+	
+	// todo: 설정에서 화면 크기 선택
+	private void initThisFrame() {
+		this.setSize(w, h);
+		this.setResizable(false);
+		this.setLayout(null);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setLocationRelativeTo(null); // 프레임 창을 모니터 가운데에 띄운다.
+		this.setVisible(false);
+	}
+	
+	private void initLable() {
+		title.setFont(new Font("Arial", Font.BOLD, 30));
+		title.setBounds(w / 4, h / 20, w / 2, h / 6);
+		title.setHorizontalAlignment(JLabel.CENTER);
+		this.add(title);
+		
+		lblGameMode[0] = new JLabel("Normal Mode");
+		lblGameMode[1] = new JLabel("Item Mode");
+		for(int i = 0; i < 2; i++) {
+			lblGameMode[i].setFont(new Font("Arial", Font.BOLD, 15));
+			lblGameMode[i].setBounds(w / 3, h / 3, w / 3, h / 15);
+			lblGameMode[i].setHorizontalAlignment(JLabel.CENTER);
+			this.add(lblGameMode[i]);
 		}
+		lblGameMode[1].setVisible(false);
+		
+		lblArrow[0].setBounds(w/3 + 10, h/3, 30, 30);
+		lblArrow[1].setBounds(w - (w/3 + 20), h/3, 30, 30);
+		this.add(lblArrow[0]);
+		this.add(lblArrow[1]);
+	}
 
-		// todo: 설정에서 화면 크기 선택
-		private void initThisFrame() {
-			this.setSize(w, h);
-			this.setResizable(false);
-			this.setLayout(null);
-			this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			this.setLocationRelativeTo(null); // 프레임 창을 모니터 가운데에 띄운다.
-			this.setVisible(false);
+	private void initButtons() {
+		for (int i = 0; i < btnMenu.length; i++) {
+			btnMenu[i] = new JButton(btnText[i]);
+			btnMenu[i].setBounds(w / 3, h / 3 + (h / 10) * (i + 1), w / 3, h / 15);
+			btnMenu[i].setBackground(Color.white);
+			btnMenu[i].setFocusable(false);
+			this.add(btnMenu[i]);
 		}
-
-		private void initLable() {
-			title.setFont(new Font("Arial", Font.BOLD, 30));
-			title.setBounds(w / 4, h / 20, w / 2, h / 6);
-			title.setHorizontalAlignment(JLabel.CENTER);
-			this.add(title);
-
-			lblGameMode[0] = new JLabel("Normal Mode");
-			lblGameMode[1] = new JLabel("Item Mode");
-			for(int i = 0; i < 2; i++) {
-				lblGameMode[i].setFont(new Font("Arial", Font.BOLD, 15));
-				lblGameMode[i].setBounds(w / 3, h / 3, w / 3, h / 15);
-				lblGameMode[i].setHorizontalAlignment(JLabel.CENTER);
-				this.add(lblGameMode[i]);
-			}
-			lblGameMode[1].setVisible(false);
-
-			lblArrow[0].setBounds(w/3 + 10, h/3, 30, 30);
-			lblArrow[1].setBounds(w - (w/3 + 20), h/3, 30, 30);
-			this.add(lblArrow[0]);
-			this.add(lblArrow[1]);
-		}
-
-		private void initButtons() {
-			for (int i = 0; i < btnMenu.length; i++) {
-				btnMenu[i] = new JButton(btnText[i]);
-				btnMenu[i].setBounds(w / 3, h / 3 + (h / 10) * (i + 1), w / 3, h / 15);
-				btnMenu[i].setBackground(Color.white);
-				btnMenu[i].setFocusable(false);
-				this.add(btnMenu[i]);
-			}
-			btnMenu[curPos].setBackground(Color.lightGray);
-		}
+		btnMenu[curPos].setBackground(Color.lightGray);
+	}
 	
 	// up-down으로 메뉴 선택, right-left로 게임 모드 선택
 	private void initControls() {

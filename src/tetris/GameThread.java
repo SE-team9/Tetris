@@ -9,7 +9,7 @@ public class GameThread extends Thread {
 	private int level = 1; // 삭제한 줄 개수에 따라 레벨 상승
 	private int linePerLevel = 7;
 	private int interval = 1000; // sleep 시간 
-	private int speedupPerLevel = 100; 
+	private int speedupPerLevel = 100;
 	private boolean isPaused = false;
 	private int levelMode; // 설정 화면에서 정한 게임 난이도
 
@@ -33,7 +33,7 @@ public class GameThread extends Thread {
 	@Override
 	public void run() {
 		if(Tetris.getGameMode() == 0) {
-			startDefaultMode(); // 일반 모드 
+			startDefaultMode(); // 일반 모드
 		}else {
 			startItemMode(); // 아이템 모드
 		}
@@ -149,7 +149,7 @@ public class GameThread extends Thread {
 			if (ga.isBlockOutOfBounds()) {
 				int gameMode = Tetris.getGameMode();
 				Tetris.gameOver(gameMode, score, levelMode);
-
+				
 				break; // 루프 탈출
 			}
 
@@ -176,6 +176,7 @@ public class GameThread extends Thread {
 			}
 
 			// 현재 블럭이 바닥에 닿았을 때, 완성된 줄을 삭제하고, 삭제된 줄 수 저장
+			//clearedLineNum = ga.clearLines() + ga.oneLineDelte();
 			clearedLineNum = ga.clearLines();
 
 			// 줄이 특정 횟수 삭제되면 아이템 생성
@@ -201,7 +202,7 @@ public class GameThread extends Thread {
 			} else if (levelMode == 2) {
 				speedupPerLevel = 120;
 			}
-			
+
 			int lvl = totalClearedLine / linePerLevel + 1;
 			if (lvl > level) {
 				level = lvl;
@@ -219,5 +220,9 @@ public class GameThread extends Thread {
 
 	public void reStart() {
 		this.isPaused = false;
+	}
+	
+	public boolean getIsPaused() {
+		return this.isPaused;
 	}
 }

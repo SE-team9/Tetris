@@ -23,7 +23,7 @@ public class GameArea extends JPanel {
 	private TetrisBlock block;
 	private TetrisBlock nextBlock;
 	private TetrisBlock[] items;
-	private boolean isItem = false; // 현재 블럭이 아이템 블럭인지 확인하기 위한 변수
+  private boolean isItem = false; // 현재 블럭이 아이템 블럭인지 확인하기 위한 변수
 
 	public GameArea(int w, int h, int columns) {
 		this.gfW = w;
@@ -39,7 +39,7 @@ public class GameArea extends JPanel {
 		gridRows = this.getBounds().height / gridCellSize;
 	}
 
-	// --------------------------------------------------------------------- 초기화관련동작
+  // --------------------------------------------------------------------- 초기화관련동작
 	// TODO: 프레임 크기에 따라 GameArea의 x, y 위치가 바뀌어야 함. 
 	private void initThisPanel() {
 		this.setBounds(gfW / 3, gfH / 60, 200, 400);
@@ -400,8 +400,9 @@ public class GameArea extends JPanel {
 		clearLine(yPos);
 		shiftDown(yPos);
 		repaint();
-
+		
 		return 1;
+
 	}
   
 	// 두 줄을 삭제한다.
