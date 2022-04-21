@@ -150,8 +150,10 @@ public class GameForm extends JFrame {
 		am.put("downToEnd", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (!isPaused)
+				if (!isPaused) {
 					ga.dropBlock();
+					gt.scorePlus15();
+				}
 			}
 		});
 

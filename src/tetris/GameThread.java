@@ -219,4 +219,9 @@ public class GameThread extends Thread {
 		score++;
 		gf.updateScore(score);
 	}
+	
+	public void scorePlus15() {
+		score+=15;
+		gf.updateScore(score);
+	}
 }
