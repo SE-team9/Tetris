@@ -15,44 +15,39 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 
 public class StartupForm extends JFrame {
-	private JLabel title = new JLabel("Tetris");
-	private JLabel guide = new JLabel("메뉴 이동: Up/Down, 게임 모드 선택: Right/Left, 메뉴 선택: Enter");
-	private JLabel[] mode = new JLabel[2];
-	private int curMode; // 0이면 일반 모드, 1이면 아이템 모드
+	private JLabel title = new JLabel("SE Team9 Tetris");
+	
+	// 0이면 일반 모드, 1이면 아이템 모드 
+	private JLabel[] gameMode = new JLabel[2];
+	private int curGameMode; 
 
+	// 시작 메뉴, 설정 화면, 스코어 보드, 게임 종료 
 	private JButton[] menu = new JButton[4];
 	private String[] btnText = { "Start Game", "Settings", "ScoreBoard", "Quit" };
-	private static int curPos;
+	private int curPos;
 
+	private int w, h;
+	
 	public StartupForm() {
-		initComponents();
+		this.w = 600;
+		this.h = 450;
+		
+		// 객체를 처음 생성할 때는 기본 값 (다른 곳에서 이 form을 띄울 때 이 함수로 크기 초기화)
+		initComponents(w, h); 
 		initControls();
 	}
-
+	
+	// up-down으로 메뉴 선택, right-left로 게임 모드 선택
 	private void initControls() {
 		InputMap im = this.getRootPane().getInputMap();
 		ActionMap am = this.getRootPane().getActionMap();
-
-		// 키보드의 키들을 guide 동작과 연결 
-		for (int i = 0; i < 125; i++) {
-			String text = java.awt.event.KeyEvent.getKeyText(i);
-			if (!text.contains("Unknown keyCode: ")) {
-				im.put(KeyStroke.getKeyStroke(text), "guide");
-			}
-		}
 
 		im.put(KeyStroke.getKeyStroke("UP"), "up");
 		im.put(KeyStroke.getKeyStroke("DOWN"), "down");
 		im.put(KeyStroke.getKeyStroke("ENTER"), "enter");
 		im.put(KeyStroke.getKeyStroke("RIGHT"), "right");
 		im.put(KeyStroke.getKeyStroke("LEFT"), "left");
-
-		am.put("guide", new AbstractAction() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				displayGuide();
-			}
-		});
+		
 		am.put("up", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -64,13 +59,6 @@ public class StartupForm extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				moveDown();
-			}
-		});
-
-		am.put("enter", new AbstractAction() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				selectMenu(curPos);
 			}
 		});
 
@@ -87,60 +75,53 @@ public class StartupForm extends JFrame {
 				moveLeft();
 			}
 		});
+		
+		am.put("enter", new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				selectMenu(curPos);
+			}
+		});
 	}
 
-	// 위로 이동
 	private void moveUp() {
 		menu[curPos].setBackground(Color.white);
-
 		curPos--;
 		if (curPos < 0) {
 			curPos = menu.length - 1;
 		}
-
 		menu[curPos].setBackground(Color.lightGray);
 	}
 
-	// 아래로 이동
 	private void moveDown() {
 		menu[curPos].setBackground(Color.white);
-
 		curPos++;
 		if (curPos > menu.length - 1) {
 			curPos = 0;
 		}
-
 		menu[curPos].setBackground(Color.lightGray);
 	}
 
-	// 모드 선택 오른쪽 방향키
 	private void moveRight() {
-		mode[curMode].setVisible(false);
-
-		curMode++;
-		if (curMode > mode.length - 1) {
-			curMode = 0;
+		gameMode[curGameMode].setVisible(false);
+		curGameMode++;
+		if (curGameMode > gameMode.length - 1) {
+			curGameMode = 0;
 		}
-
-		mode[curMode].setVisible(true);
+		gameMode[curGameMode].setVisible(true);
 	}
 
-	// 모드 선택 왼쪽 방향키
 	private void moveLeft() {
-		mode[curMode].setVisible(false);
-
-		curMode--;
-		if (curMode < 0) {
-			curMode = mode.length - 1;
+		gameMode[curGameMode].setVisible(false);
+		curGameMode--;
+		if (curGameMode < 0) {
+			curGameMode = gameMode.length - 1;
 		}
-
-		mode[curMode].setVisible(true);
+		gameMode[curGameMode].setVisible(true);
 	}
-  
-  // 다른 키를 눌렀을 경우 사용 가능한 키를 표시 
-	// (알파벳, 숫자, F1~F12에는 작동하지만 그 외의 키는 작동하지 않음. 수정 필요)
-	private void displayGuide() {
-		guide.setVisible(true);
+
+	public int getCurrentGameMode() {
+		return curGameMode;
 	}
 
 	// 선택한 메뉴에 따라 화면 전환
@@ -152,7 +133,7 @@ public class StartupForm extends JFrame {
 			break;
 		case 1:
 			this.setVisible(false);
-			Tetris.showOption();
+			Tetris.showOption(); // 설정 화면 
 			break;
 		case 2:
 			this.setVisible(false);
@@ -163,70 +144,51 @@ public class StartupForm extends JFrame {
 			break;
 		}
 	}
-
-	public int getCurrentGameMode() {
-		return curMode;
+	
+	// 다른 곳에서 이 form을 띄울 때 이 함수로 크기 초기화
+	public void initComponents(int w, int h) {
+		// 멤버 변수 값 업데이트
+		this.w = w;
+		this.h = h;
+		
+		initThisFrame();
+		initLable();
+		initButtons();
 	}
 	
-	private void initComponents() {
-		initThisFrame();
-		initButtons();
-		initLable();
-	}
-
-//	public void initComponents(int w, int h) {
-//		this.setSize(w, h);
-//		initButtons();
-//		initLable();
-//	}
-
 	// todo: 설정에서 화면 크기 선택
 	private void initThisFrame() {
-		this.setSize(600, 450);
+		this.setSize(w, h);
 		this.setResizable(false);
 		this.setLayout(null);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setLocationRelativeTo(null);
+		this.setLocationRelativeTo(null); // 프레임 창을 모니터 가운데에 띄운다.
 		this.setVisible(false);
 	}
-
+	
+	// 조작키 안내, 게임 제목, 게임 모드 텍스트 초기화
 	private void initLable() {
-		// 키 조작 방법
-		guide.setHorizontalAlignment(SwingConstants.CENTER);
-		guide.setBounds(50, 20, 500, 30);
-		this.add(guide); 
-		guide.setVisible(false);
-
-		int w = this.getWidth();
-		int h = this.getHeight();
-		Font tetrisFont = new Font("Arial", Font.BOLD, w / 10);
-
-		// 게임 제목
-		title.setFont(tetrisFont);
-		title.setBounds(w / 4, h / 10, w / 2, h / 6);
+		title.setFont(new Font("Arial", Font.BOLD, 30));
+		title.setBounds(w / 4, h / 20, w / 2, h / 6);
 		title.setHorizontalAlignment(JLabel.CENTER);
 		this.add(title);
 
-		// 게임 모드
-		mode[0] = new JLabel("Normal Mode");
-		mode[0].setBounds(w / 3, h / 2, w / 3, h / 15);
-		mode[0].setHorizontalAlignment(JLabel.CENTER);
-		this.add(mode[0]);
-
-		mode[1] = new JLabel("Item Mode");
-		mode[1].setBounds(w / 3, h / 2, w / 3, h / 15);
-		mode[1].setHorizontalAlignment(JLabel.CENTER);
-		this.add(mode[1]);
-		mode[1].setVisible(false);
+		// TODO: 설정 화면처럼 <> 이 모양을 표시했으면 좋겠는데, 프레임 크기에 따라 또 위치를 바꿔줘야 하니까 일단 보류!
+		gameMode[0] = new JLabel("Normal Mode");
+		gameMode[1] = new JLabel("Item Mode");
+		for(int i = 0; i < 2; i++) {
+			gameMode[i].setFont(new Font("Arial", Font.BOLD, 15));
+			gameMode[i].setBounds(w / 3, h / 3, w / 3, h / 15);
+			gameMode[i].setHorizontalAlignment(JLabel.CENTER);
+			this.add(gameMode[i]);
+		}
+		gameMode[1].setVisible(false);
 	}
 
 	private void initButtons() {
-		int w = this.getWidth();
-		int h = this.getHeight();
-
 		for (int i = 0; i < menu.length; i++) {
 			menu[i] = new JButton(btnText[i]);
-			menu[i].setBounds(w / 3, h / 2 + (i + 1) * (h / 12), w / 3, h / 15);
+			menu[i].setBounds(w / 3, h / 3 + (h / 10) * (i + 1), w / 3, h / 15);
 			menu[i].setBackground(Color.white);
 			menu[i].setFocusable(false);
 			this.add(menu[i]);

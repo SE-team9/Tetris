@@ -2,6 +2,7 @@ package form;
 import tetris.*;
 
 import java.awt.BorderLayout;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -28,21 +29,22 @@ import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
 public class LeaderboardForm extends JFrame {
+	private static int w, h;
 	private JTable leaderboard;
-
 	private DefaultTableModel tm;
 	private String[] leaderboardFile = { "leaderboardFile_Normal", "leaderboardFile_Item" };
 	private TableRowSorter<TableModel> sorter;
 	JScrollPane scrollLeaderboard;
 
 	private JLabel[] gameModeLabel;
-	private String gameMode[] = { "일반모드", "아이템모드" };
+	private String gameMode[] = { "일반 모드", "아이템 모드" };
 	private int curCol;
 
 	public LeaderboardForm() {
-		initThisFrame();
-		initLabel();
-
+		this.w = 600;
+		this.h = 450;
+		initComponents(w, h);
+		
 		initTableData(0);
 		initLeaderboard(tm);
 		initTableSorter();
@@ -51,9 +53,17 @@ public class LeaderboardForm extends JFrame {
 		initControls();
 	}
 
+	public void initComponents(int w, int h) {
+		this.w = w;
+		this.h = h;
+		
+		initThisFrame();
+		initLabel();
+	}
+
 	// ---------------------------------------------------------------------초기화
 	private void initThisFrame() {
-		this.setSize(600, 450);
+		this.setSize(w, h);
 		this.setResizable(false);
 		this.setLayout(null);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -61,20 +71,19 @@ public class LeaderboardForm extends JFrame {
 		this.setVisible(false);
 	}
 
-  // 모드, 난이도 표시 레이블 초기화 
+    // 모드, 난이도 표시 레이블 초기화 
 	private void initLabel() {
 		gameModeLabel = new JLabel[2];
 		for (int i = 0; i < gameModeLabel.length; i++) {
 			gameModeLabel[i] = new JLabel(gameMode[i]);
 			gameModeLabel[i].setHorizontalAlignment(JLabel.CENTER);
-			gameModeLabel[i].setBounds(200, 10, 200, 30);
+			gameModeLabel[i].setBounds(w / 3, h / 30, 200, 30);
 			gameModeLabel[i].setVisible(false);
 			this.add(gameModeLabel[i]);
 		}
 		gameModeLabel[0].setVisible(true);
 	}
   
-	// ESC를 누르면 시작 화면으로 이동
 	private void initControls() {
 		InputMap im = this.getRootPane().getInputMap();
 		ActionMap am = this.getRootPane().getActionMap();
@@ -210,7 +219,7 @@ public class LeaderboardForm extends JFrame {
 	// 생성된 테이블 데이터를 사용하여 리더보드 생성
 	private void initScrollLeaderboard() {
 		scrollLeaderboard = new JScrollPane(leaderboard);
-		scrollLeaderboard.setBounds(40, 50, 520, 350);
+		scrollLeaderboard.setBounds(w / 30, h / 10, w - 50, h - 100);
 		this.add(scrollLeaderboard);
 	}
 

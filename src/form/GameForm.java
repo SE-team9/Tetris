@@ -13,19 +13,15 @@ import javax.swing.JTextArea;
 import javax.swing.KeyStroke;
 
 public class GameForm extends JFrame {
-
-	private boolean isPaused = false;
-
 	private GameArea ga;
 	private GameThread gt;
 	private NextBlockArea nba;
-
 	private JLabel scoreDisplay;
 	private JLabel levelDisplay;
-	private JTextArea keyDisplay;
+	private boolean isPaused = false;
 
 	public GameForm() {
-		initComponents();
+		initComponents(600, 450);
 		initControls();
 	}
 
@@ -33,13 +29,14 @@ public class GameForm extends JFrame {
 		InputMap im = this.getRootPane().getInputMap();
 		ActionMap am = this.getRootPane().getActionMap();
 
-		im.put(KeyStroke.getKeyStroke("RIGHT"), "right");
-		im.put(KeyStroke.getKeyStroke("LEFT"), "left");
-		im.put(KeyStroke.getKeyStroke("UP"), "up");
-		im.put(KeyStroke.getKeyStroke("DOWN"), "downOneLine");
-		im.put(KeyStroke.getKeyStroke("SPACE"), "downToEnd");
-		im.put(KeyStroke.getKeyStroke("Q"), "quit");
-		im.put(KeyStroke.getKeyStroke("E"), "exit");
+		im.put(KeyStroke.getKeyStroke("RIGHT"), "right"); // d
+		im.put(KeyStroke.getKeyStroke("LEFT"), "left"); // a
+		im.put(KeyStroke.getKeyStroke("UP"), "up"); // w
+		im.put(KeyStroke.getKeyStroke("DOWN"), "downOneLine"); // s
+		im.put(KeyStroke.getKeyStroke("SPACE"), "downToEnd"); // enter
+		im.put(KeyStroke.getKeyStroke("Q"), "quit"); // q
+		im.put(KeyStroke.getKeyStroke("E"), "exit"); // e
+		
 		im.put(KeyStroke.getKeyStroke("ESCAPE"), "back");
 
 		am.put("right", new AbstractAction() {
@@ -136,20 +133,20 @@ public class GameForm extends JFrame {
 		levelDisplay.setText("Level: " + level);
 	}
 
-	private void initComponents() {
-		initThisFrame();
-		initDisplay();
-
-		ga = new GameArea(10);
+	public void initComponents(int w, int h) {
+		initThisFrame(w, h);
+		initDisplay(w, h);
+		
+		ga = new GameArea(w, h, 10);
 		this.add(ga);
 
-		nba = new NextBlockArea(ga);
+		nba = new NextBlockArea(w, h, ga);
 		this.add(nba);
 	}
 
 	// 이 판넬 화면 설정
-	private void initThisFrame() {
-		this.setSize(600, 450);
+	private void initThisFrame(int w, int h) {
+		this.setSize(w, h);
 		this.setResizable(false);
 		this.setLayout(null);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -157,19 +154,13 @@ public class GameForm extends JFrame {
 		this.setVisible(false);
 	}
 
-	private void initDisplay() {
+	private void initDisplay(int w, int h) {
 		scoreDisplay = new JLabel("Score: 0");
 		levelDisplay = new JLabel("Level: 0");
-		scoreDisplay.setBounds(420, 10, 100, 30);
-		levelDisplay.setBounds(420, 40, 100, 30);
+		scoreDisplay.setBounds(w - (w/5), h / 20, 100, 30);
+		levelDisplay.setBounds(w - (w/5), h / 20 + 20, 100, 30);
 		this.add(scoreDisplay);
 		this.add(levelDisplay);
-
-		keyDisplay = new JTextArea(" ← : 블럭 왼쪽 이동 \n → : 블럭 오른쪽 이동 \n"
-				+ " ↓ : 블럭 아래 한 칸 이동\n ↑ : 블럭 회전\n Space : 블럭 맨 아래 이동\n" + " q : 게임 정지/재개\n ESC : 뒤로 가기\n");
-		keyDisplay.setBounds(20, 210, 160, 150);
-		keyDisplay.setFocusable(false);
-		this.add(keyDisplay);
 	}
 
 	// GameForm 프레임 실행
