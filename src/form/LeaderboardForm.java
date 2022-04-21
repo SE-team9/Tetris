@@ -1,7 +1,4 @@
 package form;
-import tetris.*;
-
-import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -26,6 +23,8 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
+
+import tetris.Tetris;
 
 public class LeaderboardForm extends JFrame {
 	private JTable leaderboard;

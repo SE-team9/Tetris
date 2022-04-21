@@ -174,7 +174,7 @@ public class StartupForm extends JFrame {
 		// 키 조작 방법
 		guide.setHorizontalAlignment(SwingConstants.CENTER);
 		guide.setBounds(50, 20, 500, 30);
-		this.add(guide); 
+		//this.add(guide); 
 
 		int w = this.getWidth();
 		int h = this.getHeight();

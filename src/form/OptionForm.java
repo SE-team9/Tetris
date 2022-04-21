@@ -194,7 +194,7 @@ public class OptionForm extends JFrame {
 		this.setLayout(null);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setLocationRelativeTo(null);
-		this.setVisible(true);
+		this.setVisible(false);
 	}
 
 	private void initLabel(int w, int h) {

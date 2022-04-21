@@ -62,8 +62,7 @@ public class GameArea extends JPanel {
 
 	// 아이템블럭초기화
 	public void initItems() {
-		//items = new TetrisBlock[] { new FillEmpty(), new Weight(), new DeleteAroundU(), new TwoLineDelete(), new OneLineDelete()};
-		items = new TetrisBlock[] { new OneLineDelete()};
+		items = new TetrisBlock[] { new FillEmpty(), new Weight(), new DeleteAroundU(), new TwoLineDelete(), new OneLineDelete()};
 	}
 
 	// 격자 크기 반환
@@ -334,9 +333,9 @@ public class GameArea extends JPanel {
 		if (rotated.getLeftEdge() < 0)
 			rotated.setX(0);
 		if (rotated.getRightEdge() >= gridColumns)
-			rotated.setX(gridColumns - block.getWidth());
+			rotated.setX(gridColumns - rotated.getWidth());
 		if (rotated.getBottomEdge() >= gridRows)
-			rotated.setY(gridRows - block.getHeight());
+			rotated.setY(gridRows - rotated.getHeight());
 
 		int[][] shape = rotated.getShape();
 		int w = rotated.getWidth();
@@ -432,10 +431,6 @@ public class GameArea extends JPanel {
 		
 		// 아이템의 좌우아래를 삭제한다.
 		public void DeleteAroundU() {
-			/*int leftX = block.getX() - 1;
-			int leftY = block.getY() - 1;
-			int rightX = block.getRightEdge();
-			int rightY = block.getY() - 1;*/
 			for(int y = block.getY(); y <= block.getBottomEdge(); y++) {
 				if(y >= gridRows) break;
 				for(int x = block.getX() - 1; x <= block.getRightEdge(); x++) {
@@ -444,77 +439,6 @@ public class GameArea extends JPanel {
 					background[y][x] = null;
 				}
 			}
-			
-			/*if(leftX >= 0 && background[leftY][leftX] != null) {
-				try {
-					Thread.sleep(200);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				int xPos = leftX;
-				int emptyNum = 0;
-				int currentR;
-				int nextR;
-		
-				for (int r = gridRows - 1; r > 0; r--) {
-					if (background[r][xPos] == null) {
-						emptyNum++;
-						nextR = r - 1;
-						while (nextR >= 0 && background[nextR][xPos] == null) {
-							nextR--;
-						}
-						if (nextR == -1) {
-							return;
-						} else {
-							currentR = r;
-							for (; nextR >= 0; nextR--, currentR--) {
-								background[currentR][xPos] = background[nextR][xPos];
-								repaint();
-							}
-						}
-					}
-				}
-				while (emptyNum > 0) {
-					block.moveDown();
-				}
-				repaint();
-			}
-			if(rightX < gridColumns && background[rightY][rightX] != null) {
-				try {
-					Thread.sleep(200);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				int xPos = rightX;
-				int emptyNum = 0;
-				int currentR;
-				int nextR;
-		
-				for (int r = gridRows - 1; r > 0; r--) {
-					if (background[r][xPos] == null) {
-						emptyNum++;
-						nextR = r - 1;
-						while (nextR >= 0 && background[nextR][xPos] == null) {
-							nextR--;
-						}
-						if (nextR == -1) {
-							return;
-						} else {
-							currentR = r;
-							for (; nextR >= 0; nextR--, currentR--) {
-								background[currentR][xPos] = background[nextR][xPos];
-								repaint();
-							}
-						}
-					}
-				}
-				while (emptyNum > 0) {
-					block.moveDown();
-				}
-				repaint();
-			}*/
 		}
 
 	// 현재 블럭 아이템의 기능을 수행한다.
@@ -579,6 +503,8 @@ public class GameArea extends JPanel {
 				}
 			}
 		}
+		
+		block = null;
 	}
 
 	// 완성된 줄을 삭제한다.
@@ -597,6 +523,7 @@ public class GameArea extends JPanel {
 					break;
 				}
 			}
+			
 			if (lineFilled) {
 				for (int c = 0; c < gridColumns; c++) {
 					background[r][c] = Color.white;
@@ -605,7 +532,6 @@ public class GameArea extends JPanel {
 				try {
 					Thread.sleep(150);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				for (int c = 0; c < gridColumns; c++) {
@@ -615,9 +541,9 @@ public class GameArea extends JPanel {
 				try {
 					Thread.sleep(150);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+				
 				linesCleared++;
 				clearLine(r);
 				shiftDown(r);

@@ -69,8 +69,10 @@ public class GameForm extends JFrame {
 		am.put("downOneLine", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (!isPaused)
+				if (!isPaused) {
 					ga.moveBlockDown();
+					gt.scorePlus1();
+				}
 			}
 		});
 
@@ -169,7 +171,7 @@ public class GameForm extends JFrame {
 				+ " ↓ : 블럭 아래 한 칸 이동\n ↑ : 블럭 회전\n Space : 블럭 맨 아래 이동\n" + " q : 게임 정지/재개\n ESC : 뒤로 가기\n");
 		keyDisplay.setBounds(20, 210, 160, 150);
 		keyDisplay.setFocusable(false);
-		this.add(keyDisplay);
+		//this.add(keyDisplay);
 	}
 
 	// GameForm 프레임 실행
