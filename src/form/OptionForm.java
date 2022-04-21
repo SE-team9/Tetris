@@ -1,5 +1,6 @@
 package form;
 import tetris.*;
+import form.LeaderboardForm;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -48,6 +49,8 @@ public class OptionForm extends JFrame {
 		 { "NO", "YES" }, // 점수 기록 초기화
 		 { "NO", "YES" } // 기본 설정으로 되돌리기
 	};
+	
+	LeaderboardForm lf = new LeaderboardForm();
 	
 	// 행마다 포커스가 놓인 칼럼 위치가 다르기 때문에 배열 만들기
 	private int row = 0;
@@ -308,7 +311,7 @@ public class OptionForm extends JFrame {
 	
 	// 이 화면 자체에서 파일 삭제할 수 있을 듯 (다만 JTable은 리더보드폼에 있음)
 	private void initScoreboard() {
-		
+		lf.deleteLeaderboard();
 	}
 	
 	// OptionForm 프레임 실행

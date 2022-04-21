@@ -71,7 +71,7 @@ public class Tetris {
 	
 	// ¡∂¿€ ≈∞ 
 	public static int getKeyMode() {
-		if(of == null) return 0;
+	 	if(of == null) return 0;
 		return of.getCurrentKeyMode();
 	}
 	

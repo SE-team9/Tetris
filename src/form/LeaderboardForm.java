@@ -5,7 +5,9 @@ import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
@@ -270,6 +272,20 @@ public class LeaderboardForm extends JFrame {
 		curCol = Tetris.getGameMode();
 
 		this.setVisible(true); // 스코어보드 표시
+	}
+	
+	public void deleteLeaderboard() {
+		try {
+			new FileOutputStream(leaderboardFile[0]).close();
+			new FileOutputStream(leaderboardFile[1]).close();
+			initComponents(w, h);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	// LeaderboardForm 프레임 실행
