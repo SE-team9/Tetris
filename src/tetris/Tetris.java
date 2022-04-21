@@ -48,7 +48,7 @@ public class Tetris {
 		of.setVisible(true); // 설정 화면 띄우기
 		
 		of.getContentPane().repaint();
-	}	
+	}
 	
 	public static void showLeaderboard() {
 		lf.getContentPane().removeAll();

@@ -10,8 +10,17 @@ import java.util.Random;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
-import tetrisItems.*;
-import tetrisblocks.*;
+import tetrisItems.DeleteAroundU;
+import tetrisItems.FillEmpty;
+import tetrisItems.OneLineDelete;
+import tetrisItems.TwoLineDelete;
+import tetrisItems.Weight;
+import tetrisblocks.IShape;
+import tetrisblocks.JShape;
+import tetrisblocks.LShape;
+import tetrisblocks.OShape;
+import tetrisblocks.SShape;
+import tetrisblocks.ZShape;
 
 public class GameArea extends JPanel {
 	private static int gfW, gfH;
@@ -51,22 +60,37 @@ public class GameArea extends JPanel {
 	public void initBackgroundArray() {
 		background = new Color[gridRows][gridColumns];
 	}
+	
+	public Color[][] getBackgroundArray() {
+		return background;
+	}
 
 	// 블럭초기화
 	public void initBlocks() {
 		blocks = new TetrisBlock[] { new IShape(), new JShape(), new LShape(), new OShape(), new ZShape(),
 				new SShape() };
 	}
+	
+	public TetrisBlock[] getBlocks() {
+		return blocks;
+	}
 
 	// 아이템블럭초기화
 	public void initItems() {
-		//items = new TetrisBlock[] { new FillEmpty(), new Weight(), new DeleteAroundU(), new TwoLineDelete(), new OneLineDelete()};
-		items = new TetrisBlock[] { new OneLineDelete()};
+		items = new TetrisBlock[] { new FillEmpty(), new Weight(), new DeleteAroundU(), new TwoLineDelete(), new OneLineDelete()};
+	}
+	
+	public TetrisBlock[] getItems() {
+		return items;
 	}
 
 	// 격자 크기 반환
 	public int getGridCellSize() {
 		return gridCellSize;
+	}
+	
+	public int getGridColumns() {
+		return gridColumns;
 	}
 	
 	// 현재 블럭이 아이템이면 변수값을 true로 설정 아니면 false로 설정
@@ -100,13 +124,13 @@ public class GameArea extends JPanel {
 		}
 		return result;
 	}
-
+	public int level = Tetris.getGameLevel();
 	// level에 따른 가중치 부여
 	public int makeRandom() {
 		Map<String, Double> w = new HashMap<String, Double>();
 		Random r = new Random();
 
-		int level = Tetris.getGameLevel();
+		//int level = Tetris.getGameLevel();
 		double weight, iWeight;
 		int blockNum;
 
@@ -265,7 +289,7 @@ public class GameArea extends JPanel {
 		return true; // keep going
 	}
 
-	private boolean checkLeft() {
+	public boolean checkLeft() {
 		if (block.getLeftEdge() == 0) {
 			return false; // stop
 		}
@@ -293,7 +317,7 @@ public class GameArea extends JPanel {
 		return true; // keep going
 	}
 
-	private boolean checkRight() {
+	public boolean checkRight() {
 		if (block.getRightEdge() == gridColumns) {
 			return false; // stop
 		}
@@ -323,7 +347,7 @@ public class GameArea extends JPanel {
 
 	// 현재 블럭을 회전시켰을 때의 객체를 생성하여 경계를 넘는지 확인한다. 
 	// 블럭이 완전히 바닥에 닿음과 동시에 회전시키면 배경과 현재 블럭이 겹치는 등 기능이 완전하지 않으므로 수정 필요 
-	private boolean checkRotate() {
+	public boolean checkRotate() {
 		TetrisBlock rotated = new TetrisBlock(block.getShape());
 		rotated.setCurrentRotation(block.getCurrentRotation());
 		rotated.setX(block.getX());
@@ -334,9 +358,9 @@ public class GameArea extends JPanel {
 		if (rotated.getLeftEdge() < 0)
 			rotated.setX(0);
 		if (rotated.getRightEdge() >= gridColumns)
-			rotated.setX(gridColumns - block.getWidth());
+			rotated.setX(gridColumns - rotated.getWidth());
 		if (rotated.getBottomEdge() >= gridRows)
-			rotated.setY(gridRows - block.getHeight());
+			rotated.setY(gridRows - rotated.getHeight());
 
 		int[][] shape = rotated.getShape();
 		int w = rotated.getWidth();
@@ -394,15 +418,12 @@ public class GameArea extends JPanel {
 	}
   
 	//한 줄을 삭제한다.
-	public int oneLineDelte() {
+	public void oneLineDelte() {
 		int yPos = block.getY();
 
 		clearLine(yPos);
 		shiftDown(yPos);
 		repaint();
-		
-		return 1;
-
 	}
   
 	// 두 줄을 삭제한다.
@@ -518,7 +539,7 @@ public class GameArea extends JPanel {
 				repaint();
 			}*/
 		}
-	
+
 	// 현재 블럭 아이템의 기능을 수행한다.
 	public void itemFunction() {
 
@@ -537,11 +558,13 @@ public class GameArea extends JPanel {
 			oneLineDelte();
 		}
 	}
-	
-	//추가 점수
+
+	// 추가 점수
 	public int specialScore() {
-		if(this.block instanceof OneLineDelete) return 1;
-		else return 0;
+		if (this.block instanceof OneLineDelete)
+			return 1;
+		else
+			return 0;
 	}
 
 	// 아이템을 반짝거린다.
@@ -587,6 +610,7 @@ public class GameArea extends JPanel {
 				}
 			}
 		}
+		block = null;
 	}
 
 	// 완성된 줄을 삭제한다.
@@ -742,6 +766,4 @@ public class GameArea extends JPanel {
 		drawBackground(g);
 		drawBlock(g);
 	}
-	
-	public int testLevel = Tetris.getGameLevel();
 }

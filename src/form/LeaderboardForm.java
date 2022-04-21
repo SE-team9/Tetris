@@ -29,11 +29,11 @@ import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
 /*
- * ì›ë˜ëŠ” ê²Œì„ ì¢…ë£Œë˜ë©´ í•˜ë‚˜ì˜ ê³ ì •ëœ ìŠ¤ì½”ì–´ë³´ë“œë¥¼ visibilityë§Œ ì¡°ì ˆí•˜ì—¬ ë³´ì—¬ì¤¬ì§€ë§Œ,
+ * ¿ø·¡´Â °ÔÀÓ Á¾·áµÇ¸é ÇÏ³ªÀÇ °íÁ¤µÈ ½ºÄÚ¾îº¸µå¸¦ visibility¸¸ Á¶ÀıÇÏ¿© º¸¿©ÁáÁö¸¸,
  * 
- * ì´ì œëŠ” ê²Œì„ì´ ì¢…ë£Œë˜ì—ˆì„ ë•Œ, ì‹œì‘ í™”ë©´ì—ì„œ ì–´ë–¤ ëª¨ë“œë¥¼ ì„ íƒí–ˆëŠëƒì— ë”°ë¼ ë‹¤ë¥¸ íŒŒì¼ì„ ë³´ì—¬ì¤˜ì•¼ í•œë‹¤!!
+ * ÀÌÁ¦´Â °ÔÀÓÀÌ Á¾·áµÇ¾úÀ» ¶§, ½ÃÀÛ È­¸é¿¡¼­ ¾î¶² ¸ğµå¸¦ ¼±ÅÃÇß´À³Ä¿¡ µû¶ó ´Ù¸¥ ÆÄÀÏÀ» º¸¿©Áà¾ß ÇÑ´Ù!!
  * 
- * ê·¸ë¦¬ê³  ì¶”ê°€ì ìœ¼ë¡œ ì¢Œìš° í‚¤ ì…ë ¥ì— ë”°ë¼ ì„œë¡œ ë‹¤ë¥¸ íŒŒì¼ì„ ë³´ì—¬ì¤˜ì•¼ í•œë‹¤. 
+ * ±×¸®°í Ãß°¡ÀûÀ¸·Î ÁÂ¿ì Å° ÀÔ·Â¿¡ µû¶ó ¼­·Î ´Ù¸¥ ÆÄÀÏÀ» º¸¿©Áà¾ß ÇÑ´Ù. 
  * 
  */
 
@@ -43,7 +43,7 @@ public class LeaderboardForm extends JFrame {
 	private DefaultTableModel tm;
 	private String[] leaderboardFile = { "leaderboardFile_Normal", "leaderboardFile_Item" };
 	private TableRowSorter<TableModel> sorter;
-	private JScrollPane scrollLeaderboard; // í™”ë©´ ë²”ìœ„ë¥¼ ë„˜ì–´ê°ˆ ë•Œ ìŠ¤í¬ë¡¤ ê°€ëŠ¥í•˜ë„ë¡
+	private JScrollPane scrollLeaderboard; // È­¸é ¹üÀ§¸¦ ³Ñ¾î°¥ ¶§ ½ºÅ©·Ñ °¡´ÉÇÏµµ·Ï
 
 	private JLabel lblGameMode;
 	private String gameMode[] = { "Normal Mode", "Item Mode" };
@@ -51,14 +51,14 @@ public class LeaderboardForm extends JFrame {
 	private int curMode;
 	private Vector ci;
 	
-	// Tetrisì—ì„œ ê°ì²´ê°€ ì²˜ìŒ ìƒì„±ë  ë•Œ ì´ˆê¸°í™” ì‘ì—… 
+	// Tetris¿¡¼­ °´Ã¼°¡ Ã³À½ »ı¼ºµÉ ¶§ ÃÊ±âÈ­ ÀÛ¾÷ 
 	public LeaderboardForm() {
 		this.w = 600;
 		this.h = 450;
 		this.curMode = 0;
 		initComponents(w, h, 0);
 		
-		// ì™¸ë¶€ì—ì„œ í˜¸ì¶œí•  ë•Œ ëª¨ë“œë¥¼ ì¸ìë¡œ ë„˜ê²¨ì¤„ ìˆ˜ ìˆë„ë¡ 
+		// ¿ÜºÎ¿¡¼­ È£ÃâÇÒ ¶§ ¸ğµå¸¦ ÀÎÀÚ·Î ³Ñ°ÜÁÙ ¼ö ÀÖµµ·Ï 
 		updateTableWithMode(0); 
 		
 		initControls();
@@ -75,7 +75,7 @@ public class LeaderboardForm extends JFrame {
 		this.setLocationRelativeTo(null);
 		this.setVisible(false);
 		
-		// í˜„ì¬ ëª¨ë“œì— ë”°ë¼ ë ˆì´ë¸” ì´ˆê¸°í™” (ì‹œì‘ ë©”ë‰´ì—ì„œëŠ” ì¼ë°˜ ëª¨ë“œ)
+		// ÇöÀç ¸ğµå¿¡ µû¶ó ·¹ÀÌºí ÃÊ±âÈ­ (½ÃÀÛ ¸Ş´º¿¡¼­´Â ÀÏ¹İ ¸ğµå)
 		lblGameMode = new JLabel(gameMode[col]);
 		
 		lblGameMode.setHorizontalAlignment(JLabel.CENTER);
@@ -97,19 +97,19 @@ public class LeaderboardForm extends JFrame {
 		initScrollLeaderboard();
 	}
 
-	// í˜„ì¬ ëª¨ë“œì— ë”°ë¼ íŒŒì¼ ë°ì´í„° ê°€ì ¸ì˜¤ê¸°
+	// ÇöÀç ¸ğµå¿¡ µû¶ó ÆÄÀÏ µ¥ÀÌÅÍ °¡Á®¿À±â
 	private void initTableData() {
 		String header[] = { "Player", "Score", "Level" };
 		String contents[][] = {};
 		
-		// í…Œì´ë¸”ì˜ ë°ì´í„°ë¥¼ ê´€ë¦¬í•˜ëŠ” í…Œì´ë¸” ëª¨ë¸ (ì–´ë–¤ íŒŒì¼ì—ì„œë“ ì§€ ì‚¬ìš© ê°€ëŠ¥)
+		// Å×ÀÌºíÀÇ µ¥ÀÌÅÍ¸¦ °ü¸®ÇÏ´Â Å×ÀÌºí ¸ğµ¨ (¾î¶² ÆÄÀÏ¿¡¼­µçÁö »ç¿ë °¡´É)
 		tm = new DefaultTableModel(contents, header) {
-			@Override // ëª¨ë“  ì…€ í¸ì§‘ ë¶ˆê°€ëŠ¥í•˜ë„ë¡ 
+			@Override // ¸ğµç ¼¿ ÆíÁı ºÒ°¡´ÉÇÏµµ·Ï 
 			public boolean isCellEditable(int row, int column) {
 				return false;
 			}
 
-			@Override // ì ìˆ˜ ì½ì–´ì˜¬ ë•Œ ì •ìˆ˜ íƒ€ì…ìœ¼ë¡œ 
+			@Override // Á¡¼ö ÀĞ¾î¿Ã ¶§ Á¤¼ö Å¸ÀÔÀ¸·Î 
 			public Class<?> getColumnClass(int columnIndex) {
 				if (columnIndex == 1) // Score 
 					return Integer.class;
@@ -117,14 +117,14 @@ public class LeaderboardForm extends JFrame {
 			}
 		};
 		
-		// í…Œì´ë¸”ì˜ ì¹¼ëŸ¼ ì‹ë³„ì ì´ˆê¸°í™” 
+		// Å×ÀÌºíÀÇ Ä®·³ ½Äº°ÀÚ ÃÊ±âÈ­ 
 		ci = new Vector();
 		ci.add("Player");
 		ci.add("Score");
 		ci.add("Level");
 
 		try {
-			// í˜„ì¬ ë©¤ë²„ë³€ìˆ˜ curModeì— ë”°ë¼ ë‹¤ë¥¸ íŒŒì¼ì„ ì—´ì–´ì„œ ë°ì´í„° ì½ì–´ì˜¤ê¸°!!!
+			// ÇöÀç ¸â¹öº¯¼ö curMode¿¡ µû¶ó ´Ù¸¥ ÆÄÀÏÀ» ¿­¾î¼­ µ¥ÀÌÅÍ ÀĞ¾î¿À±â!!!
 			FileInputStream fs = new FileInputStream(leaderboardFile[curMode]);
 			ObjectInputStream os = new ObjectInputStream(fs);
 			
@@ -136,11 +136,11 @@ public class LeaderboardForm extends JFrame {
 			e.printStackTrace();
 		}
 		
-		// í…Œì´ë¸” ëª¨ë¸ì„ ì´ìš©í•˜ì—¬ í…Œì´ë¸” ì´ˆê¸°í™” 
+		// Å×ÀÌºí ¸ğµ¨À» ÀÌ¿ëÇÏ¿© Å×ÀÌºí ÃÊ±âÈ­ 
 		leaderboard = new JTable(tm);
 		leaderboard.setFocusable(false);
 		
-		// ì…€ì˜ ë‚´ìš© ê°€ìš´ë° ì •ë ¬ 
+		// ¼¿ÀÇ ³»¿ë °¡¿îµ¥ Á¤·Ä 
 		DefaultTableCellRenderer tScheduleCellRenderer = new DefaultTableCellRenderer();
 		tScheduleCellRenderer.setHorizontalAlignment(SwingConstants.CENTER);
 		TableColumnModel tcmSchedule = leaderboard.getColumnModel();
@@ -149,7 +149,7 @@ public class LeaderboardForm extends JFrame {
 		}
 	}
 
-	// í˜„ì¬ í…Œì´ë¸”ì— ëŒ€í•œ Sort ì„¤ì • 
+	// ÇöÀç Å×ÀÌºí¿¡ ´ëÇÑ Sort ¼³Á¤ 
 	private void initTableSorter() {
 		sorter = new TableRowSorter<>(tm);
 		leaderboard.setRowSorter(sorter);
@@ -161,14 +161,14 @@ public class LeaderboardForm extends JFrame {
 		sorter.sort();
 	}
 
-	// ìµœì¢…ì ìœ¼ë¡œ, ìŠ¤í¬ë¡¤ ê°€ëŠ¥í•œ í…Œì´ë¸” ìƒì„±!
+	// ÃÖÁ¾ÀûÀ¸·Î, ½ºÅ©·Ñ °¡´ÉÇÑ Å×ÀÌºí »ı¼º!
 	private void initScrollLeaderboard() {
 		scrollLeaderboard = new JScrollPane(leaderboard);
 		scrollLeaderboard.setBounds(w / 30, h / 10, w - 50, h - 100);
 		this.add(scrollLeaderboard);
 	}
 
-	// curModeì— ë”°ë¼ ì„œë¡œ ë‹¤ë¥¸ íŒŒì¼ì— ë°ì´í„° ì €ì¥í•˜ê¸° 
+	// curMode¿¡ µû¶ó ¼­·Î ´Ù¸¥ ÆÄÀÏ¿¡ µ¥ÀÌÅÍ ÀúÀåÇÏ±â 
 	private void saveLeaderboard() {
 		try {
 			FileOutputStream fs = new FileOutputStream(leaderboardFile[curMode]);
@@ -184,7 +184,7 @@ public class LeaderboardForm extends JFrame {
 		}
 	}
 
-	// ------------------------------------------------------ í‚¤ ì…ë ¥ì— ë”°ë¥¸ ì´ë²¤íŠ¸ ì²˜ë¦¬
+	// ------------------------------------------------------ Å° ÀÔ·Â¿¡ µû¸¥ ÀÌº¥Æ® Ã³¸®
 	private void initControls() {
 		InputMap im = this.getRootPane().getInputMap();
 		ActionMap am = this.getRootPane().getActionMap();
@@ -224,11 +224,11 @@ public class LeaderboardForm extends JFrame {
 			curMode = 0;
 		}
 		
-		// í˜„ì¬ ì¹¼ëŸ¼ ìœ„ì¹˜ì— ë”°ë¼ ìŠ¤ì½”ì–´ë³´ë“œ ë³´ì—¬ì£¼ê¸° 
+		// ÇöÀç Ä®·³ À§Ä¡¿¡ µû¶ó ½ºÄÚ¾îº¸µå º¸¿©ÁÖ±â 
 		this.remove(scrollLeaderboard);
 		updateTableWithMode(curMode);
 		
-		// ë ˆì´ë¸” í…ìŠ¤íŠ¸ ë³€ê²½
+		// ·¹ÀÌºí ÅØ½ºÆ® º¯°æ
 		lblGameMode.setText(gameMode[curMode]);
 	}
 
@@ -246,21 +246,21 @@ public class LeaderboardForm extends JFrame {
 		lblGameMode.setText(gameMode[curMode]);
 	}
 	
-	// ê²Œì„ ì¢…ë£Œ í›„ ìœ ì € ì´ë¦„ ì…ë ¥ ë°›ì•„ì„œ ìŠ¤ì½”ì–´ë³´ë“œ ë„ìš°ëŠ” ê²½ìš°: í˜„ì¬ ì„ íƒëœ ëª¨ë“œì— ë”°ë¼ ë³´ì—¬ì£¼ê¸° 
+	// °ÔÀÓ Á¾·á ÈÄ À¯Àú ÀÌ¸§ ÀÔ·Â ¹Ş¾Æ¼­ ½ºÄÚ¾îº¸µå ¶ç¿ì´Â °æ¿ì: ÇöÀç ¼±ÅÃµÈ ¸ğµå¿¡ µû¶ó º¸¿©ÁÖ±â 
 	public void addPlayer(int gameMode, String name, int score, String level) {
-		// í˜„ì¬ ëª¨ë“œì— ë”°ë¼ íŒŒì¼ ì½ì–´ì„œ í…Œì´ë¸” ë°ì´í„° ì´ˆê¸°í™”
+		// ÇöÀç ¸ğµå¿¡ µû¶ó ÆÄÀÏ ÀĞ¾î¼­ Å×ÀÌºí µ¥ÀÌÅÍ ÃÊ±âÈ­
 		this.remove(scrollLeaderboard);
 		updateTableWithMode(gameMode);
 		
-		// ìœ ì € ì •ë³´ ì¶”ê°€
+		// À¯Àú Á¤º¸ Ãß°¡
 		tm.addRow(new Object[] { name, score, level });
-		sorter.sort(); // ì¬ì •ë ¬
-		saveLeaderboard(); // íŒŒì¼ì— ì €ì¥
+		sorter.sort(); // ÀçÁ¤·Ä
+		saveLeaderboard(); // ÆÄÀÏ¿¡ ÀúÀå
 		
 		this.setVisible(true);
 	}
 	
-	// íŒŒì¼ ë‚´ìš© ì‚­ì œ 
+	// ÆÄÀÏ ³»¿ë »èÁ¦ 
 	public void deleteLeaderboard() {
 		try {
 			new FileOutputStream(leaderboardFile[0]).close();
@@ -270,7 +270,7 @@ public class LeaderboardForm extends JFrame {
 		}
 	}
 
-	// LeaderboardForm í”„ë ˆì„ ì‹¤í–‰
+	// LeaderboardForm ÇÁ·¹ÀÓ ½ÇÇà
 	public static void main(String[] args) {
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
