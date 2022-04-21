@@ -13,8 +13,6 @@ import javax.swing.JLabel;
 import javax.swing.JTextArea;
 import javax.swing.KeyStroke;
 
-// TODO: 議곗옉 �궎 �꽕�젙 
-
 public class GameForm extends JFrame {
 	private int w, h;
 	
@@ -25,7 +23,7 @@ public class GameForm extends JFrame {
 	private JTextArea keyManual;
 	private boolean isPaused = false;
 
-	// 泥섏쓬�뿉 �깮�꽦�옄 �샇異쒗븷 �븣�뒗 紐⑤몢 湲곕낯 媛믪쑝濡� 
+	// 처음에 생성자 호출할 때는 모두 기본 값으로 
 	public GameForm() {
 		this.w = 600;
 		this.h = 450;
@@ -34,7 +32,7 @@ public class GameForm extends JFrame {
 		initControls(0); 
 	}
 	
-	// Tetris�뿉�꽌 �쟾�떖 諛쏆� �씤�옄 媛믪뿉 �뵲�씪 �겕湲� 議곗젙 
+	// Tetris에서 전달 받은 인자 값에 따라 크기 조정 
 	public void initComponents(int w, int h) {
 		this.w = w;
 		this.h = h;
@@ -67,7 +65,7 @@ public class GameForm extends JFrame {
 		this.add(lblLevel);
 	}
 
-	// Tetris�뿉�꽌 �쟾�떖 諛쏆� �씤�옄 媛믪뿉 �뵲�씪 議곗옉 �궎 蹂�寃쏀븯湲�
+	// Tetris에서 전달 받은 인자 값에 따라 조작 키 변경하기
 	public void initControls(int keyMode) {
 		InputMap im = this.getRootPane().getInputMap();
 		ActionMap am = this.getRootPane().getActionMap();
@@ -81,16 +79,16 @@ public class GameForm extends JFrame {
 			im.put(KeyStroke.getKeyStroke("DOWN"), "downOneLine");
 			im.put(KeyStroke.getKeyStroke("SPACE"), "downToEnd");
 			
-			keyManual = new JTextArea("�쇊履� �씠�룞: �넀 \n"
-					+ "�삤瑜몄そ �씠�룞: �넂 \n"
-					+ "�븳移� �븘�옒濡� �씠�룞: �넃 \n"
-					+ "釉붾윮 �쉶�쟾: �넁 \n"
-					+ "�븳踰덉뿉 諛묒쑝濡� �씠�룞: SPACE \n"
-					+ "寃뚯엫 �젙吏�/�옱媛�: q \n"
-					+ "寃뚯엫 醫낅즺: e  \n");
+			keyManual = new JTextArea(" 왼쪽 이동: ← \n"
+					+ " 오른쪽 이동: → \n"
+					+ " 한칸 아래로 이동: ↓ \n"
+					+ " 블럭 회전: ↑ \n"
+					+ " 한번에 밑으로 이동: SPACE \n"
+					+ " 게임 정지/재개: q \n"
+					+ " 게임 종료: e  \n");
 		}
 		else {
-			im.clear(); // �떎瑜� �궎紐⑤뱶�뿉�꽌 �꽕�젙�뻽�뜕 嫄� 珥덇린�솕
+			im.clear(); // 다른 키모드에서 설정했던 거 초기화
 			
 			im.put(KeyStroke.getKeyStroke("D"), "right");
 			im.put(KeyStroke.getKeyStroke("A"), "left");
@@ -98,21 +96,21 @@ public class GameForm extends JFrame {
 			im.put(KeyStroke.getKeyStroke("S"), "downOneLine");
 			im.put(KeyStroke.getKeyStroke("ENTER"), "downToEnd");
 			
-			keyManual = new JTextArea("�쇊履� �씠�룞: a \n"
-					+ "�삤瑜몄そ �씠�룞: d \n"
-					+ "�븳移� �븘�옒濡� �씠�룞: s \n"
-					+ "釉붾윮 �쉶�쟾: w \n"
-					+ "�븳踰덉뿉 諛묒쑝濡� �씠�룞: ENTER \n"
-					+ "寃뚯엫 �젙吏�/�옱媛�: q \n"
-					+ "寃뚯엫 醫낅즺: e  \n");
+			keyManual = new JTextArea(" 왼쪽 이동: a \n"
+					+ " 오른쪽 이동: d \n"
+					+ " 한칸 아래로 이동: s \n"
+					+ " 블럭 회전: w \n"
+					+ " 한번에 밑으로 이동: ENTER \n"
+					+ " 게임 정지/재개: q \n"
+					+ " 게임 종료: e  \n");
 		}
 		
-		// 怨듯넻 (以묒�, 醫낅즺, �뮘濡쒓�湲�)
+		// 공통 (중지, 종료, 뒤로가기)
 		im.put(KeyStroke.getKeyStroke("Q"), "quit");
 		im.put(KeyStroke.getKeyStroke("E"), "exit");
 		im.put(KeyStroke.getKeyStroke("ESCAPE"), "back");
 		
-		keyManual.setBounds(w/30, h-300, 160, 140);
+		keyManual.setBounds(w/30, h-300, 160, 130);
 		keyManual.setFocusable(false);
 		this.add(keyManual);
 		
@@ -143,16 +141,20 @@ public class GameForm extends JFrame {
 		am.put("downOneLine", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (!isPaused)
-					ga.moveBlockDown();
+				if (!isPaused) {
+					if(ga.moveBlockDown())
+						gt.scorePlus1();
+				}
 			}
 		});
 
 		am.put("downToEnd", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (!isPaused)
+				if (!isPaused) {
 					ga.dropBlock();
+					gt.scorePlus15();
+				}
 			}
 		});
 
@@ -172,7 +174,7 @@ public class GameForm extends JFrame {
 		am.put("exit", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				gt.interrupt(); // 寃뚯엫 �뒪�젅�뱶 醫낅즺 
+				gt.interrupt(); // 게임 스레드 종료 
 
 				setVisible(false);
 				Tetris.showStartup();
@@ -183,7 +185,7 @@ public class GameForm extends JFrame {
 		am.put("back", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				gt.interrupt(); // 寃뚯엫 �뒪�젅�뱶 醫낅즺 
+				gt.interrupt(); // 게임 스레드 종료 
 
 				setVisible(false);
 				Tetris.showStartup();
@@ -191,13 +193,13 @@ public class GameForm extends JFrame {
 		});
 	}
 
-	// 寃뚯엫 �뒪�젅�뱶 �떆�옉
+	// 게임 스레드 시작
 	public void startGame() {
-		// 寃뚯엫�씠 �떎�떆 �떆�옉�맆 �븣留덈떎 珥덇린�솕 �릺�뼱�빞 �븯�뒗 寃껊뱾�쓣 珥덇린�솕�븳�떎. 
+		// 게임이 다시 시작될 때마다 초기화 되어야 하는 것들을 초기화한다. 
 		ga.initGameArea(); 
 		nba.initNextBlockArea(); 
 		
-		// 寃뚯엫 �뒪�젅�뱶 �떆�옉
+		// 게임 스레드 시작
 		gt = new GameThread(ga, this, nba);
 		gt.start();
 	}
@@ -210,7 +212,7 @@ public class GameForm extends JFrame {
 		lblLevel.setText("Level: " + level);
 	}
 	
-	// GameForm �봽�젅�엫 �떎�뻾
+	// GameForm 프레임 실행
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
