@@ -174,7 +174,7 @@ public class GameThread extends Thread {
 			}
 
 			// 현재 블럭이 바닥에 닿았을 때, 완성된 줄을 삭제하고, 삭제된 줄 수 저장
-			clearedLineNum = ga.clearLines();
+			clearedLineNum = ga.clearLines() + ga.oneLineDelte();
 
 			// 줄이 특정 횟수 삭제되면 아이템 생성
 			// 3을 10으로 고치면 10줄이 삭제될 때마다 아이템이 생성됩니다.
