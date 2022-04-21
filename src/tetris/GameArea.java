@@ -394,13 +394,14 @@ public class GameArea extends JPanel {
 	}
   
 	//한 줄을 삭제한다.
-	public void oneLineDelte() {
+	public int oneLineDelte() {
 		int yPos = block.getY();
 
 		clearLine(yPos);
 		shiftDown(yPos);
 		repaint();
 
+		return 1;
 	}
   
 	// 두 줄을 삭제한다.
