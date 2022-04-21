@@ -31,7 +31,7 @@ public class StartupForm extends JFrame {
 	
 	public StartupForm() {
 		this.w = 600;
-		this.h = 450;
+		this.h = 460;
 		
 		// 객체를 처음 생성할 때는 기본 값
 		initComponents(w, h); 

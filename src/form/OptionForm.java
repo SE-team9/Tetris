@@ -50,7 +50,7 @@ public class OptionForm extends JFrame {
 
 	public OptionForm() {
 		this.w = 600;
-		this.h = 450;
+		this.h = 460;
 		
 		// 모든 행의 옵션을 첫번째 칼럼으로 초기화
 		initDefaultSettings();
@@ -182,13 +182,13 @@ public class OptionForm extends JFrame {
 				case 0: // 화면 크기 설정 
 					switch(confirmedColumn[row]) {
 					case 0: 
-						updateFrameSize(600, 450);
+						updateFrameSize(600, 460);
 						break;
 					case 1:
-						updateFrameSize(700, 550);
+						updateFrameSize(720, 540);
 						break;
 					case 2:
-						updateFrameSize(800, 650);
+						updateFrameSize(840, 620);
 						break;
 					}
 					break;

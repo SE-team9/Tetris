@@ -25,7 +25,7 @@ public class NextBlockArea extends JPanel {
 	}
 
 	private void initThisPanel() {
-		this.setBounds(gfW / 60, gfH / 60, 120, 120);
+		this.setBounds(gfW / 15, gfH / 60, gfW/5, gfW/5);
 		this.setBackground(new Color(238, 238, 238));
 		this.setBorder(LineBorder.createBlackLineBorder());
 	}

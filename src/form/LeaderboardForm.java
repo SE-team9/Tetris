@@ -45,7 +45,7 @@ public class LeaderboardForm extends JFrame {
 	// Tetris에서 객체가 처음 생성될 때 초기화 작업 
 	public LeaderboardForm() {
 		this.w = 600;
-		this.h = 450;
+		this.h = 460;
 		this.curMode = 0;
 		initComponents(w, h, 0);
 		

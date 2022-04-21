@@ -26,7 +26,7 @@ public class GameForm extends JFrame {
 	// 처음에 생성자 호출할 때는 모두 기본 값으로 
 	public GameForm() {
 		this.w = 600;
-		this.h = 450;
+		this.h = 460;
 		
 		initComponents(w, h);
 		initControls(0); 
