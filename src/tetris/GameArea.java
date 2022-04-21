@@ -14,24 +14,21 @@ import tetrisItems.*;
 import tetrisblocks.*;
 
 public class GameArea extends JPanel {
-	
+	private static int gfW, gfH;
 	private int gridRows;
 	private int gridColumns;
 	private int gridCellSize;
-	
 	private Color[][] background;
-	
 	private TetrisBlock[] blocks;
 	private TetrisBlock block;
 	private TetrisBlock nextBlock;
-	
-	boolean paused = false;
-
 	private TetrisBlock[] items;
-	
 	private boolean isItem = false; // 현재 블럭이 아이템 블럭인지 확인하기 위한 변수
 
-	public GameArea(int columns) {
+	public GameArea(int w, int h, int columns) {
+		this.gfW = w;
+		this.gfH = h;
+		
 		initThisPanel();
 		initBlocks();
 		initItems();
@@ -43,8 +40,9 @@ public class GameArea extends JPanel {
 	}
 
 	// --------------------------------------------------------------------- 초기화관련동작
+	// TODO: 프레임 크기에 따라 GameArea의 x, y 위치가 바뀌어야 함. 
 	private void initThisPanel() {
-		this.setBounds(200, 0, 200, 400);
+		this.setBounds(gfW / 3, gfH / 60, 200, 400);
 		this.setBackground(new Color(238, 238, 238));
 		this.setBorder(LineBorder.createBlackLineBorder());
 	}
@@ -62,7 +60,8 @@ public class GameArea extends JPanel {
 
 	// 아이템블럭초기화
 	public void initItems() {
-		items = new TetrisBlock[] { new FillEmpty(), new Weight(), new DeleteAroundU(), new TwoLineDelete(), new OneLineDelete()};
+		//items = new TetrisBlock[] { new FillEmpty(), new Weight(), new DeleteAroundU(), new TwoLineDelete(), new OneLineDelete()};
+		items = new TetrisBlock[] { new OneLineDelete()};
 	}
 
 	// 격자 크기 반환
@@ -76,6 +75,8 @@ public class GameArea extends JPanel {
 	}
 	
 	public void initGameArea() {
+		initThisPanel();
+		
 		this.isItem = false;
 		
 		initBackgroundArray(); 	// 시작할 때마다 배경 초기화
@@ -99,9 +100,7 @@ public class GameArea extends JPanel {
 		}
 		return result;
 	}
-	
-	public int level = Tetris.getGameLevel();
-	
+
 	// level에 따른 가중치 부여
 	public int makeRandom() {
 		Map<String, Double> w = new HashMap<String, Double>();
@@ -606,7 +605,6 @@ public class GameArea extends JPanel {
 				try {
 					Thread.sleep(150);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				for (int c = 0; c < gridColumns; c++) {
@@ -616,7 +614,6 @@ public class GameArea extends JPanel {
 				try {
 					Thread.sleep(150);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				linesCleared++;
@@ -737,4 +734,6 @@ public class GameArea extends JPanel {
 		drawBackground(g);
 		drawBlock(g);
 	}
+	 
+	public int level = Tetris.getGameLevel(); // 확률 test를 위해 남겨두었습니다.
 }

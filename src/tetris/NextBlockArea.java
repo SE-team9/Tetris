@@ -7,13 +7,17 @@ import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
 public class NextBlockArea extends JPanel {
+	private static int gfW = 600, gfH = 450;
 	private GameArea ga;
 	private TetrisBlock nextBlock;
 	private int gridCellSize;
 	
 	private boolean isItem = false;  // 아이템 블럭인지 확인하는 변수
 
-	public NextBlockArea(GameArea ga) {
+	public NextBlockArea(int w, int h, GameArea ga) {
+		this.gfW = w;
+		this.gfH = h;
+		
 		initThisPanel();
 
 		this.ga = ga;
@@ -22,7 +26,7 @@ public class NextBlockArea extends JPanel {
 	}
 
 	private void initThisPanel() {
-		this.setBounds(40, 0, 120, 120);
+		this.setBounds(gfW / 60, gfH / 60, 120, 120);
 		this.setBackground(new Color(238, 238, 238));
 		this.setBorder(LineBorder.createBlackLineBorder());
 	}
@@ -84,5 +88,9 @@ public class NextBlockArea extends JPanel {
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		drawBlock(g);
+	}
+	
+	public boolean getIsItem() {
+		return this.isItem;
 	}
 }
