@@ -23,7 +23,7 @@ public class GameForm extends JFrame {
 	private JTextArea keyManual;
 	private boolean isPaused = false;
 
-	// Ã³À½¿¡ »ı¼ºÀÚ È£ÃâÇÒ ¶§´Â ¸ğµÎ ±âº» °ªÀ¸·Î 
+	// ì²˜ìŒì— ìƒì„±ì í˜¸ì¶œí•  ë•ŒëŠ” ëª¨ë‘ ê¸°ë³¸ ê°’ìœ¼ë¡œ 
 	public GameForm() {
 		this.w = 600;
 		this.h = 450;
@@ -32,7 +32,7 @@ public class GameForm extends JFrame {
 		initControls(0); 
 	}
 	
-	// Tetris¿¡¼­ Àü´Ş ¹ŞÀº ÀÎÀÚ °ª¿¡ µû¶ó Å©±â Á¶Á¤ 
+	// Tetrisì—ì„œ ì „ë‹¬ ë°›ì€ ì¸ì ê°’ì— ë”°ë¼ í¬ê¸° ì¡°ì • 
 	public void initComponents(int w, int h) {
 		this.w = w;
 		this.h = h;
@@ -65,7 +65,7 @@ public class GameForm extends JFrame {
 		this.add(lblLevel);
 	}
 
-	// Tetris¿¡¼­ Àü´Ş ¹ŞÀº ÀÎÀÚ °ª¿¡ µû¶ó Á¶ÀÛ Å° º¯°æÇÏ±â
+	// Tetrisì—ì„œ ì „ë‹¬ ë°›ì€ ì¸ì ê°’ì— ë”°ë¼ ì¡°ì‘ í‚¤ ë³€ê²½í•˜ê¸°
 	public void initControls(int keyMode) {
 		InputMap im = this.getRootPane().getInputMap();
 		ActionMap am = this.getRootPane().getActionMap();
@@ -78,17 +78,17 @@ public class GameForm extends JFrame {
 			im.put(KeyStroke.getKeyStroke("UP"), "up");
 			im.put(KeyStroke.getKeyStroke("DOWN"), "downOneLine");
 			im.put(KeyStroke.getKeyStroke("SPACE"), "downToEnd");
-			
-			keyManual = new JTextArea(" ¿ŞÂÊ ÀÌµ¿: ¡ç \n"
-					+ " ¿À¸¥ÂÊ ÀÌµ¿: ¡æ \n"
-					+ " ÇÑÄ­ ¾Æ·¡·Î ÀÌµ¿: ¡é \n"
-					+ " ºí·° È¸Àü: ¡è \n"
-					+ " ÇÑ¹ø¿¡ ¹ØÀ¸·Î ÀÌµ¿: SPACE \n"
-					+ " °ÔÀÓ Á¤Áö/Àç°³: q \n"
-					+ " °ÔÀÓ Á¾·á: e  \n");
+
+			keyManual = new JTextArea(" ì™¼ìª½ ì´ë™: â† \n"
+					+ " ì˜¤ë¥¸ìª½ ì´ë™: â†’ \n"
+					+ " í•œì¹¸ ì•„ë˜ë¡œ ì´ë™: â†“ \n"
+					+ " ë¸”ëŸ­ íšŒì „: â†‘ \n"
+					+ " í•œë²ˆì— ë°‘ìœ¼ë¡œ ì´ë™: SPACE \n"
+					+ " ê²Œì„ ì •ì§€/ì¬ê°œ: q \n"
+					+ " ê²Œì„ ì¢…ë£Œ: e  \n");
 		}
 		else {
-			im.clear(); // ´Ù¸¥ Å°¸ğµå¿¡¼­ ¼³Á¤Çß´ø °Å ÃÊ±âÈ­
+			im.clear(); // ë‹¤ë¥¸ í‚¤ëª¨ë“œì—ì„œ ì„¤ì •í–ˆë˜ ê±° ì´ˆê¸°í™”
 			
 			im.put(KeyStroke.getKeyStroke("D"), "right");
 			im.put(KeyStroke.getKeyStroke("A"), "left");
@@ -96,16 +96,16 @@ public class GameForm extends JFrame {
 			im.put(KeyStroke.getKeyStroke("S"), "downOneLine");
 			im.put(KeyStroke.getKeyStroke("ENTER"), "downToEnd");
 			
-			keyManual = new JTextArea(" ¿ŞÂÊ ÀÌµ¿: a \n"
-					+ " ¿À¸¥ÂÊ ÀÌµ¿: d \n"
-					+ " ÇÑÄ­ ¾Æ·¡·Î ÀÌµ¿: s \n"
-					+ " ºí·° È¸Àü: w \n"
-					+ " ÇÑ¹ø¿¡ ¹ØÀ¸·Î ÀÌµ¿: ENTER \n"
-					+ " °ÔÀÓ Á¤Áö/Àç°³: q \n"
-					+ " °ÔÀÓ Á¾·á: e  \n");
+			keyManual = new JTextArea(" ì™¼ìª½ ì´ë™: a \n"
+					+ " ì˜¤ë¥¸ìª½ ì´ë™: d \n"
+					+ " í•œì¹¸ ì•„ë˜ë¡œ ì´ë™: s \n"
+					+ " ë¸”ëŸ­ íšŒì „: w \n"
+					+ " í•œë²ˆì— ë°‘ìœ¼ë¡œ ì´ë™: ENTER \n"
+					+ " ê²Œì„ ì •ì§€/ì¬ê°œ: q \n"
+					+ " ê²Œì„ ì¢…ë£Œ: e  \n");
 		}
 		
-		// °øÅë (ÁßÁö, Á¾·á, µÚ·Î°¡±â)
+		// ê³µí†µ (ì¤‘ì§€, ì¢…ë£Œ, ë’¤ë¡œê°€ê¸°)
 		im.put(KeyStroke.getKeyStroke("Q"), "quit");
 		im.put(KeyStroke.getKeyStroke("E"), "exit");
 		im.put(KeyStroke.getKeyStroke("ESCAPE"), "back");
@@ -174,7 +174,7 @@ public class GameForm extends JFrame {
 		am.put("exit", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				gt.interrupt(); // °ÔÀÓ ½º·¹µå Á¾·á 
+				gt.interrupt(); // ê²Œì„ ìŠ¤ë ˆë“œ ì¢…ë£Œ 
 
 				setVisible(false);
 				Tetris.showStartup();
@@ -185,7 +185,7 @@ public class GameForm extends JFrame {
 		am.put("back", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				gt.interrupt(); // °ÔÀÓ ½º·¹µå Á¾·á 
+				gt.interrupt(); // ê²Œì„ ìŠ¤ë ˆë“œ ì¢…ë£Œ 
 
 				setVisible(false);
 				Tetris.showStartup();
@@ -193,13 +193,13 @@ public class GameForm extends JFrame {
 		});
 	}
 
-	// °ÔÀÓ ½º·¹µå ½ÃÀÛ
+	// ê²Œì„ ìŠ¤ë ˆë“œ ì‹œì‘
 	public void startGame() {
-		// °ÔÀÓÀÌ ´Ù½Ã ½ÃÀÛµÉ ¶§¸¶´Ù ÃÊ±âÈ­ µÇ¾î¾ß ÇÏ´Â °ÍµéÀ» ÃÊ±âÈ­ÇÑ´Ù. 
+		// ê²Œì„ì´ ë‹¤ì‹œ ì‹œì‘ë  ë•Œë§ˆë‹¤ ì´ˆê¸°í™” ë˜ì–´ì•¼ í•˜ëŠ” ê²ƒë“¤ì„ ì´ˆê¸°í™”í•œë‹¤. 
 		ga.initGameArea(); 
 		nba.initNextBlockArea(); 
 		
-		// °ÔÀÓ ½º·¹µå ½ÃÀÛ
+		// ê²Œì„ ìŠ¤ë ˆë“œ ì‹œì‘
 		gt = new GameThread(ga, this, nba);
 		gt.start();
 	}
@@ -212,7 +212,7 @@ public class GameForm extends JFrame {
 		lblLevel.setText("Level: " + level);
 	}
 	
-	// GameForm ÇÁ·¹ÀÓ ½ÇÇà
+	// GameForm í”„ë ˆì„ ì‹¤í–‰
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
