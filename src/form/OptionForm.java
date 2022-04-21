@@ -4,6 +4,8 @@ import tetris.*;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
+import java.io.File;
+import java.io.FileOutputStream;
 
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
@@ -39,13 +41,12 @@ public class OptionForm extends JFrame {
 		 { "NO", "YES" } // 기본 설정으로 되돌리기
 	};
 	
-	// 행마다 포커스가 놓인 칼럼 위치가 다르기 때문에 배열 만들기
+	// 행마다 포커스가 놓인 칼럼 위치가 다르기 때문에 배열로 만들었다.
 	private int row = 0;
 	private int[] focusColumn = new int[ROW];
 	
 	// 엔터 눌러서 확정된 칼럼 값을 저장 (다른 곳에서 참조 가능)
-	private int[] confirmedColumn = new int[ROW]; 
-  private LeaderboardForm lf = new LeaderboardForm();
+	private int[] confirmedColumn = new int[ROW];
 
 	public OptionForm() {
 		this.w = 600;
@@ -175,7 +176,7 @@ public class OptionForm extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				confirmedColumn[row] = focusColumn[row];
-				//System.out.println(row + " " + confirmedColumn[row]); // 디버깅 용도
+				System.out.println(row + " " + confirmedColumn[row]); // 디버깅 용도
 				
 				switch(row) {
 				case 0: // 화면 크기 설정 
@@ -191,17 +192,17 @@ public class OptionForm extends JFrame {
 						break;
 					}
 					break;
-				case 4: // 스코어보드 초기화 on/off
+				case 4: // 스코어보드 초기화
 					if(confirmedColumn[row] == 1) {
 						initScoreboard();						
 					}
-        break;
-				case 5: // 기본 설정 on/off
+					break;
+				case 5: // 기본 설정
 					if(confirmedColumn[row] == 1) {
 						initDefaultSettings(); // 첫번째 칼럼으로 옵션 초기화
 						updateFrameSize(600, 450); // 모든 컴포넌트 크기 조정
 					}
-         break;
+					break;
 				}
 			}
 		});
@@ -299,9 +300,22 @@ public class OptionForm extends JFrame {
 		return confirmedColumn[3];
 	}
 	
-	// 스코어보드 기록 초기화
+	// 스코어보드 기록 초기화 (파일명으로 검색)
 	private void initScoreboard() {
-		lf.deleteLeaderboard();
+		File file = new File("leaderboardFile_Normal");
+		File file2 = new File("leaderboardFile_Item");
+		
+		if(file.exists()) {
+			file.delete();
+		}else {
+			System.out.println("파일이 존재하지 않습니다.");
+		}
+		
+		if(file2.exists()) {
+			file2.delete();
+		}else {
+			System.out.println("파일이 존재하지 않습니다.");
+		}
 	}
 	
 	// OptionForm 프레임 실행

@@ -32,7 +32,7 @@ public class GameArea extends JPanel {
 	private TetrisBlock block;
 	private TetrisBlock nextBlock;
 	private TetrisBlock[] items;
-  private boolean isItem = false; // 현재 블럭이 아이템 블럭인지 확인하기 위한 변수
+    private boolean isItem = false; // 현재 블럭이 아이템 블럭인지 확인하기 위한 변수
 
 	public GameArea(int w, int h, int columns) {
 		this.gfW = w;
@@ -159,7 +159,7 @@ public class GameArea extends JPanel {
 	// --------------------------------------------------------------------- 블럭생성관련동작
 	// 난이도에 따라 다음 블럭을 정한다.
 	public void updateNextBlock() {
-		int r= makeRandom();
+		int r = makeRandom();
 		nextBlock = blocks[r];
 		nextBlock.setShape();
 	}
@@ -205,6 +205,18 @@ public class GameArea extends JPanel {
 
 		return true;
 	}
+	
+	public boolean dropBlock() { 
+		if (block == null)
+			return false;
+		
+		while (checkBottom()) {
+			block.moveDown(); 
+		}
+		repaint();
+		
+		return true;
+	}
 
 	public void moveBlockRight() {
 		if (block == null)
@@ -225,17 +237,6 @@ public class GameArea extends JPanel {
 			return;
 
 		block.moveLeft();
-		repaint();
-	}
-
-	public void dropBlock() { 
-		if (block == null)
-			return;
-		
-		while (checkBottom()) {
-			block.moveDown(); 
-		}
-		
 		repaint();
 	}
 
@@ -542,7 +543,6 @@ public class GameArea extends JPanel {
 
 	// 현재 블럭 아이템의 기능을 수행한다.
 	public void itemFunction() {
-
 		if (this.block instanceof FillEmpty) {
 			fillEmpty();
 		} else if(this.block instanceof TwoLineDelete) {
@@ -561,9 +561,7 @@ public class GameArea extends JPanel {
 
 	// 아이템을 반짝거린다.
 	public void twinkleItem() {
-
 		Color originColor = block.getColor();
-
 		try {
 			block.setColor(Color.white);
 			repaint();
@@ -597,63 +595,74 @@ public class GameArea extends JPanel {
 
 		for (int r = 0; r < h; r++) {
 			for (int c = 0; c < w; c++) {
-				if (shape[r][c] == 1) {		// 해당 위치가 현재 블럭이 차지하는 공간이라면
+				if (shape[r][c] == 1) {	// 해당 위치가 현재 블럭이 차지하는 공간이라면
 					background[r + yPos][c + xPos] = color;
 				}
 			}
 		}
+		
 		block = null;
 	}
 
 	// 완성된 줄을 삭제한다.
 	public int clearLines() {
-
-		boolean lineFilled;
-		int linesCleared = 0;
+		boolean lineFilled; // 한 줄이 채워졌는지 확인
+		int clearedLineNum = 0; // 삭제된 줄의 수 
 
 		// 맨 아래 줄부터
 		for (int r = gridRows - 1; r >= 0; r--) {
-			lineFilled = true;
-
+			lineFilled = true; // 행마다 상태가 업데이트 되는 변수
+			
 			for (int c = 0; c < gridColumns; c++) {
 				if (background[r][c] == null) {
 					lineFilled = false;
 					break;
 				}
 			}
+			
 			if (lineFilled) {
-				for (int c = 0; c < gridColumns; c++) {
-					background[r][c] = Color.white;
-					repaint();
-				}
-				try {
-					Thread.sleep(150);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				for (int c = 0; c < gridColumns; c++) {
-					background[r][c] = Color.black;
-					repaint();
-				}
-				try {
-					Thread.sleep(150);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				linesCleared++;
-				clearLine(r);
-				shiftDown(r);
+				clearedLineNum++;
 				
-				// 맨 윗 줄의 위는 null이므로 따로 지워준다. 
-				clearLine(0);
-
-				// 아래로 한 줄 씩 내려왔으므로 지워진 줄 위치에서부터 다시 시작한다.
-				r++;
-
-				repaint();
+				animateLineClear(r);
+				updateGameArea(r);
 			}
 		}
-		return linesCleared;
+		
+		return clearedLineNum;
+	}
+
+	// 삭제된 행 검정색으로 깜빡이기
+	private void animateLineClear(int r) {
+		for (int c = 0; c < gridColumns; c++) {
+			background[r][c] = Color.white; // 흰색 
+			repaint();
+		}
+		
+		try {
+			Thread.sleep(150);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
+		for (int c = 0; c < gridColumns; c++) {
+			background[r][c] = Color.black; // 검정색
+			repaint();
+		}
+		
+		try {
+			Thread.sleep(150);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void updateGameArea(int r) {
+		clearLine(r);
+		shiftDown(r);
+		clearLine(0); // 첫번째 행이 null이 되므로 따로 지워주기
+		r++; // 여러 줄이 삭제되는 경우 고려 
+		
+		repaint();
 	}
 
 	// 배경에서 r행 줄을 지운다.
