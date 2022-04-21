@@ -19,12 +19,12 @@ public class StartupForm extends JFrame {
 	
 	private JLabel title = new JLabel("SE Team9 Tetris");
 	
-	// 0ÀÌ¸é ÀÏ¹İ ¸ğµå, 1ÀÌ¸é ¾ÆÀÌÅÛ ¸ğµå 
+	// 0ì´ë©´ ì¼ë°˜ ëª¨ë“œ, 1ì´ë©´ ì•„ì´í…œ ëª¨ë“œ 
 	private JLabel[] lblArrow = { new JLabel("<"), new JLabel(">") };
 	private JLabel[] lblGameMode = new JLabel[2];
 	private int curGameMode; 
 
-	// ½ÃÀÛ ¸Ş´º, ¼³Á¤ È­¸é, ½ºÄÚ¾î º¸µå, °ÔÀÓ Á¾·á 
+	// ì‹œì‘ ë©”ë‰´, ì„¤ì • í™”ë©´, ìŠ¤ì½”ì–´ ë³´ë“œ, ê²Œì„ ì¢…ë£Œ 
 	private JButton[] btnMenu = new JButton[4];
 	private String[] btnText = { "Start Game", "Settings", "ScoreBoard", "Quit" };
 	private int curPos;
@@ -33,15 +33,15 @@ public class StartupForm extends JFrame {
 		this.w = 600;
 		this.h = 450;
 		
-		// °´Ã¼¸¦ Ã³À½ »ı¼ºÇÒ ¶§´Â ±âº» °ª
+		// ê°ì²´ë¥¼ ì²˜ìŒ ìƒì„±í•  ë•ŒëŠ” ê¸°ë³¸ ê°’
 		initComponents(w, h); 
 		
 		initControls();
 	}
 	
-	// ´Ù¸¥ °÷¿¡¼­ ÀÌ formÀ» ¶ç¿ï ¶§ ÀÌ ÇÔ¼ö·Î Å©±â ÃÊ±âÈ­
+	// ë‹¤ë¥¸ ê³³ì—ì„œ ì´ formì„ ë„ìš¸ ë•Œ ì´ í•¨ìˆ˜ë¡œ í¬ê¸° ì´ˆê¸°í™”
 	public void initComponents(int w, int h) {
-		// ¸â¹ö º¯¼ö °ª ¾÷µ¥ÀÌÆ®
+		// ë©¤ë²„ ë³€ìˆ˜ ê°’ ì—…ë°ì´íŠ¸
 		this.w = w;
 		this.h = h;
 		
@@ -50,13 +50,13 @@ public class StartupForm extends JFrame {
 		initButtons();
 	}
 	
-	// todo: ¼³Á¤¿¡¼­ È­¸é Å©±â ¼±ÅÃ
+	// todo: ì„¤ì •ì—ì„œ í™”ë©´ í¬ê¸° ì„ íƒ
 	private void initThisFrame() {
 		this.setSize(w, h);
 		this.setResizable(false);
 		this.setLayout(null);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setLocationRelativeTo(null); // ÇÁ·¹ÀÓ Ã¢À» ¸ğ´ÏÅÍ °¡¿îµ¥¿¡ ¶ç¿î´Ù.
+		this.setLocationRelativeTo(null); // í”„ë ˆì„ ì°½ì„ ëª¨ë‹ˆí„° ê°€ìš´ë°ì— ë„ìš´ë‹¤.
 		this.setVisible(false);
 	}
 	
@@ -93,7 +93,7 @@ public class StartupForm extends JFrame {
 		btnMenu[curPos].setBackground(Color.lightGray);
 	}
 	
-	// up-downÀ¸·Î ¸Ş´º ¼±ÅÃ, right-left·Î °ÔÀÓ ¸ğµå ¼±ÅÃ
+	// up-downìœ¼ë¡œ ë©”ë‰´ ì„ íƒ, right-leftë¡œ ê²Œì„ ëª¨ë“œ ì„ íƒ
 	private void initControls() {
 		InputMap im = this.getRootPane().getInputMap();
 		ActionMap am = this.getRootPane().getActionMap();
@@ -140,23 +140,23 @@ public class StartupForm extends JFrame {
 		});
 	}
 
-	// ¼±ÅÃÇÑ ¸Ş´º¿¡ µû¶ó È­¸é ÀüÈ¯
+	// ì„ íƒí•œ ë©”ë‰´ì— ë”°ë¼ í™”ë©´ ì „í™˜
 	private void selectMenu(int curPos) {
 		switch (curPos) {
 		case 0:
 			this.setVisible(false);
-			Tetris.start(); // °ÔÀÓ ½ÃÀÛ
+			Tetris.start(); // ê²Œì„ ì‹œì‘
 			break;
 		case 1:
 			this.setVisible(false);
-			Tetris.showOption(); // ¼³Á¤ È­¸é 
+			Tetris.showOption(); // ì„¤ì • í™”ë©´ 
 			break;
 		case 2:
 			this.setVisible(false);
-			Tetris.showLeaderboard(); // ½ºÄÚ¾î º¸µå
+			Tetris.showLeaderboard(); // ìŠ¤ì½”ì–´ ë³´ë“œ
 			break;
 		case 3:
-			System.exit(0); // °ÔÀÓ Á¾·á
+			System.exit(0); // ê²Œì„ ì¢…ë£Œ
 			break;
 		}
 	}
@@ -197,12 +197,12 @@ public class StartupForm extends JFrame {
 		lblGameMode[curGameMode].setVisible(true);
 	}
 
-	// ½ÃÀÛ È­¸é¿¡¼­ ¼±ÅÃÇß´ø °ÔÀÓ ¸ğµå¸¦, °ÔÀÓ Á¾·á ½Ã ÂüÁ¶ÇÏ¿© ½ºÄÚ¾îº¸µå¿¡ º¸¿©ÁÙ ¼ö ÀÖµµ·Ï
+	// ì‹œì‘ í™”ë©´ì—ì„œ ì„ íƒí–ˆë˜ ê²Œì„ ëª¨ë“œë¥¼, ê²Œì„ ì¢…ë£Œ ì‹œ ì°¸ì¡°í•˜ì—¬ ìŠ¤ì½”ì–´ë³´ë“œì— ë³´ì—¬ì¤„ ìˆ˜ ìˆë„ë¡
 	public int getCurrentGameMode() {
 		return curGameMode;
 	}
 
-	// StartupForm ÇÁ·¹ÀÓ ½ÇÇà
+	// StartupForm í”„ë ˆì„ ì‹¤í–‰
 	public static void main(String[] args) {
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {

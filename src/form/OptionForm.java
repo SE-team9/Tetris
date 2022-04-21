@@ -14,13 +14,13 @@ import javax.swing.JLabel;
 import javax.swing.KeyStroke;
 
 /*  
-	È­¸é Å©±â Á¶Àı - 3°³ -> ÀÌ È­¸é¿¡¼­ ¹Ù·Î Àû¿ë 
-	±âº» ¼³Á¤À¸·Î µÇµ¹¸®±â on/off -> ÀÌ È­¸é¿¡¼­ ¹Ù·Î Àû¿ë 
-	½ºÄÚ¾îº¸µå ±â·Ï ÃÊ±âÈ­ on/off -> LeaderboardForm¿¡¼­ »ç¿ë 
-	
-	Á¶ÀÛ Å° ¼³Á¤ - 2°³ -> GameForm¿¡¼­ ÂüÁ¶ 
-	³­ÀÌµµ ¼±ÅÃ - 3°³ -> GameThread¿¡¼­ ÂüÁ¶ (³«ÇÏ ¼Óµµ Á¶Àı, ºí·° »ı¼º È®·ü Á¶Àı)
-	»ö¸Í ¸ğµå on/off -> ºí·° »ö»ó ÃÊ±âÈ­ ÇÒ ¶§ »ç¿ë 
+	í™”ë©´ í¬ê¸° ì¡°ì ˆ - 3ê°œ -> ì´ í™”ë©´ì—ì„œ ë°”ë¡œ ì ìš© 
+	ê¸°ë³¸ ì„¤ì •ìœ¼ë¡œ ë˜ëŒë¦¬ê¸° on/off -> ì´ í™”ë©´ì—ì„œ ë°”ë¡œ ì ìš© 
+	ìŠ¤ì½”ì–´ë³´ë“œ ê¸°ë¡ ì´ˆê¸°í™” on/off -> LeaderboardFormì—ì„œ ì‚¬ìš© 
+  
+  ì¡°ì‘ í‚¤ ì„¤ì • - 2ê°œ -> GameFormì—ì„œ ì°¸ì¡°
+	ë‚œì´ë„ ì„ íƒ - 3ê°œ -> GameThreadì—ì„œ ì°¸ì¡° (ë‚™í•˜ ì†ë„ ì¡°ì ˆ, ë¸”ëŸ­ ìƒì„± í™•ë¥  ì¡°ì ˆ)
+	ìƒ‰ë§¹ ëª¨ë“œ on/off -> ë¸”ëŸ­ ìƒ‰ìƒ ì´ˆê¸°í™” í•  ë•Œ ì‚¬ìš© 
  */
 
 public class OptionForm extends JFrame {
@@ -36,45 +36,44 @@ public class OptionForm extends JFrame {
 	
 	private static final int ROW = 6;
 	private JLabel[] lblOption = new JLabel[ROW]; 
-	private String[] options = { "È­¸é Å©±â", "Á¶ÀÛ Å°", "³­ÀÌµµ", "»ö¸Í ¸ğµå", "½ºÄÚ¾îº¸µå ±â·Ï ÃÊ±âÈ­", "±âº» ¼³Á¤À¸·Î µÇµ¹¸®±â"};
+	private String[] options = { "í™”ë©´ í¬ê¸°", "ì¡°ì‘ í‚¤", "ë‚œì´ë„", "ìƒ‰ë§¹ ëª¨ë“œ", "ìŠ¤ì½”ì–´ë³´ë“œ ê¸°ë¡ ì´ˆê¸°í™”", "ê¸°ë³¸ ì„¤ì •ìœ¼ë¡œ ë˜ëŒë¦¬ê¸°"};
 	private JLabel[] lblArrow = { new JLabel("<"), new JLabel(">") };
 	private JButton[] btnOption = new JButton[ROW];
 	
 	private String[][] optionArray = {
-		 { "Small (default)", "Medium", "Large" }, // È­¸é Å©±â
-		 { "¡ç, ¡æ, ¡é, ¡è, SPACE, q, e", "a, d, s, w, ENTER, q, e"}, // Á¶ÀÛ Å° 
-		 { "Easy", "Normal", "Hard" }, // ³­ÀÌµµ
-		 { "NO", "YES" }, // »ö¸Í ¸ğµå
-		 { "NO", "YES" }, // Á¡¼ö ±â·Ï ÃÊ±âÈ­
-		 { "NO", "YES" } // ±âº» ¼³Á¤À¸·Î µÇµ¹¸®±â
+		 { "Small (default)", "Medium", "Large" }, // í™”ë©´ í¬ê¸°
+		 { "â†, â†’, â†“, â†‘, SPACE, q, e", "a, d, s, w, ENTER, q, e"}, // ì¡°ì‘ í‚¤ 
+		 { "Easy", "Normal", "Hard" }, // ë‚œì´ë„
+		 { "NO", "YES" }, // ìƒ‰ë§¹ ëª¨ë“œ
+		 { "NO", "YES" }, // ì ìˆ˜ ê¸°ë¡ ì´ˆê¸°í™”
+		 { "NO", "YES" } // ê¸°ë³¸ ì„¤ì •ìœ¼ë¡œ ë˜ëŒë¦¬ê¸°
 	};
 	
-	// Çà¸¶´Ù Æ÷Ä¿½º°¡ ³õÀÎ Ä®·³ À§Ä¡°¡ ´Ù¸£±â ¶§¹®¿¡ ¹è¿­ ¸¸µé±â
+	// í–‰ë§ˆë‹¤ í¬ì»¤ìŠ¤ê°€ ë†“ì¸ ì¹¼ëŸ¼ ìœ„ì¹˜ê°€ ë‹¤ë¥´ê¸° ë•Œë¬¸ì— ë°°ì—´ ë§Œë“¤ê¸°
 	private int row = 0;
 	private int[] focusColumn = new int[ROW];
 	
-	// ¿£ÅÍ ´­·¯¼­ È®Á¤µÈ Ä®·³ °ªÀ» ÀúÀå (´Ù¸¥ °÷¿¡¼­ ÂüÁ¶ °¡´É)
+	// ì—”í„° ëˆŒëŸ¬ì„œ í™•ì •ëœ ì¹¼ëŸ¼ ê°’ì„ ì €ì¥ (ë‹¤ë¥¸ ê³³ì—ì„œ ì°¸ì¡° ê°€ëŠ¥)
 	private int[] confirmedColumn = new int[ROW]; 
-	
-	private LeaderboardForm lf = new LeaderboardForm();
+  private LeaderboardForm lf = new LeaderboardForm();
 
 	public OptionForm() {
 		this.w = 600;
 		this.h = 450;
 		
-		// ¸ğµç ÇàÀÇ ¿É¼ÇÀ» Ã¹¹øÂ° Ä®·³À¸·Î ÃÊ±âÈ­
+		// ëª¨ë“  í–‰ì˜ ì˜µì…˜ì„ ì²«ë²ˆì§¸ ì¹¼ëŸ¼ìœ¼ë¡œ ì´ˆê¸°í™”
 		initDefaultSettings();
 		
-		// ±âº» Å©±â·Î ¼³Á¤
+		// ê¸°ë³¸ í¬ê¸°ë¡œ ì„¤ì •
 		initComponents(w, h);
 		
 		initControls();
 	}
 	
-	// ÀÌ È­¸é ³»¿¡¼­ Å©±â¸¦ ¹Ù²Ü ¶§´Â Æ÷Ä¿½º ³õÀÎ ÅØ½ºÆ®¸¦ º¸¿©Áà¾ß ÇÏÁö¸¸,
-	// È­¸éÀ» ³ª°¬´Ù°¡ ´Ù½Ã µé¾î¿Ã ¶§´Â È®Á¤µÈ ¼³Á¤ °ªÀ» ¶ç¿ö¾ß ÇÑ´Ù. 
+	// ì´ í™”ë©´ ë‚´ì—ì„œ í¬ê¸°ë¥¼ ë°”ê¿€ ë•ŒëŠ” í¬ì»¤ìŠ¤ ë†“ì¸ í…ìŠ¤íŠ¸ë¥¼ ë³´ì—¬ì¤˜ì•¼ í•˜ì§€ë§Œ,
+	// í™”ë©´ì„ ë‚˜ê°”ë‹¤ê°€ ë‹¤ì‹œ ë“¤ì–´ì˜¬ ë•ŒëŠ” í™•ì •ëœ ì„¤ì • ê°’ì„ ë„ì›Œì•¼ í•œë‹¤. 
 	public void showConfirmedOption() {
-		// È®Á¤µÈ ¼³Á¤ °ªÀ¸·Î ÅØ½ºÆ® º¸¿©ÁÖ±â
+		// í™•ì •ëœ ì„¤ì • ê°’ìœ¼ë¡œ í…ìŠ¤íŠ¸ ë³´ì—¬ì£¼ê¸°
 		for(int i = 0; i < ROW; i++) {
 			btnOption[i] = new JButton(optionArray[i][confirmedColumn[i]]); 
 			btnOption[i].setBounds(w/4, h/30 + i * 60 + 25, w/2, 25);
@@ -83,7 +82,7 @@ public class OptionForm extends JFrame {
 			this.add(btnOption[i]);
 		}
 		
-		// È­»ìÇ¥ À§Ä¡ ÃÊ±âÈ­
+		// í™”ì‚´í‘œ ìœ„ì¹˜ ì´ˆê¸°í™”
 		row = 0;
 		lblArrow[0].setBounds(w/3, h/30 + row * 60, 25, 25);
 		lblArrow[1].setBounds(w - w/3, h/30 + row * 60, 25, 25);
@@ -91,7 +90,7 @@ public class OptionForm extends JFrame {
 		this.add(lblArrow[1]);
 	}
 	
-	// ±âº» ¼³Á¤À¸·Î ÃÊ±âÈ­
+	// ê¸°ë³¸ ì„¤ì •ìœ¼ë¡œ ì´ˆê¸°í™”
 	private void initDefaultSettings() {
 		for(int i = 0; i < ROW; i++) {
 			focusColumn[i] = 0;
@@ -108,21 +107,21 @@ public class OptionForm extends JFrame {
 		this.setVisible(false);
 	}
 	
-	// ´Ù¸¥ È­¸é¿¡¼­ ¼³Á¤ È­¸é ÁøÀÔÇÒ ¶§¸¶´Ù w, h°ª ¹Ş¾Æ¿Í¼­ ¸â¹öº¯¼ö ÃÊ±âÈ­!!
+	// ë‹¤ë¥¸ í™”ë©´ì—ì„œ ì„¤ì • í™”ë©´ ì§„ì…í•  ë•Œë§ˆë‹¤ w, hê°’ ë°›ì•„ì™€ì„œ ë©¤ë²„ë³€ìˆ˜ ì´ˆê¸°í™”!!
 	public void initComponents(int w, int h) {
 		this.w = w;
 		this.h = h;
 		initThisFrame();
 		
-		// ·¹ÀÌºí°ú È­»ìÇ¥´Â ³ôÀÌ µ¿ÀÏÇÏ°Ô!
+		// ë ˆì´ë¸”ê³¼ í™”ì‚´í‘œëŠ” ë†’ì´ ë™ì¼í•˜ê²Œ!
 		for(int i = 0; i < ROW; i++) {
 			lblOption[i] = new JLabel(options[i]);
 			lblOption[i].setBounds(w/4, h/30 + i * 60, w/2, 25);
 			lblOption[i].setHorizontalAlignment(JLabel.CENTER);
 			this.add(lblOption[i]);
 			
-			// ¹öÆ° 6°³ ÃÊ±âÈ­
-			// repaint·Î È­¸é ´Ù½Ã ±×·Áµµ, ÇöÀç Æ÷Ä¿½º°¡ ³õÀÎ Ä®·³À¸·Î ÅØ½ºÆ® ÃÊ±âÈ­!!!
+			// ë²„íŠ¼ 6ê°œ ì´ˆê¸°í™”
+			// repaintë¡œ í™”ë©´ ë‹¤ì‹œ ê·¸ë ¤ë„, í˜„ì¬ í¬ì»¤ìŠ¤ê°€ ë†“ì¸ ì¹¼ëŸ¼ìœ¼ë¡œ í…ìŠ¤íŠ¸ ì´ˆê¸°í™”!!!
 			btnOption[i] = new JButton(optionArray[i][focusColumn[i]]);
 			btnOption[i].setBounds(w/4, h/30 + i * 60 + 25, w/2, 25);
 			btnOption[i].setBackground(Color.white);
@@ -130,7 +129,7 @@ public class OptionForm extends JFrame {
 			this.add(btnOption[i]);
 		}
 		
-		// Æ÷Ä¿½º°¡ ³õÀÎ Çà¿¡ È­»ìÇ¥ Ç¥½Ã
+		// í¬ì»¤ìŠ¤ê°€ ë†“ì¸ í–‰ì— í™”ì‚´í‘œ í‘œì‹œ
 		lblArrow[0].setBounds(w/3, h/30 + row * 60, 25, 25);
 		lblArrow[1].setBounds(w - w/3, h/30 + row * 60, 25, 25);
 		this.add(lblArrow[0]);
@@ -181,15 +180,15 @@ public class OptionForm extends JFrame {
 			}
 		});
 		
-		// ¿£ÅÍ¸¦ ´­·¯¾ß ÇöÀç Ä®·³ÀÇ ¿É¼ÇÀÌ È®Á¤µÊ.
+		// ì—”í„°ë¥¼ ëˆŒëŸ¬ì•¼ í˜„ì¬ ì¹¼ëŸ¼ì˜ ì˜µì…˜ì´ í™•ì •ë¨.
 		am.put("enter", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				confirmedColumn[row] = focusColumn[row];
-				//System.out.println(row + " " + confirmedColumn[row]); // µğ¹ö±ë ¿ëµµ
+				//System.out.println(row + " " + confirmedColumn[row]); // ë””ë²„ê¹… ìš©ë„
 				
 				switch(row) {
-				case 0: // È­¸é Å©±â ¼³Á¤ 
+				case 0: // í™”ë©´ í¬ê¸° ì„¤ì • 
 					switch(confirmedColumn[row]) {
 					case 0: 
 						updateFrameSize(600, 450);
@@ -202,25 +201,24 @@ public class OptionForm extends JFrame {
 						break;
 					}
 					break;
-				case 4: // ½ºÄÚ¾îº¸µå ÃÊ±âÈ­ on/off
+				case 4: // ìŠ¤ì½”ì–´ë³´ë“œ ì´ˆê¸°í™” on/off
 					if(confirmedColumn[row] == 1) {
 						initScoreboard();						
 					}
-					break;
-				case 5: // ±âº» ¼³Á¤ on/off
+        break;
+				case 5: // ê¸°ë³¸ ì„¤ì • on/off
 					if(confirmedColumn[row] == 1) {
-						initDefaultSettings(); // Ã¹¹øÂ° Ä®·³À¸·Î ¿É¼Ç ÃÊ±âÈ­
-						updateFrameSize(600, 450); // ¸ğµç ÄÄÆ÷³ÍÆ® Å©±â Á¶Á¤
+						initDefaultSettings(); // ì²«ë²ˆì§¸ ì¹¼ëŸ¼ìœ¼ë¡œ ì˜µì…˜ ì´ˆê¸°í™”
+						updateFrameSize(600, 450); // ëª¨ë“  ì»´í¬ë„ŒíŠ¸ í¬ê¸° ì¡°ì •
 					}
-					break;
-				default: break;
+         break;
 				}
 			}
 		});
 	}
 	
 	private void moveUp() {		
-		// ¿ø·¡ ÇàÀÇ ÅØ½ºÆ®´Â Æ÷Ä¿½ºµÈ °É·Î!
+		// ì›ë˜ í–‰ì˜ í…ìŠ¤íŠ¸ëŠ” í¬ì»¤ìŠ¤ëœ ê±¸ë¡œ!
 		btnOption[row].setText(optionArray[row][focusColumn[row]]);
 		
 		lblArrow[0].setVisible(false);
@@ -232,7 +230,7 @@ public class OptionForm extends JFrame {
 			row = ROW - 1;
 		}
 		
-		// ÇöÀç Çà¿¡ µû¶ó È­»ìÇ¥ÀÇ À§Ä¡¿Í visibility Á¶Àı
+		// í˜„ì¬ í–‰ì— ë”°ë¼ í™”ì‚´í‘œì˜ ìœ„ì¹˜ì™€ visibility ì¡°ì ˆ
 		lblArrow[0].setBounds(w/3, h/30 + row * 60, 25, 25);
 		lblArrow[1].setBounds(w - w/3, h/30 + row * 60, 25, 25);
 		lblArrow[0].setVisible(true);
@@ -250,7 +248,7 @@ public class OptionForm extends JFrame {
 			row = 0;
 		}
 		
-		// ÇöÀç Çà¿¡ µû¶ó È­»ìÇ¥ÀÇ À§Ä¡¿Í visibility Á¶Àı
+		// í˜„ì¬ í–‰ì— ë”°ë¼ í™”ì‚´í‘œì˜ ìœ„ì¹˜ì™€ visibility ì¡°ì ˆ
 		lblArrow[0].setBounds(w/3, h/30 + row * 60, 25, 25);
 		lblArrow[1].setBounds(w - w/3, h/30 + row * 60, 25, 25);
 		lblArrow[0].setVisible(true);
@@ -258,10 +256,10 @@ public class OptionForm extends JFrame {
 	}
 
 	private void moveRight() {
-		// Ã³À½¿¡´Â Ä®·³ À§Ä¡°¡ 0À¸·Î ÃÊ±âÈ­ µÇ¾î ÀÖÀ½.
+		// ì²˜ìŒì—ëŠ” ì¹¼ëŸ¼ ìœ„ì¹˜ê°€ 0ìœ¼ë¡œ ì´ˆê¸°í™” ë˜ì–´ ìˆìŒ.
 		focusColumn[row]++;
 		
-		// ÇöÀç ÇàÀÇ ÃÖ´ë ¿É¼Ç ±æÀÌ¸¦ ³ÑÀ¸¸é 0À¸·Î ÃÊ±âÈ­
+		// í˜„ì¬ í–‰ì˜ ìµœëŒ€ ì˜µì…˜ ê¸¸ì´ë¥¼ ë„˜ìœ¼ë©´ 0ìœ¼ë¡œ ì´ˆê¸°í™”
 		if(focusColumn[row] >= optionArray[row].length) {
 			focusColumn[row] = 0;
 		}
@@ -279,44 +277,44 @@ public class OptionForm extends JFrame {
 		btnOption[row].setText(optionArray[row][focusColumn[row]]);
 	}
 	
-	// ÇÁ·¹ÀÓ Å©±â º¯°æ (ÇöÀç ¼³Á¤µÈ ¿É¼Ç°ªÀº È­¸é¿¡¼­ ±×´ë·Î À¯ÁöµÇ¾î¾ß ÇÔ)
+	// í”„ë ˆì„ í¬ê¸° ë³€ê²½ (í˜„ì¬ ì„¤ì •ëœ ì˜µì…˜ê°’ì€ í™”ë©´ì—ì„œ ê·¸ëŒ€ë¡œ ìœ ì§€ë˜ì–´ì•¼ í•¨)
 	private void updateFrameSize(int w, int h) {
 		getContentPane().removeAll();
 		
-		// ¸â¹ö º¯¼ö w, h º¯°æÇØ¼­ È­¸é Å©±â Á¶Àı!
-		// È­¸é Å©±â ¹Ù²ãµµ ÇöÀç Æ÷Ä¿½º¿¡ µû¶ó ¹öÆ° ÅØ½ºÆ®´Â À¯ÁöµÊ.
+		// ë©¤ë²„ ë³€ìˆ˜ w, h ë³€ê²½í•´ì„œ í™”ë©´ í¬ê¸° ì¡°ì ˆ!
+		// í™”ë©´ í¬ê¸° ë°”ê¿”ë„ í˜„ì¬ í¬ì»¤ìŠ¤ì— ë”°ë¼ ë²„íŠ¼ í…ìŠ¤íŠ¸ëŠ” ìœ ì§€ë¨.
 		initComponents(w, h);
 		this.setVisible(true);
 		
 		getContentPane().repaint();
 	}
 
-	// ¼³Á¤¿¡¼­ ¼±ÅÃÇÑ ³Êºñ, ³ôÀÌ¿¡ µû¶ó ¸ğµç ÇÁ·¹ÀÓÀÇ Å©±â¿Í ÄÄÆ÷³ÍÆ®µéÀÇ À§Ä¡ Á¶Á¤ÇÏ±â!!!
+	// ì„¤ì •ì—ì„œ ì„ íƒí•œ ë„ˆë¹„, ë†’ì´ì— ë”°ë¼ ëª¨ë“  í”„ë ˆì„ì˜ í¬ê¸°ì™€ ì»´í¬ë„ŒíŠ¸ë“¤ì˜ ìœ„ì¹˜ ì¡°ì •í•˜ê¸°!!!
 	public Pair<Integer, Integer> getFrameSize() {
 		return new Pair<>(w, h);
 	}
 	
-	// Á¶ÀÛ Å°
+	// ì¡°ì‘ í‚¤
 	public int getCurrentKeyMode() {
 		return confirmedColumn[1];
 	}
 	
-	// ³­ÀÌµµ 
+	// ë‚œì´ë„ 
 	public int getCurrentGameLevel() {
 		return confirmedColumn[2];
 	}
 	
-	// »ö¸Í ¸ğµå 
+	// ìƒ‰ë§¹ ëª¨ë“œ 
 	public int getCurrentColorMode() {
 		return confirmedColumn[3];
 	}
 	
-	// ½ºÄÚ¾îº¸µå ±â·Ï ÃÊ±âÈ­
+	// ìŠ¤ì½”ì–´ë³´ë“œ ê¸°ë¡ ì´ˆê¸°í™”
 	private void initScoreboard() {
 		lf.deleteLeaderboard();
 	}
 	
-	// OptionForm ÇÁ·¹ÀÓ ½ÇÇà
+	// OptionForm í”„ë ˆì„ ì‹¤í–‰
 	public static void main(String[] args) {
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
