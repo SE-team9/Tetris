@@ -5,19 +5,19 @@ public class GameThread extends Thread {
 	private GameArea ga;
 	private GameForm gf;
 	private NextBlockArea nba;
-	private int score = 0; // ÇÑ ´ÜÀ§¾¿ °è¼Ó Áõ°¡ 
-	private int level = 1; 
-	private int linePerLevel = 7; // 7ÁÙ »èÁ¦ÇÒ ¶§¸¶´Ù ·¹º§ »ó½Â
-	private int interval = 1000; // sleep ½Ã°£ 
-	private int speedupPerLevel = 100; 
+	private int score = 0; // í•œ ë‹¨ìœ„ì”© ê³„ì† ì¦ê°€ 
+	private int level = 1; // ì‚­ì œí•œ ì¤„ ê°œìˆ˜ì— ë”°ë¼ ë ˆë²¨ ìƒìŠ¹
+	private int linePerLevel = 7;
+	private int interval = 1000; // sleep ì‹œê°„ 
+	private int speedupPerLevel = 100;
 	private boolean isPaused = false;
-	private int levelMode; // ¼³Á¤ È­¸é¿¡¼­ Á¤ÇÑ °ÔÀÓ ³­ÀÌµµ
+	private int levelMode; // ì„¤ì • í™”ë©´ì—ì„œ ì •í•œ ê²Œì„ ë‚œì´ë„
 
-	// ¾ÆÀÌÅÛ »ı¼º°ú °ü·ÃµÈ º¯¼öµé
-	private int clearedLineNum; 	    // ÁÙÀÌ »èÁ¦µÈ °æ¿ì »èÁ¦µÈ ÁÙ ¼ö¸¦ ÀúÀåÇÏ´Â º¯¼ö
-	private int totalClearedLine; 	    // »èÁ¦µÈ ÁÙ ¼ö¸¦ ´©Àû ÀúÀåÇÏ´Â º¯¼ö
-	private boolean nextIsItem = false; // ´ÙÀ½ ºí·°ÀÌ ¾ÆÀÌÅÛ ºí·°ÀÎÁö È®ÀÎÇÏ´Â º¯¼ö
-	private boolean isItem = false; 	// ÇöÀç ºí·°ÀÌ ¾ÆÀÌÅÛ ºí·°ÀÎÁö È®ÀÎÇÏ´Â º¯¼ö
+	// ì•„ì´í…œ ìƒì„±ê³¼ ê´€ë ¨ëœ ë³€ìˆ˜ë“¤
+	private int clearedLineNum; 	    // ì¤„ì´ ì‚­ì œëœ ê²½ìš° ì‚­ì œëœ ì¤„ ìˆ˜ë¥¼ ì €ì¥í•˜ëŠ” ë³€ìˆ˜
+	private int totalClearedLine; 	    // ì‚­ì œëœ ì¤„ ìˆ˜ë¥¼ ëˆ„ì  ì €ì¥í•˜ëŠ” ë³€ìˆ˜
+	private boolean nextIsItem = false; // ë‹¤ìŒ ë¸”ëŸ­ì´ ì•„ì´í…œ ë¸”ëŸ­ì¸ì§€ í™•ì¸í•˜ëŠ” ë³€ìˆ˜
+	private boolean isItem = false; 	// í˜„ì¬ ë¸”ëŸ­ì´ ì•„ì´í…œ ë¸”ëŸ­ì¸ì§€ í™•ì¸í•˜ëŠ” ë³€ìˆ˜
 
 	public GameThread(GameArea ga, GameForm gf, NextBlockArea nba) {
 		this.ga = ga;
@@ -33,16 +33,16 @@ public class GameThread extends Thread {
 	@Override
 	public void run() {
 		if(Tetris.getGameMode() == 0) {
-			startDefaultMode(); 
+			startDefaultMode(); // ì¼ë°˜ ëª¨ë“œ
 		}else {
-			startItemMode();
+			startItemMode(); // ì•„ì´í…œ ëª¨ë“œ
 		}
 	}
 
 	private void startDefaultMode() {
 		while (true) {
-			ga.spawnBlock(); // »õ·Î¿î ºí·° »ı¼º 
-			ga.updateNextBlock(); // ´ÙÀ½ ºí·° Ç¥½Ã 	
+			ga.spawnBlock(); // ìƒˆë¡œìš´ ë¸”ëŸ­ ìƒì„± 
+			ga.updateNextBlock(); // ë‹¤ìŒ ë¸”ëŸ­ í‘œì‹œ 	
 			nba.updateNBA(ga.getNextBlock());
 
 			while (ga.moveBlockDown()) {
@@ -52,10 +52,10 @@ public class GameThread extends Thread {
 
 					int i = 0;
 					while (i < interval / 100) {
-						Thread.sleep(100); // 0.1ÃÊ¸¶´Ù pauseÅ°°¡ ´­·È´ÂÁö È®ÀÎ
+						Thread.sleep(100); // 0.1ì´ˆë§ˆë‹¤ pauseí‚¤ê°€ ëˆŒë ¸ëŠ”ì§€ í™•ì¸
 						i++;
 						
-						// ´­·ÈÀ¸¸é ·çÇÁ µ¹¸é¼­ ´ë±â
+						// ëˆŒë ¸ìœ¼ë©´ ë£¨í”„ ëŒë©´ì„œ ëŒ€ê¸°
 						while (isPaused) {
 							if (!isPaused) {
 								break;
@@ -64,40 +64,40 @@ public class GameThread extends Thread {
 					}
 
 				} catch (InterruptedException ex) {
-					return; // °ÔÀÓ ½º·¹µå Á¾·á
+					return; // ê²Œì„ ìŠ¤ë ˆë“œ ì¢…ë£Œ
 				}
 			}
 
-			// ºí·°ÀÌ ´Ù ³»·Á¿Ô´Âµ¥ À§ÂÊ °æ°è¸¦ ³Ñ¾î ÀÖ´Â °æ¿ì´Â °ÔÀÓ Á¾·á
+			// ë¸”ëŸ­ì´ ë‹¤ ë‚´ë ¤ì™”ëŠ”ë° ìœ„ìª½ ê²½ê³„ë¥¼ ë„˜ì–´ ìˆëŠ” ê²½ìš°ëŠ” ê²Œì„ ì¢…ë£Œ
 			if (ga.isBlockOutOfBounds()) {
-				Tetris.gameOver(score, levelMode);
+				int gameMode = Tetris.getGameMode();
+				Tetris.gameOver(gameMode, score, levelMode);
 				break;
 			}
 
-			// ÇöÀç ºí·°À§Ä¡ ¹è°æ¿¡ ÀúÀå
+			// í˜„ì¬ ë¸”ëŸ­ìœ„ì¹˜ ë°°ê²½ì— ì €ì¥
 			ga.moveBlockToBackground();
 			
-			
-			
-			// ¿Ï¼ºµÈ ÁÙ »èÁ¦, »èÁ¦µÈ ÁÙ ¼ö¿¡ µû¶ó Á¡¼ö Ãß°¡
+			// ë‘ ì¤„ ì´ìƒ ì‚­ì œë˜ë©´ ì¶”ê°€ ì ìˆ˜ íšë“ 
 			if(ga.clearLines() > 1) {
 				score += 2 * ga.clearLines() + level;
 			}
 			else {
+				// ê¸°ë³¸ ì ìˆ˜ (+ ë ˆë²¨ì— ë”°ë¼ ì¶”ê°€ ì ìˆ˜ íšë“)
 				score += ga.clearLines() + level;
 			}
 			
-			// Á¡¼ö ¾÷µ¥ÀÌÆ®
+			// ì ìˆ˜ ì—…ë°ì´íŠ¸
 			gf.updateScore(score);
 			
-			// ³­ÀÌµµ Á¶Àı Ãß°¡
+			// ë‚œì´ë„ ì¡°ì ˆ ì¶”ê°€
 			if (levelMode == 0) {
 				speedupPerLevel = 80;
 			} else if (levelMode == 2) {
 				speedupPerLevel = 120;
 			}
 			
-			// ·¹º§ ¾÷µ¥ÀÌÆ® ·¹º§ÀÌ Áõ°¡ÇÒ¼ö·Ï ºí·°ÀÌ ³»·Á¿À´Â ¼Óµµ Áõ°¡
+			// ë ˆë²¨ ì—…ë°ì´íŠ¸, ë ˆë²¨ì´ ì¦ê°€í• ìˆ˜ë¡ ë¸”ëŸ­ì´ ë‚´ë ¤ì˜¤ëŠ” ì†ë„ ì¦ê°€
 			int lvl = totalClearedLine / linePerLevel + 1;
 			if (lvl > level) {
 				level = lvl;
@@ -114,9 +114,9 @@ public class GameThread extends Thread {
 		while (true) {
 			ga.spawnBlock();
 
-			if (nextIsItem) { 		// ´ÙÀ½ ºí·°ÀÌ ¾ÆÀÌÅÛ
-				ga.updateNextItem(); 	// ´ÙÀ½ ¾ÆÀÌÅÛ ºí·° ¼³Á¤
-				nba.setIsItem(true); 	// ¾ÆÀÌÅÛÀº ¿øÇüÀ¸·Î Ç¥½ÃÇÏ±â À§ÇØ ¾ÆÀÌÅÛ ºí·°ÀÓÀ» ¾Ë·ÁÁÖ´Â ¿ëµµ
+			if (nextIsItem) { 		// ë‹¤ìŒ ë¸”ëŸ­ì´ ì•„ì´í…œ
+				ga.updateNextItem(); 	// ë‹¤ìŒ ì•„ì´í…œ ë¸”ëŸ­ ì„¤ì •
+				nba.setIsItem(true); 	// ì•„ì´í…œì€ ì›í˜•ìœ¼ë¡œ í‘œì‹œí•˜ê¸° ìœ„í•´ ì•„ì´í…œ ë¸”ëŸ­ì„ì„ ì•Œë ¤ì£¼ëŠ” ìš©ë„
 			} else {
 				ga.updateNextBlock(); 	
 			}
@@ -145,40 +145,43 @@ public class GameThread extends Thread {
 				}
 			}
 
-			// °ÔÀÓ Á¾·á È®ÀÎ
+			// ê²Œì„ ì¢…ë£Œ í™•ì¸
 			if (ga.isBlockOutOfBounds()) {
-				Tetris.gameOver(score, levelMode);
-				break;
+				int gameMode = Tetris.getGameMode();
+				Tetris.gameOver(gameMode, score, levelMode);
+				
+				break; // ë£¨í”„ íƒˆì¶œ
 			}
 
-			// ÇöÀç ºí·°ÀÌ ¾ÆÀÌÅÛÀÌ¸é ¾ÆÀÌÅÛÀ» ¹İÂ¦°Å¸®°í ÇØ´ç ¾ÆÀÌÅÛÀÇ µ¿ÀÛÀ» ¼öÇàÇÑ´Ù.
+			// í˜„ì¬ ë¸”ëŸ­ì´ ì•„ì´í…œì´ë©´ ì•„ì´í…œì„ ë°˜ì§ê±°ë¦¬ê³  í•´ë‹¹ ì•„ì´í…œì˜ ë™ì‘ì„ ìˆ˜í–‰í•œë‹¤.
 			if (isItem) {
 				ga.twinkleItem();
 				ga.itemFunction();
 
-				// ÀÌÁ¦ ÇöÀç ºí·°ÀÌ ±âº» ºí·°ÀÓÀ» ³ªÅ¸³»±â À§ÇØ ºÒ¸°°ª Á¶Á¤
+				// ì´ì œ í˜„ì¬ ë¸”ëŸ­ì´ ê¸°ë³¸ ë¸”ëŸ­ì„ì„ ë‚˜íƒ€ë‚´ê¸° ìœ„í•´ ë¶ˆë¦°ê°’ ì¡°ì •
 				ga.setIsItem(false);
 				isItem = false;
 
-			} else { // ÇöÀç ºí·°ÀÌ ¾ÆÀÌÅÛÀÌ ¾Æ´Ï¸é ÇöÀç ºí·°À» ¹è°æÀ¸·Î ¿Å±ä´Ù.
+			} else { // í˜„ì¬ ë¸”ëŸ­ì´ ì•„ì´í…œì´ ì•„ë‹ˆë©´ í˜„ì¬ ë¸”ëŸ­ì„ ë°°ê²½ìœ¼ë¡œ ì˜®ê¸´ë‹¤.
 				ga.moveBlockToBackground();
 
-				// ´ÙÀ½ ºí·°ÀÌ ¾ÆÀÌÅÛÀÌ¾ú´Ù¸é ÀÌÁ¦ ÇöÀç ºí·°ÀÌ ¾ÆÀÌÅÛÀÌ µÇ°í, ´ÙÀ½ ºí·°Àº ±âº» ºí·°ÀÌ µÇ¾î¾ß ÇÏ¹Ç·Î,
-				// ÇöÀç ºí·°Àº ¿øÇüÀ¸·Î, ´ÙÀ½ ºí·°Àº »ç°¢ÇüÀ¸·Î Ç¥½ÃÇÏ±â À§ÇØ °¢ ºÒ¸°°ªµéÀ» Á¶Á¤ÇØÁØ´Ù.
+				// ë‹¤ìŒ ë¸”ëŸ­ì´ ì•„ì´í…œì´ì—ˆë‹¤ë©´ ì´ì œ í˜„ì¬ ë¸”ëŸ­ì´ ì•„ì´í…œì´ ë˜ê³ , ë‹¤ìŒ ë¸”ëŸ­ì€ ê¸°ë³¸ ë¸”ëŸ­ì´ ë˜ì–´ì•¼ í•˜ë¯€ë¡œ,
+				// í˜„ì¬ ë¸”ëŸ­ì€ ì›í˜•ìœ¼ë¡œ, ë‹¤ìŒ ë¸”ëŸ­ì€ ì‚¬ê°í˜•ìœ¼ë¡œ í‘œì‹œí•˜ê¸° ìœ„í•´ ê° ë¶ˆë¦°ê°’ë“¤ì„ ì¡°ì •í•´ì¤€ë‹¤.
 				if (nextIsItem) {
-					nextIsItem = false; 	// ´ÙÀ½ ºí·°Àº ±âº» ºí·°
-					isItem = true; 			// ÇöÀç ºí·°Àº ¾ÆÀÌÅÛ
-					nba.setIsItem(false);		// ´ÙÀ½ ºí·°Àº ¾ÆÀÌÅÛÀÌ ¾Æ´Ô
-					ga.setIsItem(true); 		// ÇöÀçºí·°Àº ¾ÆÀÌÅÛ
+					nextIsItem = false; 	// ë‹¤ìŒ ë¸”ëŸ­ì€ ê¸°ë³¸ ë¸”ëŸ­
+					isItem = true; 			// í˜„ì¬ ë¸”ëŸ­ì€ ì•„ì´í…œ
+					nba.setIsItem(false);		// ë‹¤ìŒ ë¸”ëŸ­ì€ ì•„ì´í…œì´ ì•„ë‹˜
+					ga.setIsItem(true); 		// í˜„ì¬ë¸”ëŸ­ì€ ì•„ì´í…œ
 				}
 			}
 
-			// ÇöÀç ºí·°ÀÌ ¹Ù´Ú¿¡ ´ê¾ÒÀ» ¶§, ¿Ï¼ºµÈ ÁÙÀ» »èÁ¦ÇÏ°í, »èÁ¦µÈ ÁÙ ¼ö ÀúÀå
-			clearedLineNum = ga.clearLines() + ga.oneLineDelte();
+			// í˜„ì¬ ë¸”ëŸ­ì´ ë°”ë‹¥ì— ë‹¿ì•˜ì„ ë•Œ, ì™„ì„±ëœ ì¤„ì„ ì‚­ì œí•˜ê³ , ì‚­ì œëœ ì¤„ ìˆ˜ ì €ì¥
+			//clearedLineNum = ga.clearLines() + ga.oneLineDelte();
+			clearedLineNum = ga.clearLines();
 
-			// ÁÙÀÌ Æ¯Á¤ È½¼ö »èÁ¦µÇ¸é ¾ÆÀÌÅÛ »ı¼º
-			// 3À» 10À¸·Î °íÄ¡¸é 10ÁÙÀÌ »èÁ¦µÉ ¶§¸¶´Ù ¾ÆÀÌÅÛÀÌ »ı¼ºµË´Ï´Ù.
-			// µ¿ÀÛÀ» ½±°Ô È®ÀÎÇÏ±â À§ÇØ 3ÁÙ ¸¶´Ù ¾ÆÀÌÅÛÀÌ ³ª¿Àµµ·Ï 3À¸·Î ¼³Á¤ÇØµ×½À´Ï´Ù.
+			// ì¤„ì´ íŠ¹ì • íšŸìˆ˜ ì‚­ì œë˜ë©´ ì•„ì´í…œ ìƒì„±
+			// 3ì„ 10ìœ¼ë¡œ ê³ ì¹˜ë©´ 10ì¤„ì´ ì‚­ì œë  ë•Œë§ˆë‹¤ ì•„ì´í…œì´ ìƒì„±ë©ë‹ˆë‹¤.
+			// ë™ì‘ì„ ì‰½ê²Œ í™•ì¸í•˜ê¸° ìœ„í•´ 3ì¤„ ë§ˆë‹¤ ì•„ì´í…œì´ ë‚˜ì˜¤ë„ë¡ 3ìœ¼ë¡œ ì„¤ì •í•´ë’€ìŠµë‹ˆë‹¤.
 			if (totalClearedLine / 3 != (totalClearedLine + clearedLineNum) / 3) {
 				nextIsItem = true;
 			}
@@ -193,12 +196,13 @@ public class GameThread extends Thread {
 			}
 			gf.updateScore(score);
 
-			// ³­ÀÌµµ Á¶Àı Ãß°¡
+			// ë‚œì´ë„ ì¡°ì ˆ ì¶”ê°€
 			if (levelMode == 0) {
 				speedupPerLevel = 80;
 			} else if (levelMode == 2) {
 				speedupPerLevel = 120;
 			}
+
 			int lvl = totalClearedLine / linePerLevel + 1;
 			if (lvl > level) {
 				level = lvl;
