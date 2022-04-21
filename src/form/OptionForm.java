@@ -16,12 +16,11 @@ import javax.swing.KeyStroke;
 /*  
 	화면 크기 조절 - 3개 -> 이 화면에서 바로 적용 
 	기본 설정으로 되돌리기 on/off -> 이 화면에서 바로 적용 
+	스코어보드 기록 초기화 on/off -> LeaderboardForm에서 사용 
 	
 	조작 키 설정 - 2개 -> GameForm에서 참조
 	난이도 선택 - 3개 -> GameThread에서 참조 (낙하 속도 조절, 블럭 생성 확률 조절)
 	색맹 모드 on/off -> 블럭 색상 초기화 할 때 사용 
-	
-	스코어보드 기록 초기화 on/off -> LeaderboardForm에서 사용 
  */
 
 public class OptionForm extends JFrame {
@@ -68,6 +67,26 @@ public class OptionForm extends JFrame {
 		initComponents(w, h);
 		
 		initControls();
+	}
+	
+	// 이 화면 내에서 크기를 바꿀 때는 포커스 놓인 텍스트를 보여줘야 하지만,
+	// 화면을 나갔다가 다시 들어올 때는 확정된 설정 값을 띄워야 한다. 
+	public void showConfirmedOption() {
+		// 확정된 설정 값으로 텍스트 보여주기
+		for(int i = 0; i < ROW; i++) {
+			btnOption[i] = new JButton(optionArray[i][confirmedColumn[i]]); 
+			btnOption[i].setBounds(w/4, h/30 + i * 60 + 25, w/2, 25);
+			btnOption[i].setBackground(Color.white);
+			btnOption[i].setFocusable(false);
+			this.add(btnOption[i]);
+		}
+		
+		// 화살표 위치 초기화
+		row = 0;
+		lblArrow[0].setBounds(w/3, h/30 + row * 60, 25, 25);
+		lblArrow[1].setBounds(w - w/3, h/30 + row * 60, 25, 25);
+		this.add(lblArrow[0]);
+		this.add(lblArrow[1]);
 	}
 	
 	// 기본 설정으로 초기화
@@ -195,11 +214,15 @@ public class OptionForm extends JFrame {
 		});
 	}
 	
-	private void moveUp() {
+	private void moveUp() {		
+		// 원래 행의 텍스트는 포커스된 걸로!
+		btnOption[row].setText(optionArray[row][focusColumn[row]]);
+		
 		lblArrow[0].setVisible(false);
 		lblArrow[1].setVisible(false);
 		
 		row--;
+		
 		if(row < 0) {
 			row = ROW - 1;
 		}
@@ -212,6 +235,8 @@ public class OptionForm extends JFrame {
 	}
 
 	private void moveDown() {
+		btnOption[row].setText(optionArray[row][focusColumn[row]]);
+		
 		lblArrow[0].setVisible(false);
 		lblArrow[1].setVisible(false);
 		

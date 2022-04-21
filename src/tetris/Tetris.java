@@ -46,6 +46,7 @@ public class Tetris {
 		h = of.getFrameSize().height;
 		
 		of.initComponents(w, h);
+		of.showConfirmedOption();
 		
 		of.setVisible(true);
 		of.getContentPane().repaint();
