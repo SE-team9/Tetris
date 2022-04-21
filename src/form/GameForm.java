@@ -79,13 +79,13 @@ public class GameForm extends JFrame {
 			im.put(KeyStroke.getKeyStroke("DOWN"), "downOneLine");
 			im.put(KeyStroke.getKeyStroke("SPACE"), "downToEnd");
 			
-			keyManual = new JTextArea("왼쪽 이동: ← \n"
-					+ "오른쪽 이동: → \n"
-					+ "한칸 아래로 이동: ↓ \n"
-					+ "블럭 회전: ↑ \n"
-					+ "한번에 밑으로 이동: SPACE \n"
-					+ "게임 정지/재개: q \n"
-					+ "게임 종료: e  \n");
+			keyManual = new JTextArea(" 왼쪽 이동: ← \n"
+					+ " 오른쪽 이동: → \n"
+					+ " 한칸 아래로 이동: ↓ \n"
+					+ " 블럭 회전: ↑ \n"
+					+ " 한번에 밑으로 이동: SPACE \n"
+					+ " 게임 정지/재개: q \n"
+					+ " 게임 종료: e  \n");
 		}
 		else {
 			im.clear(); // 다른 키모드에서 설정했던 거 초기화
@@ -96,13 +96,13 @@ public class GameForm extends JFrame {
 			im.put(KeyStroke.getKeyStroke("S"), "downOneLine");
 			im.put(KeyStroke.getKeyStroke("ENTER"), "downToEnd");
 			
-			keyManual = new JTextArea("왼쪽 이동: a \n"
-					+ "오른쪽 이동: d \n"
-					+ "한칸 아래로 이동: s \n"
-					+ "블럭 회전: w \n"
-					+ "한번에 밑으로 이동: ENTER \n"
-					+ "게임 정지/재개: q \n"
-					+ "게임 종료: e  \n");
+			keyManual = new JTextArea(" 왼쪽 이동: a \n"
+					+ " 오른쪽 이동: d \n"
+					+ " 한칸 아래로 이동: s \n"
+					+ " 블럭 회전: w \n"
+					+ " 한번에 밑으로 이동: ENTER \n"
+					+ " 게임 정지/재개: q \n"
+					+ " 게임 종료: e  \n");
 		}
 		
 		// 공통 (중지, 종료, 뒤로가기)
@@ -110,7 +110,7 @@ public class GameForm extends JFrame {
 		im.put(KeyStroke.getKeyStroke("E"), "exit");
 		im.put(KeyStroke.getKeyStroke("ESCAPE"), "back");
 		
-		keyManual.setBounds(w/30, h-300, 160, 140);
+		keyManual.setBounds(w/30, h-300, 160, 130);
 		keyManual.setFocusable(false);
 		this.add(keyManual);
 		
