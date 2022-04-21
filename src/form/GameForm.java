@@ -68,10 +68,7 @@ public class GameForm extends JFrame {
 	public void initControls(int keyMode) {
 		InputMap im = this.getRootPane().getInputMap();
 		ActionMap am = this.getRootPane().getActionMap();
-		
-		System.out.println("keymode : " + keyMode);
-		keyManual = new JTextArea();
-		
+	
 		if(keyMode == 0) {
 			im.clear();
 			
@@ -81,7 +78,7 @@ public class GameForm extends JFrame {
 			im.put(KeyStroke.getKeyStroke("DOWN"), "downOneLine");
 			im.put(KeyStroke.getKeyStroke("SPACE"), "downToEnd");
 			
-			keyManual.setText("왼쪽 이동: ← \n"
+			keyManual = new JTextArea("왼쪽 이동: ← \n"
 					+ "오른쪽 이동: → \n"
 					+ "한칸 아래로 이동: ↓ \n"
 					+ "블럭 회전: ↑ \n"
@@ -98,7 +95,7 @@ public class GameForm extends JFrame {
 			im.put(KeyStroke.getKeyStroke("S"), "downOneLine");
 			im.put(KeyStroke.getKeyStroke("ENTER"), "downToEnd");
 			
-			keyManual.setText("왼쪽 이동: a \n"
+			keyManual = new JTextArea("왼쪽 이동: a \n"
 					+ "오른쪽 이동: d \n"
 					+ "한칸 아래로 이동: s \n"
 					+ "블럭 회전: w \n"

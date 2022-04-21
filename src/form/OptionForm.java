@@ -49,7 +49,7 @@ public class OptionForm extends JFrame {
 		 { "NO", "YES" } // 기본 설정으로 되돌리기
 	};
 	
-	// 행마다 포커스가 놓인 칼럼 위치가 다르기 때문에 배열로 만들었다.
+	// 행마다 포커스가 놓인 칼럼 위치가 다르기 때문에 배열 만들기
 	private int row = 0;
 	private int[] focusColumn = new int[ROW];
 	
@@ -184,7 +184,7 @@ public class OptionForm extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				confirmedColumn[row] = focusColumn[row];
-				System.out.println(row + " " + confirmedColumn[row]); // 디버깅 용도
+				//System.out.println(row + " " + confirmedColumn[row]); // 디버깅 용도
 				
 				switch(row) {
 				case 0: // 화면 크기 설정 

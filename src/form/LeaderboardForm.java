@@ -36,10 +36,11 @@ public class LeaderboardForm extends JFrame {
 	private DefaultTableModel tm;
 	private String[] leaderboardFile = { "leaderboardFile_Normal", "leaderboardFile_Item" };
 	private TableRowSorter<TableModel> sorter;
-	JScrollPane scrollLeaderboard;
+	private JScrollPane scrollLeaderboard;
 
-	private JLabel[] gameModeLabel;
-	private String gameMode[] = { "일반 모드", "아이템 모드" };
+	private JLabel[] lblArrow = { new JLabel("<"), new JLabel(">") };
+	private JLabel[] lblGameMode;
+	private String gameMode[] = { "Normal Mode", "Item Mode" };
 	private int curCol;
 
 	public LeaderboardForm() {
@@ -75,15 +76,20 @@ public class LeaderboardForm extends JFrame {
 
     // 모드, 난이도 표시 레이블 초기화 
 	private void initLabel() {
-		gameModeLabel = new JLabel[2];
-		for (int i = 0; i < gameModeLabel.length; i++) {
-			gameModeLabel[i] = new JLabel(gameMode[i]);
-			gameModeLabel[i].setHorizontalAlignment(JLabel.CENTER);
-			gameModeLabel[i].setBounds(w / 3, h / 30, 200, 30);
-			gameModeLabel[i].setVisible(false);
-			this.add(gameModeLabel[i]);
+		lblGameMode = new JLabel[2];
+		for (int i = 0; i < lblGameMode.length; i++) {
+			lblGameMode[i] = new JLabel(gameMode[i]);
+			lblGameMode[i].setHorizontalAlignment(JLabel.CENTER);
+			lblGameMode[i].setBounds(w / 3, h / 30, 200, 30);
+			lblGameMode[i].setVisible(false);
+			this.add(lblGameMode[i]);
 		}
-		gameModeLabel[0].setVisible(true);
+		lblGameMode[0].setVisible(true);
+		
+		lblArrow[0].setBounds(w/3 + 10, h/30, 30, 30);
+		lblArrow[1].setBounds(w - (w/3 + 20), h/30, 30, 30);
+		this.add(lblArrow[0]);
+		this.add(lblArrow[1]);
 	}
   
 	private void initControls() {
@@ -118,29 +124,29 @@ public class LeaderboardForm extends JFrame {
 	}
 
 	private void moveNextMode() {
-		gameModeLabel[curCol].setVisible(false);
+		lblGameMode[curCol].setVisible(false);
 		scrollLeaderboard.setVisible(false);
 
 		curCol++;
-		if (curCol > gameModeLabel.length - 1) {
+		if (curCol > lblGameMode.length - 1) {
 			curCol = 0;
 		}
 
-		gameModeLabel[curCol].setVisible(true);
+		lblGameMode[curCol].setVisible(true);
 
 		remakeScrollLeaderboard(curCol);
 	}
 
 	private void movePreviousMode() {
-		gameModeLabel[curCol].setVisible(false);
+		lblGameMode[curCol].setVisible(false);
 		scrollLeaderboard.setVisible(false);
 
 		curCol--;
 		if (curCol < 0) {
-			curCol = gameModeLabel.length - 1;
+			curCol = lblGameMode.length - 1;
 		}
 
-		gameModeLabel[curCol].setVisible(true);
+		lblGameMode[curCol].setVisible(true);
 
 		remakeScrollLeaderboard(curCol);
 	}
@@ -167,7 +173,7 @@ public class LeaderboardForm extends JFrame {
 				return false;
 			}
 
-			@Override // score--> Int 형으로
+			@Override // score --> Int 형으로
 			public Class<?> getColumnClass(int columnIndex) {
 				if (columnIndex == 1)
 					return Integer.class;
@@ -176,17 +182,17 @@ public class LeaderboardForm extends JFrame {
 			}
 		};
 		
-		Vector columnIdentifier = new Vector();
-		columnIdentifier.add("Player");
-		columnIdentifier.add("Score");
-		columnIdentifier.add("Level");
+		Vector ci = new Vector();
+		ci.add("Player");
+		ci.add("Score");
+		ci.add("Level");
 
 		try {
 			FileInputStream fs = new FileInputStream(leaderboardFile[mode]);
 			ObjectInputStream os = new ObjectInputStream(fs);
 
 			// 점수를 문자열이 아닌 int 타입으로 읽어야 두자리 이상의 숫자도 정렬 가능!
-			tm.setDataVector((Vector<Vector>) os.readObject(), columnIdentifier);
+			tm.setDataVector((Vector<Vector>) os.readObject(), ci);
 
 			os.close();
 			fs.close();
@@ -199,7 +205,7 @@ public class LeaderboardForm extends JFrame {
 		leaderboard = new JTable(tm);
 		leaderboard.setFocusable(false);
 
-		// 내용물 중앙 정렬
+		// 내용 중앙 정렬
 		DefaultTableCellRenderer tScheduleCellRenderer = new DefaultTableCellRenderer();
 		tScheduleCellRenderer.setHorizontalAlignment(SwingConstants.CENTER);
 		TableColumnModel tcmSchedule = leaderboard.getColumnModel();

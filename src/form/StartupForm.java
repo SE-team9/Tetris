@@ -20,11 +20,12 @@ public class StartupForm extends JFrame {
 	private JLabel title = new JLabel("SE Team9 Tetris");
 	
 	// 0이면 일반 모드, 1이면 아이템 모드 
-	private JLabel[] gameMode = new JLabel[2];
+	private JLabel[] lblArrow = { new JLabel("<"), new JLabel(">") };
+	private JLabel[] lblGameMode = new JLabel[2];
 	private int curGameMode; 
 
 	// 시작 메뉴, 설정 화면, 스코어 보드, 게임 종료 
-	private JButton[] menu = new JButton[4];
+	private JButton[] btnMenu = new JButton[4];
 	private String[] btnText = { "Start Game", "Settings", "ScoreBoard", "Quit" };
 	private int curPos;
 	
@@ -32,8 +33,9 @@ public class StartupForm extends JFrame {
 		this.w = 600;
 		this.h = 450;
 		
-		// 객체를 처음 생성할 때는 기본 값 (다른 곳에서 이 form을 띄울 때 이 함수로 크기 초기화)
+		// 객체를 처음 생성할 때는 기본 값
 		initComponents(w, h); 
+		
 		initControls();
 	}
 	
@@ -106,39 +108,39 @@ public class StartupForm extends JFrame {
 	}
 
 	private void moveUp() {
-		menu[curPos].setBackground(Color.white);
+		btnMenu[curPos].setBackground(Color.white);
 		curPos--;
 		if (curPos < 0) {
-			curPos = menu.length - 1;
+			curPos = btnMenu.length - 1;
 		}
-		menu[curPos].setBackground(Color.lightGray);
+		btnMenu[curPos].setBackground(Color.lightGray);
 	}
 
 	private void moveDown() {
-		menu[curPos].setBackground(Color.white);
+		btnMenu[curPos].setBackground(Color.white);
 		curPos++;
-		if (curPos > menu.length - 1) {
+		if (curPos > btnMenu.length - 1) {
 			curPos = 0;
 		}
-		menu[curPos].setBackground(Color.lightGray);
+		btnMenu[curPos].setBackground(Color.lightGray);
 	}
 
 	private void moveRight() {
-		gameMode[curGameMode].setVisible(false);
+		lblGameMode[curGameMode].setVisible(false);
 		curGameMode++;
-		if (curGameMode > gameMode.length - 1) {
+		if (curGameMode > lblGameMode.length - 1) {
 			curGameMode = 0;
 		}
-		gameMode[curGameMode].setVisible(true);
+		lblGameMode[curGameMode].setVisible(true);
 	}
 
 	private void moveLeft() {
-		gameMode[curGameMode].setVisible(false);
+		lblGameMode[curGameMode].setVisible(false);
 		curGameMode--;
 		if (curGameMode < 0) {
-			curGameMode = gameMode.length - 1;
+			curGameMode = lblGameMode.length - 1;
 		}
-		gameMode[curGameMode].setVisible(true);
+		lblGameMode[curGameMode].setVisible(true);
 	}
 
 	public int getCurrentGameMode() {
@@ -166,34 +168,37 @@ public class StartupForm extends JFrame {
 		this.setVisible(false);
 	}
 	
-	// 조작키 안내, 게임 제목, 게임 모드 텍스트 초기화
 	private void initLable() {
 		title.setFont(new Font("Arial", Font.BOLD, 30));
 		title.setBounds(w / 4, h / 20, w / 2, h / 6);
 		title.setHorizontalAlignment(JLabel.CENTER);
 		this.add(title);
-
-		// TODO: 설정 화면처럼 <> 이 모양을 표시했으면 좋겠는데, 프레임 크기에 따라 또 위치를 바꿔줘야 하니까 일단 보류!
-		gameMode[0] = new JLabel("Normal Mode");
-		gameMode[1] = new JLabel("Item Mode");
+		
+		lblGameMode[0] = new JLabel("Normal Mode");
+		lblGameMode[1] = new JLabel("Item Mode");
 		for(int i = 0; i < 2; i++) {
-			gameMode[i].setFont(new Font("Arial", Font.BOLD, 15));
-			gameMode[i].setBounds(w / 3, h / 3, w / 3, h / 15);
-			gameMode[i].setHorizontalAlignment(JLabel.CENTER);
-			this.add(gameMode[i]);
+			lblGameMode[i].setFont(new Font("Arial", Font.BOLD, 15));
+			lblGameMode[i].setBounds(w / 3, h / 3, w / 3, h / 15);
+			lblGameMode[i].setHorizontalAlignment(JLabel.CENTER);
+			this.add(lblGameMode[i]);
 		}
-		gameMode[1].setVisible(false);
+		lblGameMode[1].setVisible(false);
+		
+		lblArrow[0].setBounds(w/3 + 10, h/3, 30, 30);
+		lblArrow[1].setBounds(w - (w/3 + 20), h/3, 30, 30);
+		this.add(lblArrow[0]);
+		this.add(lblArrow[1]);
 	}
 
 	private void initButtons() {
-		for (int i = 0; i < menu.length; i++) {
-			menu[i] = new JButton(btnText[i]);
-			menu[i].setBounds(w / 3, h / 3 + (h / 10) * (i + 1), w / 3, h / 15);
-			menu[i].setBackground(Color.white);
-			menu[i].setFocusable(false);
-			this.add(menu[i]);
+		for (int i = 0; i < btnMenu.length; i++) {
+			btnMenu[i] = new JButton(btnText[i]);
+			btnMenu[i].setBounds(w / 3, h / 3 + (h / 10) * (i + 1), w / 3, h / 15);
+			btnMenu[i].setBackground(Color.white);
+			btnMenu[i].setFocusable(false);
+			this.add(btnMenu[i]);
 		}
-		menu[curPos].setBackground(Color.lightGray);
+		btnMenu[curPos].setBackground(Color.lightGray);
 	}
 
 	// StartupForm 프레임 실행
