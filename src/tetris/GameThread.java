@@ -18,7 +18,7 @@ public class GameThread extends Thread {
 	private int totalClearedLine; 	    // 삭제된 줄 수를 누적 저장하는 변수
 	private boolean nextIsItem = false; // 다음 블럭이 아이템 블럭인지 확인하는 변수
 	private boolean isItem = false; 	// 현재 블럭이 아이템 블럭인지 확인하는 변수
-	private int linePerItem = 3;
+	private int linePerItem = 10;
 
 	public GameThread(GameArea ga, GameForm gf, NextBlockArea nba) {
 		this.ga = ga;
@@ -59,7 +59,8 @@ public class GameThread extends Thread {
 
 			// 블럭이 한칸씩 떨어질 때마다 한 단위씩 점수 증가
 			while (ga.moveBlockDown()) {
-				gf.updateScore(score++);
+				score+=level;
+				gf.updateScore(score);
 				checkPauseKey(); // 0.1초마다 pause키 확인
 			}
 
@@ -111,7 +112,8 @@ public class GameThread extends Thread {
 
 			// 블럭이 한칸씩 떨어질 때마다 한 단위씩 점수 증가
 			while (ga.moveBlockDown()) {
-				gf.updateScore(score++);
+				score+=level;
+				gf.updateScore(score);
 				checkPauseKey(); // 0.1초마다 pause키 확인
 			}
 
@@ -205,8 +207,8 @@ public class GameThread extends Thread {
 	}
 	
 	// 블럭 한칸 아래로 내렸을 때 1점 증가 
-	public void scorePlus1() {
-		score++;
+	public void scorePlus_level() {
+		score+=level;
 		gf.updateScore(score);
 	}
 	
