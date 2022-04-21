@@ -77,8 +77,7 @@ public class GameArea extends JPanel {
 
 	// 아이템블럭초기화
 	public void initItems() {
-		//items = new TetrisBlock[] { new FillEmpty(), new Weight(), new DeleteAroundU(), new TwoLineDelete(), new OneLineDelete()};
-		items = new TetrisBlock[] { new OneLineDelete()};
+		items = new TetrisBlock[] { new FillEmpty(), new Weight(), new DeleteAroundU(), new TwoLineDelete(), new OneLineDelete()};
 	}
 	
 	public TetrisBlock[] getItems() {
@@ -359,9 +358,9 @@ public class GameArea extends JPanel {
 		if (rotated.getLeftEdge() < 0)
 			rotated.setX(0);
 		if (rotated.getRightEdge() >= gridColumns)
-			rotated.setX(gridColumns - block.getWidth());
+			rotated.setX(gridColumns - rotated.getWidth());
 		if (rotated.getBottomEdge() >= gridRows)
-			rotated.setY(gridRows - block.getHeight());
+			rotated.setY(gridRows - rotated.getHeight());
 
 		int[][] shape = rotated.getShape();
 		int w = rotated.getWidth();
@@ -603,6 +602,7 @@ public class GameArea extends JPanel {
 				}
 			}
 		}
+		block = null;
 	}
 
 	// 완성된 줄을 삭제한다.

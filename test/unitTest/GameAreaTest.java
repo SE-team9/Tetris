@@ -134,7 +134,7 @@ class GameAreaTest {
 		TetrisBlock currentblock = ga.getBlock();
 
 		assertEquals(currentblock, nextblock);
-		assertEquals(currentblock.getY(), 1-currentblock.getHeight());
+		assertEquals(currentblock.getY(), -currentblock.getHeight());
 
 		int curX = currentblock.getX();
 		int curBlockWidth = currentblock.getWidth();
