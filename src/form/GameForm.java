@@ -141,8 +141,8 @@ public class GameForm extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (!isPaused) {
-					ga.moveBlockDown();
-					gt.scorePlus1();
+					if(ga.moveBlockDown())
+						gt.scorePlus1();
 				}
 			}
 		});

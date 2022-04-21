@@ -49,7 +49,7 @@ public class GameThread extends Thread {
 			while (ga.moveBlockDown()) {
 
 				try {
-					scorePlus1();
+					scorePlus1();	// 1Á¡ Ãß°¡
 
 					int i = 0;
 					while (i < interval / 100) {

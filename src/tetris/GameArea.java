@@ -534,7 +534,6 @@ public class GameArea extends JPanel {
 				}
 			}
 		}
-
 		block = null;
 	}
 

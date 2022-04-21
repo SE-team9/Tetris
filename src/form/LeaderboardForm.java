@@ -47,7 +47,7 @@ public class LeaderboardForm extends JFrame {
 		this.h = 450;
 		initComponents(w, h);
 		
-		initTableData(0);
+		initTableData(Tetris.getGameMode());
 		initLeaderboard(tm);
 		initTableSorter();
 		initScrollLeaderboard();
@@ -83,7 +83,7 @@ public class LeaderboardForm extends JFrame {
 			lblGameMode[i].setVisible(false);
 			this.add(lblGameMode[i]);
 		}
-		lblGameMode[0].setVisible(true);
+		lblGameMode[Tetris.getGameMode()].setVisible(true);
 		
 		lblArrow[0].setBounds(w/3 + 10, h/30, 30, 30);
 		lblArrow[1].setBounds(w - (w/3 + 20), h/30, 30, 30);
@@ -151,7 +151,8 @@ public class LeaderboardForm extends JFrame {
 	}
 
 	// 현재 모드에 맞는 파일에 따라 보드를 다시 생성한다. 
-	private void remakeScrollLeaderboard(int mode) {
+	public void remakeScrollLeaderboard(int mode) {
+		this.curCol = mode; 
 		this.remove(scrollLeaderboard);
 		initTableData(mode);
 		initLeaderboard(tm);

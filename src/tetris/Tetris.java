@@ -59,6 +59,7 @@ public class Tetris {
 		
 		lf.initComponents(w, h);
 		
+		lf.remakeScrollLeaderboard(getGameMode());
 		lf.setVisible(true);
 		lf.getContentPane().repaint();
 	}
