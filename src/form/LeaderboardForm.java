@@ -75,7 +75,7 @@ public class LeaderboardForm extends JFrame {
 		this.setVisible(false);
 		
 		// 현재 모드에 따라 레이블 초기화 (시작 메뉴에서는 일반 모드)
-		lblGameMode = new JLabel(gameMode[col]);
+		lblGameMode = new JLabel(gameMode[Tetris.getGameMode()]);
 		
 		lblGameMode.setHorizontalAlignment(JLabel.CENTER);
 		lblGameMode.setBounds(w / 3, h / 30, 200, 30);
@@ -92,7 +92,9 @@ public class LeaderboardForm extends JFrame {
 		this.curMode = mode;
 		
 		initTableData();
+		
 		initTableSorter();
+		
 		initScrollLeaderboard();
 	}
 

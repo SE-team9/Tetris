@@ -57,6 +57,7 @@ public class Tetris {
 		
 		lf.initComponents(w, h, 0); // 프레임 크기, 칼럼 위치
 		lf.updateTableWithMode(0); // 일반 모드
+		lf.updateTableWithMode(getGameMode());
 		lf.setVisible(true);
 		
 		lf.getContentPane().repaint();
