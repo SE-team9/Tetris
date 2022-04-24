@@ -6,19 +6,18 @@ public class GameThread extends Thread {
 	private GameForm gf;
 	private NextBlockArea nba;
 	private int score = 0; // 한 단위씩 계속 증가 
-	private int level = 1; // 삭제된 줄 개수에 따라 레벨 상승
+	private int level = 1; // 삭제한 줄 개수에 따라 레벨 상승
 	private int linePerLevel = 7;
 	private int interval = 1000; // sleep 시간 
-	private int speedupPerLevel;
+	private int speedupPerLevel = 100;
 	private boolean isPaused = false;
 	private int levelMode; // 설정 화면에서 정한 게임 난이도
 
 	// 아이템 생성과 관련된 변수들
-	private int curClearedLines; 	    // 줄이 삭제된 경우 삭제된 줄 수를 저장하는 변수
+	private int clearedLineNum; 	    // 줄이 삭제된 경우 삭제된 줄 수를 저장하는 변수
 	private int totalClearedLine; 	    // 삭제된 줄 수를 누적 저장하는 변수
 	private boolean nextIsItem = false; // 다음 블럭이 아이템 블럭인지 확인하는 변수
 	private boolean isItem = false; 	// 현재 블럭이 아이템 블럭인지 확인하는 변수
-	private int linePerItem = 3;
 
 	public GameThread(GameArea ga, GameForm gf, NextBlockArea nba) {
 		this.ga = ga;
@@ -29,16 +28,12 @@ public class GameThread extends Thread {
 		gf.updateLevel(level);
 
 		levelMode = Tetris.getGameLevel();
-		switch(levelMode) {
-		case 0: 
+		
+		// 난이도 조절 추가
+		if (levelMode == 0) {
 			speedupPerLevel = 80;
-			break;
-		case 1:
-			speedupPerLevel = 100;
-			break;
-		case 2:
+		} else if (levelMode == 2) {
 			speedupPerLevel = 120;
-			break;
 		}
 	}
 
@@ -57,68 +52,104 @@ public class GameThread extends Thread {
 			ga.updateNextBlock(); // 다음 블럭 표시 	
 			nba.updateNBA(ga.getNextBlock());
 
-			// 블럭이 한칸씩 떨어질 때마다 한 단위씩 점수 증가
 			while (ga.moveBlockDown()) {
-				gf.updateScore(score++);
-				checkPauseKey(); // 0.1초마다 pause키 확인
+				try {
+					score++;
+					gf.updateScore(score);
+
+					int i = 0;
+					while (i < interval / 100) {
+						Thread.sleep(100); // 0.1초마다 pause키가 눌렸는지 확인
+						i++;
+						
+						// 눌렸으면 루프 돌면서 대기
+						while (isPaused) {
+							if (!isPaused) {
+								break;
+							}
+						}
+					}
+
+				} catch (InterruptedException ex) {
+					return; // 게임 스레드 종료
+				}
 			}
 
-			// 블럭이 끝까지 다 쌓이면 게임 종료
+			// 블럭이 다 내려왔는데 위쪽 경계를 넘어 있는 경우는 게임 종료
 			if (ga.isBlockOutOfBounds()) {
 				int gameMode = Tetris.getGameMode();
 				Tetris.gameOver(gameMode, score, levelMode);
-				break; // 루프 탈출
+				break;
 			}
 
-			// 현재 블럭 위치를 배경에 저장
+			// 현재 블럭위치 배경에 저장
 			ga.moveBlockToBackground();
 			
-			// 두 줄 이상 삭제되면 보너스 점수 획득
-			if(curClearedLines > 1) {
-				score += 2* curClearedLines + level;
+			// 두 줄 이상 삭제되면 추가 점수 획득 
+			if(ga.clearLines() > 1) {
+				score += 2 * ga.clearLines() + level;
 			}
 			else {
-				// 기본 점수이지만, 레벨 상승에 따라 보너스 점수 획득 가능 
-				score += curClearedLines + level;
+				// 기본 점수 (+ 레벨에 따라 추가 점수 획득)
+				score += ga.clearLines() + level;
 			}
+			
+			// 점수 업데이트
 			gf.updateScore(score);
 			
-			// linePerLevel 만큼 줄 삭제하면 레벨 및 블럭 낙하 속도 증가
+			// 레벨 업데이트, 레벨이 증가할수록 블럭이 내려오는 속도 증가
 			int lvl = totalClearedLine / linePerLevel + 1;
 			if (lvl > level) {
 				level = lvl;
 				gf.updateLevel(level);
-				
-				// 시간 간격이 300보다 클 때만 업데이트 (그 이하로는 떨어지지 않도록)
 				if (interval > 300) {
 					interval -= speedupPerLevel;
 				}
 			}
 		}
+		
 	}
 
 	private void startItemMode() {
 		while (true) {
 			ga.spawnBlock();
-			
-			if (nextIsItem) {
-				ga.updateNextItem(); // 아이템 블럭으로 설정
-				nba.setIsItem(true); // 아이템은 원형으로 표시하기 위한 플래그
+
+			if (nextIsItem) { 		// 다음 블럭이 아이템
+				ga.updateNextItem(); 	// 다음 아이템 블럭 설정
+				nba.setIsItem(true); 	// 아이템은 원형으로 표시하기 위해 아이템 블럭임을 알려주는 용도
 			} else {
-				ga.updateNextBlock(); // 일반 블럭으로 설정 
+				ga.updateNextBlock(); 	
 			}
-			nba.updateNBA(ga.getNextBlock());
 
-			// 블럭이 한칸씩 떨어질 때마다 한 단위씩 점수 증가
+			nba.updateNBA(ga.getNextBlock()); 
+
 			while (ga.moveBlockDown()) {
-				gf.updateScore(score++);
-				checkPauseKey(); // 0.1초마다 pause키 확인
+
+				try {
+					score++;
+					gf.updateScore(score);
+
+					int i = 0;
+					while (i < interval / 100) {
+						Thread.sleep(100);
+						i++;
+						while (isPaused) {
+							if (!isPaused) {
+								break;
+							}
+						}
+					}
+
+				} catch (InterruptedException ex) {
+					return;
+				}
 			}
 
-			// 블럭이 끝까지 다 쌓이면 게임 종료
+			// 게임 종료 확인
 			if (ga.isBlockOutOfBounds()) {
 				int gameMode = Tetris.getGameMode();
 				Tetris.gameOver(gameMode, score, levelMode);
+				
 				break; // 루프 탈출
 			}
 
@@ -137,31 +168,34 @@ public class GameThread extends Thread {
 				// 다음 블럭이 아이템이었다면 이제 현재 블럭이 아이템이 되고, 다음 블럭은 기본 블럭이 되어야 하므로,
 				// 현재 블럭은 원형으로, 다음 블럭은 사각형으로 표시하기 위해 각 불린값들을 조정해준다.
 				if (nextIsItem) {
-					nextIsItem = false; // 다음 블럭은 기본 블럭
-					nba.setIsItem(false);
-					
-					isItem = true; // 현재 블럭은 아이템
-					ga.setIsItem(true); 
+					nextIsItem = false; 	// 다음 블럭은 기본 블럭
+					isItem = true; 			// 현재 블럭은 아이템
+					nba.setIsItem(false);		// 다음 블럭은 아이템이 아님
+					ga.setIsItem(true); 		// 현재블럭은 아이템
 				}
 			}
 
-			// 현재 삭제된 줄의 수 리턴 
-			curClearedLines = ga.clearLines();
+			// 현재 블럭이 바닥에 닿았을 때, 완성된 줄을 삭제하고, 삭제된 줄 수 저장
+			//clearedLineNum = ga.clearLines() + ga.oneLineDelte();
+			clearedLineNum = ga.clearLines();
 
-			// linePerItem 만큼 줄이 삭제되면 아이템 등장 (원래는 10으로 해야 함)
-			if (totalClearedLine / linePerItem != (totalClearedLine + curClearedLines) / linePerItem) {
+			// 줄이 특정 횟수 삭제되면 아이템 생성
+			// 3을 10으로 고치면 10줄이 삭제될 때마다 아이템이 생성됩니다.
+			// 동작을 쉽게 확인하기 위해 3줄 마다 아이템이 나오도록 3으로 설정해뒀습니다.
+			if (totalClearedLine / 3 != (totalClearedLine + clearedLineNum) / 3) {
 				nextIsItem = true;
 			}
-			totalClearedLine += curClearedLines;
-			
-			if(curClearedLines > 1) {
-				score += 2* curClearedLines + level;
+
+			totalClearedLine += clearedLineNum;
+
+			if(clearedLineNum > 1) {
+				score += 2* clearedLineNum + level;
 			}
 			else {
-				score += curClearedLines + level;
+				score += clearedLineNum + level;
 			}
 			gf.updateScore(score);
-			
+
 			int lvl = totalClearedLine / linePerLevel + 1;
 			if (lvl > level) {
 				level = lvl;
@@ -170,25 +204,6 @@ public class GameThread extends Thread {
 					interval -= speedupPerLevel;
 				}
 			}
-		}
-	}
-	
-	private void checkPauseKey() {
-		try {
-			int i = 0;
-			while (i < interval / 100) {
-				Thread.sleep(100); 
-				i++;
-				
-				// 눌렸으면 루프 돌면서 대기
-				while (isPaused) {
-					if (!isPaused) {
-						break;
-					}
-				}
-			}
-		} catch (InterruptedException ex) {
-			return; // 게임 스레드 종료
 		}
 	}
 
@@ -204,15 +219,13 @@ public class GameThread extends Thread {
 		return this.isPaused;
 	}
 	
-	// 블럭 한칸 아래로 내렸을 때 1점 증가 
 	public void scorePlus1() {
 		score++;
 		gf.updateScore(score);
 	}
 	
-	// 한번에 드롭했을 때 15점 증가
 	public void scorePlus15() {
-		score += 15;
+		score+=15;
 		gf.updateScore(score);
 	}
 }
