@@ -7,11 +7,14 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
+import java.io.EOFException;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Vector;
 
 import javax.swing.AbstractAction;
@@ -54,15 +57,13 @@ public class LeaderboardForm extends JFrame {
 		this.w = 600;
 		this.h = 450;
 		this.curMode = 0;
-		initComponents(w, h, 0);
-
-		// 외부에서 호출할 때 모드를 인자로 넘겨줄 수 있도록
-		updateTableWithMode(0);
+		initComponents(w, h);
+		updateTableWithMode(curMode); 
 
 		initControls();
 	}
 
-	public void initComponents(int w, int h, int col) {
+	public void initComponents(int w, int h) {
 		this.w = w;
 		this.h = h;
 
@@ -73,8 +74,8 @@ public class LeaderboardForm extends JFrame {
 		this.setLocationRelativeTo(null);
 		this.setVisible(false);
 
-		// 현재 모드에 따라 레이블 초기화 (시작 메뉴에서는 일반 모드)
-		lblGameMode = new JLabel(gameMode[col]);
+		// 일반모드 텍스트로 초기화 
+		lblGameMode = new JLabel(gameMode[0]);
 
 		lblGameMode.setHorizontalAlignment(JLabel.CENTER);
 		lblGameMode.setBounds(w / 3, h / 30, 200, 30);
@@ -86,16 +87,19 @@ public class LeaderboardForm extends JFrame {
 		this.add(lblArrow[1]);
 	}
 
-	public void updateTableWithMode(int mode) {
+	// 좌우 화살표 키 입력에 따라 서로 다른 테이블 보여주기
+		public void updateTableWithMode(int mode) {		
+			// 모드 변경 
 		this.curMode = mode;
 
+		// 테이블 업로드
 		initTableData();
 		makeLeaderboard(-1); // highlight 위해 initTableData에서 분리
 		initTableSorter();
 		initScrollLeaderboard();
 	}
 	
-	// 현재 모드에 따라 파일 데이터 가져오기
+		// 현재 게임 모드에 따라 서로 다른 파일 읽어오기 (FileInputStream)
 	private void initTableData() {
 		String header[] = { "Player", "Score", "Level" };
 		String contents[][] = {};
@@ -112,6 +116,7 @@ public class LeaderboardForm extends JFrame {
 			public Class<?> getColumnClass(int columnIndex) {
 				if (columnIndex == 1) // Score
 					return Integer.class;
+				
 				return super.getColumnClass(columnIndex).getClass();
 			}
 		};
@@ -123,14 +128,23 @@ public class LeaderboardForm extends JFrame {
 		ci.add("Level");
 
 		try {
-			// 현재 멤버변수 curMode에 따라 다른 파일을 열어서 데이터 읽어오기!!!
-			FileInputStream fs = new FileInputStream(leaderboardFile[curMode]);
+			// 해당 이름의 파일이 존재하지 않는 경우 새로 생성 
+			File file = new File(leaderboardFile[curMode]);
+			if(!file.exists()) { 
+				file.createNewFile(); 
+				System.out.println("Create new file.");
+			};
+
+			FileInputStream fs = new FileInputStream(file);
 			ObjectInputStream os = new ObjectInputStream(fs);
 
+			// de-serialization (직렬화 된 바이트 데이터 -> 객체 타입으로 읽어오기)
+			// 여기서 데이터 읽어올 때 파일의 끝에 이르면 eof 예외 발생함. (일단 스킵)
 			tm.setDataVector((Vector<Vector>) os.readObject(), ci);
 
 			os.close();
 			fs.close();
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -180,12 +194,20 @@ public class LeaderboardForm extends JFrame {
 		this.add(scrollLeaderboard);
 	}
 
-	// curMode에 따라 서로 다른 파일에 데이터 저장하기
+	// 현재 게임 모드에 따라 서로 다른 파일에 데이터 저장하기 (FileOutputStream)
 	private void saveLeaderboard() {
 		try {
-			FileOutputStream fs = new FileOutputStream(leaderboardFile[curMode]);
+			// 해당 이름의 파일이 존재하지 않는 경우, 새로 생성하기
+			File file = new File(leaderboardFile[curMode]);			
+			if(!file.exists()) { 
+				System.out.println("Create new file.");
+				file.createNewFile(); 
+			};
+
+			FileOutputStream fs = new FileOutputStream(file);
 			ObjectOutputStream os = new ObjectOutputStream(fs);
 
+			// serialization (객체 -> 바이트 데이터로 직렬화하여 파일에 저장)
 			os.writeObject(tm.getDataVector());
 
 			os.close();
@@ -196,7 +218,6 @@ public class LeaderboardForm extends JFrame {
 		}
 	}
 
-	// ------------------------------------------------------ 키 입력에 따른 이벤트 처리
 	private void initControls() {
 		InputMap im = this.getRootPane().getInputMap();
 		ActionMap am = this.getRootPane().getActionMap();
@@ -229,40 +250,33 @@ public class LeaderboardForm extends JFrame {
 	}
 
 	private void moveRight() {
-		scrollLeaderboard.setVisible(false);
+		this.remove(scrollLeaderboard); // 화면에서 컴포넌트 제거 
 
 		curMode++;
 		if (curMode > gameMode.length - 1) {
 			curMode = 0;
 		}
-
-		// 현재 칼럼 위치에 따라 스코어보드 보여주기
-		this.remove(scrollLeaderboard);
 		updateTableWithMode(curMode);
 
-		// 레이블 텍스트 변경
 		lblGameMode.setText(gameMode[curMode]);
 	}
 
 	private void moveLeft() {
-		scrollLeaderboard.setVisible(false);
+		this.remove(scrollLeaderboard);
 
 		curMode--;
 		if (curMode < 0) {
 			curMode = gameMode.length - 1;
 		}
-
-		this.remove(scrollLeaderboard);
 		updateTableWithMode(curMode);
 
 		lblGameMode.setText(gameMode[curMode]);
 	}
 
-	// 게임 종료 후 유저 이름 입력 받아서 스코어보드 띄우는 경우: 현재 선택된 모드에 따라 보여주기
-	public void addPlayer(int gameMode, String name, int score, String level) {
-		// 현재 모드에 따라 파일 읽어서 테이블 데이터 초기화
+	// 게임 종료 후 유저 이름 입력 받아서 스코어보드 띄우기
+	public void addPlayer(int mode, String name, int score, String level) {
 		this.remove(scrollLeaderboard);
-		this.curMode = gameMode;
+		this.curMode = mode;
 		initTableData();
 		//updateTableWithMode(gameMode, position); 
 
