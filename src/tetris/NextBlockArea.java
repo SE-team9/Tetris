@@ -11,7 +11,6 @@ public class NextBlockArea extends JPanel {
 	private GameArea ga;
 	private TetrisBlock nextBlock;
 	private int gridCellSize;
-	
 	private boolean isItem = false;  // 아이템 블럭인지 확인하는 변수
 
 	public NextBlockArea(int w, int h, GameArea ga) {

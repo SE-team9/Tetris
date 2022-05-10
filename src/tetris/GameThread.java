@@ -28,6 +28,13 @@ public class GameThread extends Thread {
 		gf.updateLevel(level);
 
 		levelMode = Tetris.getGameLevel();
+		
+		// 난이도 조절 추가
+		if (levelMode == 0) {
+			speedupPerLevel = 80;
+		} else if (levelMode == 2) {
+			speedupPerLevel = 120;
+		}
 	}
 
 	@Override
@@ -89,13 +96,6 @@ public class GameThread extends Thread {
 			
 			// 점수 업데이트
 			gf.updateScore(score);
-			
-			// 난이도 조절 추가
-			if (levelMode == 0) {
-				speedupPerLevel = 80;
-			} else if (levelMode == 2) {
-				speedupPerLevel = 120;
-			}
 			
 			// 레벨 업데이트, 레벨이 증가할수록 블럭이 내려오는 속도 증가
 			int lvl = totalClearedLine / linePerLevel + 1;
@@ -176,6 +176,7 @@ public class GameThread extends Thread {
 			}
 
 			// 현재 블럭이 바닥에 닿았을 때, 완성된 줄을 삭제하고, 삭제된 줄 수 저장
+			//clearedLineNum = ga.clearLines() + ga.oneLineDelte();
 			clearedLineNum = ga.clearLines();
 
 			// 줄이 특정 횟수 삭제되면 아이템 생성
@@ -194,13 +195,6 @@ public class GameThread extends Thread {
 				score += clearedLineNum + level;
 			}
 			gf.updateScore(score);
-
-			// 난이도 조절 추가
-			if (levelMode == 0) {
-				speedupPerLevel = 80;
-			} else if (levelMode == 2) {
-				speedupPerLevel = 120;
-			}
 
 			int lvl = totalClearedLine / linePerLevel + 1;
 			if (lvl > level) {

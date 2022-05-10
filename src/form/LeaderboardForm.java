@@ -251,16 +251,6 @@ public class LeaderboardForm extends JFrame {
 		this.setVisible(true);
 	}
 	
-	// 파일 내용 삭제 
-	public void deleteLeaderboard() {
-		try {
-			new FileOutputStream(leaderboardFile[0]).close();
-			new FileOutputStream(leaderboardFile[1]).close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
 	// LeaderboardForm 프레임 실행
 	public static void main(String[] args) {
 		java.awt.EventQueue.invokeLater(new Runnable() {

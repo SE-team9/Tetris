@@ -621,6 +621,7 @@ public class GameArea extends JPanel {
 					break;
 				}
 			}
+			
 			if (lineFilled) {
 				for (int c = 0; c < gridColumns; c++) {
 					background[r][c] = Color.white;
@@ -640,7 +641,9 @@ public class GameArea extends JPanel {
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
+				
 				linesCleared++;
+				
 				clearLine(r);
 				shiftDown(r);
 				
@@ -653,6 +656,7 @@ public class GameArea extends JPanel {
 				repaint();
 			}
 		}
+		
 		return linesCleared;
 	}
 

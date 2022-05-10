@@ -138,22 +138,22 @@ public class GameForm extends JFrame {
 			}
 		});
 
+		// TODO: 키 입력에 의해 한칸 내려갈 때도 점수가 1점 증가하도록 
 		am.put("downOneLine", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (!isPaused) {
-					if(ga.moveBlockDown())
-						gt.scorePlus1();
+					ga.moveBlockDown();
 				}
 			}
 		});
 
+		// TODO: 키 입력에 의해 한번에 떨어지면 15점 증가하도록 
 		am.put("downToEnd", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (!isPaused) {
 					ga.dropBlock();
-					gt.scorePlus15();
 				}
 			}
 		});
