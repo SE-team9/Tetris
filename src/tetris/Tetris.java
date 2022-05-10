@@ -44,8 +44,8 @@ public class Tetris {
 		w = of.getFrameSize().width;
 		h = of.getFrameSize().height;
 		
-		of.initComponents(w, h); // 크기 조절 
-		of.showConfirmedOption(); // 확정된 설정값으로 보여주기
+		of.initComponents(w, h); // 크기 조절, 칼럼 확정 
+		
 		of.setVisible(true); // 설정 화면 띄우기
 		
 		of.getContentPane().repaint();
@@ -61,6 +61,10 @@ public class Tetris {
 		
 		lf.setVisible(true);
 		lf.getContentPane().repaint();
+	}
+	
+	public static void saveSettings() {
+		of.saveSettings();
 	}
 	
 	// 게임 모드
@@ -88,21 +92,21 @@ public class Tetris {
 	}
 
 	// 게임 종료 (현재 모드, 이름, 점수, 난이도)
-	public static void gameOver(int gameMode, int score, int levelMode) {
+	public static void gameOver(int mode, int score, int levelMode) {
 		// 유저 이름 입력 받기
-		String playerName = JOptionPane.showInputDialog("Game Over!\n Please enter your name.");
+		String name = JOptionPane.showInputDialog("Game Over!\n Please enter your name.");
 		gf.setVisible(false);
 		
 		// 테이블에 데이터 추가
 		switch(levelMode) {
 		case 0:
-			lf.addPlayer(gameMode, playerName, score, "Easy");
+			lf.addPlayer(mode, name, score, "Easy");
 			break;
 		case 1:
-			lf.addPlayer(gameMode, playerName, score, "Normal");
+			lf.addPlayer(mode, name, score, "Normal");
 			break;
 		case 2:
-			lf.addPlayer(gameMode, playerName, score, "Hard");
+			lf.addPlayer(mode, name, score, "Hard");
 			break;
 		}
 	}
@@ -113,7 +117,7 @@ public class Tetris {
 				
 				// 여기서 모든 Form 객체 생성 (생성자 호출하여 초기화)
 				sf = new StartupForm();
-				of = new OptionForm();				
+				of = new OptionForm(); // 객체를 새로 만들면 설정 값이 초기화 돼버린다! 
 				gf = new GameForm();
 				lf = new LeaderboardForm();
 				
