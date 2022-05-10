@@ -5,6 +5,8 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 
 import javax.swing.AbstractAction;
@@ -26,11 +28,11 @@ public class OptionForm extends JFrame {
 	}
 	private int w, h;
 	
-	private static final int ROW = 6;
+	private static final int ROW = 6; 
 	private JLabel[] lblOption = new JLabel[ROW]; 
 	private String[] options = { "화면 크기", "조작 키", "난이도", "색맹 모드", "스코어보드 기록 초기화", "기본 설정으로 되돌리기"};
 	private JLabel[] lblArrow = { new JLabel("<"), new JLabel(">") };
-	private JButton[] btnOption = new JButton[ROW];
+	private JButton[] btnOption = new JButton[ROW]; // 따로 초기화 해줘야 널 포인터 에러 안 뜸. 
 	
 	private String[][] optionArray = {
 		 { "Small (default)", "Medium", "Large" }, // 화면 크기
@@ -41,19 +43,51 @@ public class OptionForm extends JFrame {
 		 { "NO", "YES" } // 기본 설정으로 되돌리기
 	};
 	
-	// 행마다 포커스가 놓인 칼럼 위치가 다르기 때문에 배열로 만들었다.
+	// 각 행마다 어떤 열에 포커스가 놓여 있는지 배열에 저장하기 
 	private int row = 0;
-	private int[] focusColumn = new int[ROW];
+	private int[] focusColumn; // 전역이어서 기본적으로 0으로 초기화 
 	
 	// 엔터 눌러서 확정된 칼럼 값을 저장 (다른 곳에서 참조 가능)
-	private int[] confirmedColumn = new int[ROW];
+	private int[] confirmedColumn; // 전역이어서 기본적으로 0으로 초기화 
 
-	public OptionForm() {
+	public OptionForm() { // 객체 생성 시 초기화 작업 
 		this.w = 600;
 		this.h = 450;
 		
-		// 모든 행의 옵션을 첫번째 칼럼으로 초기화
-		initDefaultSettings();
+		// 0으로 초기화 
+		focusColumn = new int[ROW];
+		confirmedColumn = new int[ROW];
+		
+		// 파일에서 설정 값 가져와서 배열 초기화 
+		try {
+			File file = new File("settings.txt");
+			if(!file.exists()) { 
+				file.createNewFile(); 
+				System.out.println("Create new file.");
+			};
+			
+			FileInputStream fis = new FileInputStream(file);
+			int data = 0;
+			int idx = 0;
+			
+			// 파일에 저장된 값이 없으면 그냥 닫아버림. 
+			while((data = fis.read()) != -1) {
+				confirmedColumn[idx] = data;
+				idx++;
+			}
+			
+			fis.close();
+			
+			// 디버그 
+			System.out.println("this is init object OF.");
+			for(int i = 0; i < confirmedColumn.length; i++) {
+				System.out.print(confirmedColumn[i] + " ");
+			}
+			System.out.println();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 		// 기본 크기로 설정
 		initComponents(w, h);
@@ -61,27 +95,6 @@ public class OptionForm extends JFrame {
 		initControls();
 	}
 	
-	// 이 화면 내에서 크기를 바꿀 때는 포커스 놓인 텍스트를 보여줘야 하지만,
-	// 화면을 나갔다가 다시 들어올 때는 확정된 설정 값을 띄워야 한다. 
-	public void showConfirmedOption() {
-		// 확정된 설정 값으로 텍스트 보여주기
-		for(int i = 0; i < ROW; i++) {
-			btnOption[i] = new JButton(optionArray[i][confirmedColumn[i]]); 
-			btnOption[i].setBounds(w/4, h/30 + i * 60 + 25, w/2, 25);
-			btnOption[i].setBackground(Color.white);
-			btnOption[i].setFocusable(false);
-			this.add(btnOption[i]);
-		}
-		
-		// 화살표 위치 초기화
-		row = 0;
-		lblArrow[0].setBounds(w/3, h/30 + row * 60, 25, 25);
-		lblArrow[1].setBounds(w - w/3, h/30 + row * 60, 25, 25);
-		this.add(lblArrow[0]);
-		this.add(lblArrow[1]);
-	}
-	
-	// 기본 설정으로 초기화
 	private void initDefaultSettings() {
 		for(int i = 0; i < ROW; i++) {
 			focusColumn[i] = 0;
@@ -111,16 +124,21 @@ public class OptionForm extends JFrame {
 			lblOption[i].setHorizontalAlignment(JLabel.CENTER);
 			this.add(lblOption[i]);
 			
-			// 버튼 6개 초기화
-			// repaint로 화면 다시 그려도, 현재 포커스가 놓인 칼럼으로 텍스트 초기화!!!
-			btnOption[i] = new JButton(optionArray[i][focusColumn[i]]);
+			// 버튼 6개 초기화 (화면 크기 조정한 뒤의 텍스트는 현재 포커스가 놓인 칼럼으로)
+			btnOption[i] = new JButton(optionArray[i][confirmedColumn[i]]);
 			btnOption[i].setBounds(w/4, h/30 + i * 60 + 25, w/2, 25);
 			btnOption[i].setBackground(Color.white);
 			btnOption[i].setFocusable(false);
 			this.add(btnOption[i]);
 		}
 		
-		// 포커스가 놓인 행에 화살표 표시
+		System.out.println("components");
+		for(int i = 0; i < confirmedColumn.length; i++) {
+			System.out.print(confirmedColumn[i] + " ");
+		}
+		System.out.println();
+		
+		// 현재 포커스가 놓인 행에 화살표 표시
 		lblArrow[0].setBounds(w/3, h/30 + row * 60, 25, 25);
 		lblArrow[1].setBounds(w - w/3, h/30 + row * 60, 25, 25);
 		this.add(lblArrow[0]);
@@ -162,7 +180,6 @@ public class OptionForm extends JFrame {
 				moveLeft();
 			}
 		});
-		
 		am.put("back", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -171,25 +188,21 @@ public class OptionForm extends JFrame {
 			}
 		});
 		
-		// 엔터를 눌러야 현재 칼럼의 옵션이 확정됨.
+		// 엔터를 눌러야 현재 칼럼이 설정 값으로 확정됨. 
 		am.put("enter", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				confirmedColumn[row] = focusColumn[row];
+				confirmedColumn[row] = focusColumn[row]; // 현재 칼럼을 설정 값으로 확정 
 				System.out.println(row + " " + confirmedColumn[row]); // 디버깅 용도
 				
 				switch(row) {
 				case 0: // 화면 크기 설정 
-					switch(confirmedColumn[row]) {
-					case 0: 
+					if(confirmedColumn[row] == 0) { // Small
 						updateFrameSize(600, 450);
-						break;
-					case 1:
+					}else if(confirmedColumn[row] == 1) { // Medium
 						updateFrameSize(700, 550);
-						break;
-					case 2:
+					}else { // Large
 						updateFrameSize(800, 650);
-						break;
 					}
 					break;
 				case 4: // 스코어보드 초기화
@@ -208,15 +221,11 @@ public class OptionForm extends JFrame {
 		});
 	}
 	
-	private void moveUp() {		
-		// 원래 행의 텍스트는 포커스된 걸로!
-		btnOption[row].setText(optionArray[row][focusColumn[row]]);
-		
+	private void moveUp() {
 		lblArrow[0].setVisible(false);
 		lblArrow[1].setVisible(false);
 		
 		row--;
-		
 		if(row < 0) {
 			row = ROW - 1;
 		}
@@ -226,11 +235,11 @@ public class OptionForm extends JFrame {
 		lblArrow[1].setBounds(w - w/3, h/30 + row * 60, 25, 25);
 		lblArrow[0].setVisible(true);
 		lblArrow[1].setVisible(true);
+		
+		
 	}
 
 	private void moveDown() {
-		btnOption[row].setText(optionArray[row][focusColumn[row]]);
-		
 		lblArrow[0].setVisible(false);
 		lblArrow[1].setVisible(false);
 		
@@ -247,10 +256,10 @@ public class OptionForm extends JFrame {
 	}
 
 	private void moveRight() {
-		// 처음에는 칼럼 위치가 0으로 초기화 되어 있음.
+		// 좌우 화살표 키 입력에 따라 포커스가 놓인 칼럼 위치 바꾸기 
 		focusColumn[row]++;
 		
-		// 현재 행의 최대 옵션 길이를 넘으면 0으로 초기화
+		// 현재 행이 가질 수 있는 최대 옵션 개수를 넘으면 0으로 초기화
 		if(focusColumn[row] >= optionArray[row].length) {
 			focusColumn[row] = 0;
 		}
@@ -268,19 +277,18 @@ public class OptionForm extends JFrame {
 		btnOption[row].setText(optionArray[row][focusColumn[row]]);
 	}
 	
-	// 프레임 크기 변경 (현재 설정된 옵션값은 화면에서 그대로 유지되어야 함)
+	// 프레임 크기 변경 (현재 포커스가 놓인 칼럼의 텍스트는 그대로 유지) 
 	private void updateFrameSize(int w, int h) {
-		getContentPane().removeAll();
+		getContentPane().removeAll(); // 이걸 안 해주면 여러 개의 프레임이 겹침.
 		
-		// 멤버 변수 w, h 변경해서 화면 크기 조절!
-		// 화면 크기 바꿔도 현재 포커스에 따라 버튼 텍스트는 유지됨.
+		// 멤버 변수 w, h 바꾸고, 컴포넌트 전부 다시 그리기
 		initComponents(w, h);
-		this.setVisible(true);
-		
 		getContentPane().repaint();
+		
+		this.setVisible(true);
 	}
 
-	// 설정에서 선택한 너비, 높이에 따라 모든 프레임의 크기와 컴포넌트들의 위치 조정하기!!!
+	// 모든 화면에 적용되는 프레임 크기 참조하기
 	public Pair<Integer, Integer> getFrameSize() {
 		return new Pair<>(w, h);
 	}
@@ -308,14 +316,35 @@ public class OptionForm extends JFrame {
 		if(file.exists()) {
 			file.delete();
 		}else {
-			System.out.println("파일이 존재하지 않습니다.");
+			System.out.println("File does not exist.");
 		}
 		
 		if(file2.exists()) {
 			file2.delete();
 		}else {
-			System.out.println("파일이 존재하지 않습니다.");
+			System.out.println("File does not exist.");
 		}
+	}
+	
+	public void saveSettings() {
+		try {
+			// 확정된 칼럼 값 파일에 저장하기 
+			FileOutputStream fos = new FileOutputStream("settings.txt", false); // append 하지 않고 매번 새로 쓰기 
+			for(int i = 0; i < confirmedColumn.length; i++) {
+				fos.write(confirmedColumn[i]);
+			}
+			
+			fos.close();
+			
+			for(int i = 0; i < confirmedColumn.length; i++) {
+				System.out.print(confirmedColumn[i] + " ");
+			}
+			System.out.println();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 	}
 	
 	// OptionForm 프레임 실행

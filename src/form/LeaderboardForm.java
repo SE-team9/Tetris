@@ -57,9 +57,10 @@ public class LeaderboardForm extends JFrame {
 		this.w = 600;
 		this.h = 450;
 		this.curMode = 0;
+		
 		initComponents(w, h);
 		updateTableWithMode(curMode); 
-
+		
 		initControls();
 	}
 
@@ -73,7 +74,7 @@ public class LeaderboardForm extends JFrame {
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setLocationRelativeTo(null);
 		this.setVisible(false);
-
+		
 		// 일반모드 텍스트로 초기화 
 		lblGameMode = new JLabel(gameMode[0]);
 
@@ -86,20 +87,18 @@ public class LeaderboardForm extends JFrame {
 		this.add(lblArrow[0]);
 		this.add(lblArrow[1]);
 	}
-
-	// 좌우 화살표 키 입력에 따라 서로 다른 테이블 보여주기
-		public void updateTableWithMode(int mode) {		
-			// 모드 변경 
+	public void updateTableWithMode(int mode) {		
+		// 모드 변경 
 		this.curMode = mode;
-
-		// 테이블 업로드
+		
+		// 테이블 데이터 업로드 
 		initTableData();
 		makeLeaderboard(-1); // highlight 위해 initTableData에서 분리
 		initTableSorter();
 		initScrollLeaderboard();
 	}
 	
-		// 현재 게임 모드에 따라 서로 다른 파일 읽어오기 (FileInputStream)
+	// 현재 게임 모드에 따라 서로 다른 파일 읽어오기 (FileInputStream)
 	private void initTableData() {
 		String header[] = { "Player", "Score", "Level" };
 		String contents[][] = {};
@@ -134,14 +133,14 @@ public class LeaderboardForm extends JFrame {
 				file.createNewFile(); 
 				System.out.println("Create new file.");
 			};
-
+			
 			FileInputStream fs = new FileInputStream(file);
 			ObjectInputStream os = new ObjectInputStream(fs);
-
+			
 			// de-serialization (직렬화 된 바이트 데이터 -> 객체 타입으로 읽어오기)
 			// 여기서 데이터 읽어올 때 파일의 끝에 이르면 eof 예외 발생함. (일단 스킵)
 			tm.setDataVector((Vector<Vector>) os.readObject(), ci);
-
+			
 			os.close();
 			fs.close();
 			
@@ -174,8 +173,8 @@ public class LeaderboardForm extends JFrame {
 			tcmSchedule.getColumn(i).setCellRenderer(tScheduleCellRenderer);
 		}
 	}
-
-	// 현재 테이블에 대한 Sort 설정
+	
+	// 현재 테이블에 대한 Sort 설정 
 	private void initTableSorter() {
 		sorter = new TableRowSorter<>(tm);
 		leaderboard.setRowSorter(sorter);
@@ -206,13 +205,11 @@ public class LeaderboardForm extends JFrame {
 
 			FileOutputStream fs = new FileOutputStream(file);
 			ObjectOutputStream os = new ObjectOutputStream(fs);
-
 			// serialization (객체 -> 바이트 데이터로 직렬화하여 파일에 저장)
 			os.writeObject(tm.getDataVector());
-
+		    
 			os.close();
 			fs.close();
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -251,13 +248,13 @@ public class LeaderboardForm extends JFrame {
 
 	private void moveRight() {
 		this.remove(scrollLeaderboard); // 화면에서 컴포넌트 제거 
-
+		
 		curMode++;
 		if (curMode > gameMode.length - 1) {
 			curMode = 0;
 		}
 		updateTableWithMode(curMode);
-
+		
 		lblGameMode.setText(gameMode[curMode]);
 	}
 
@@ -272,15 +269,14 @@ public class LeaderboardForm extends JFrame {
 
 		lblGameMode.setText(gameMode[curMode]);
 	}
-
+	
 	// 게임 종료 후 유저 이름 입력 받아서 스코어보드 띄우기
 	public void addPlayer(int mode, String name, int score, String level) {
 		this.remove(scrollLeaderboard);
 		this.curMode = mode;
 		initTableData();
-		//updateTableWithMode(gameMode, position); 
-
 		//sorter.sort(); // 재정렬, 뭐지 없어도 작동되네...?
+		
 		// 유저 정보 추가
 		tm.addRow(new Object[] { name, score, level });
 
@@ -296,7 +292,9 @@ public class LeaderboardForm extends JFrame {
 		initScrollLeaderboard();
 		
 		saveLeaderboard(); // 파일에 저장
+		
 
+		// 스코어보드 보여주기
 		this.setVisible(true);
 	}
 
