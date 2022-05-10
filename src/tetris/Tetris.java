@@ -38,6 +38,7 @@ public class Tetris {
 		gf.startGame(); // 게임 스레드 시작 
 	}
 	
+	// 다른 화면에서 설정 화면 띄울 때, 현재 확정된 설정 값으로 보여주기
 	public static void showOption() {
 		of.getContentPane().removeAll();
 		w = of.getFrameSize().width;
@@ -55,8 +56,9 @@ public class Tetris {
 		w = of.getFrameSize().width;
 		h = of.getFrameSize().height;
 		
-		lf.initComponents(w, h, 0); // 프레임 크기, 칼럼 위치
-		lf.updateTableWithMode(0); // 일반 모드
+		lf.initComponents(w, h); // 프레임 크기, 칼럼 위치
+		lf.updateTableWithMode(0); // 일반 모드 먼저 보여주기 
+		
 		lf.setVisible(true);
 		lf.getContentPane().repaint();
 	}

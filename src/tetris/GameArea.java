@@ -679,7 +679,6 @@ public class GameArea extends JPanel {
 	// --------------------------------------------------------------------- 그리기
 	// 현재 블럭을 그려준다.
 	private void drawBlock(Graphics g) {
-
 		if (block == null)
 			return;
 
@@ -698,7 +697,7 @@ public class GameArea extends JPanel {
           if(this.block instanceof OneLineDelete) {
 						drawGridL(g, c, x, y);
 					}
-          // 현재 블럭이 아이템블럭이면 원으로, 기본블럭이면 사각형으로 그려준다.
+          			// 현재 블럭이 아이템블럭이면 원으로, 기본블럭이면 사각형으로 그려준다.
 					else if (isItem) {
 						drawGridOval(g, c, x, y);
 					} else {

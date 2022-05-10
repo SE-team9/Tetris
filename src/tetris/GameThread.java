@@ -12,6 +12,7 @@ public class GameThread extends Thread {
 	private int speedupPerLevel = 100;
 	private boolean isPaused = false;
 	private int levelMode; // 설정 화면에서 정한 게임 난이도
+	private int gameMode; // 시작 화면에서 정한 게임 모드 (일반, 아이템)
 
 	// 아이템 생성과 관련된 변수들
 	private int clearedLineNum; 	    // 줄이 삭제된 경우 삭제된 줄 수를 저장하는 변수
@@ -28,6 +29,7 @@ public class GameThread extends Thread {
 		gf.updateLevel(level);
 
 		levelMode = Tetris.getGameLevel();
+		gameMode = Tetris.getGameMode();
 		
 		// 난이도 조절 추가
 		if (levelMode == 0) {
@@ -39,7 +41,7 @@ public class GameThread extends Thread {
 
 	@Override
 	public void run() {
-		if(Tetris.getGameMode() == 0) {
+		if(gameMode == 0) {
 			startDefaultMode(); // 일반 모드
 		}else {
 			startItemMode(); // 아이템 모드
@@ -77,7 +79,6 @@ public class GameThread extends Thread {
 
 			// 블럭이 다 내려왔는데 위쪽 경계를 넘어 있는 경우는 게임 종료
 			if (ga.isBlockOutOfBounds()) {
-				int gameMode = Tetris.getGameMode();
 				Tetris.gameOver(gameMode, score, levelMode);
 				break;
 			}
@@ -147,7 +148,6 @@ public class GameThread extends Thread {
 
 			// 게임 종료 확인
 			if (ga.isBlockOutOfBounds()) {
-				int gameMode = Tetris.getGameMode();
 				Tetris.gameOver(gameMode, score, levelMode);
 				
 				break; // 루프 탈출
