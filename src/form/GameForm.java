@@ -24,12 +24,11 @@ public class GameForm extends JFrame {
 	private boolean isPaused = false;
 
 	// 처음에 생성자 호출할 때는 모두 기본 값으로 
-	public GameForm() {
-		this.w = 600;
-		this.h = 450;
-		
+	public GameForm(int w, int h) {
+		this.w = w;
+		this.h = h;
 		initComponents(w, h);
-		initControls(0); 
+		initControls(0); // 조작 키 설정 
 	}
 	
 	// Tetris에서 전달 받은 인자 값에 따라 크기 조정 
@@ -216,7 +215,7 @@ public class GameForm extends JFrame {
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				new GameForm().setVisible(true);
+				
 			}
 		});
 	}

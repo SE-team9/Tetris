@@ -46,10 +46,10 @@ public class LeaderboardForm extends JFrame {
 	private Vector ci;
 	
 	// Tetris에서 객체가 처음 생성될 때 초기화 작업 
-	public LeaderboardForm() {
-		this.w = 600;
-		this.h = 450;
-		this.curMode = 0;
+	public LeaderboardForm(int w, int h) {
+		this.w = w;
+		this.h = h;
+		this.curMode = 0; // 게임 모드 
 		
 		initComponents(w, h);
 		updateTableWithMode(curMode); 
@@ -275,7 +275,7 @@ public class LeaderboardForm extends JFrame {
 	public static void main(String[] args) {
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				new LeaderboardForm().setVisible(true);
+				
 			}
 		});
 	}
