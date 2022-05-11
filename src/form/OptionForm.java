@@ -192,6 +192,9 @@ public class OptionForm extends JFrame {
 		am.put("back", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				// 이때 파일에 설정 값을 저장하자! 
+				saveAllSettings();
+				
 				setVisible(false);
 				Tetris.showStartup();
 			}
@@ -338,7 +341,7 @@ public class OptionForm extends JFrame {
 		}
 	}
 	
-	public void saveSettings() {
+	public void saveAllSettings() {
 		try {
 			// 확정된 칼럼 값 파일에 저장하기 
 			FileOutputStream fos = new FileOutputStream("settings.txt", false); // append 하지 않고 매번 새로 쓰기 

@@ -153,14 +153,9 @@ public class StartupForm extends JFrame {
 			Tetris.showLeaderboard(); // 스코어 보드
 			break;
 		case 3:
-			Tetris.saveSettings(); // 설정 값 파일에 저장 
 			System.exit(0); // 게임 종료
 			break;
 		}
-	}
-
-	private void saveSettings() {
-		
 	}
 
 	private void moveUp() {

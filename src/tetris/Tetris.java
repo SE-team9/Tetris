@@ -17,57 +17,78 @@ public class Tetris {
 	private static OptionForm of;
 	private static LeaderboardForm lf;
 	
+	private static void updateFrameSize() {
+		try {
+			File file = new File("settings.txt");
+			if(!file.exists()) { 
+				file.createNewFile(); 
+				System.out.println("Create new file.");
+			};
+			
+			FileInputStream fis = new FileInputStream(file);
+			int data = fis.read();
+			
+			// 파일에 저장된 값에 따라 크기 조절 
+			if(data == 0) {
+				w = 600;
+				h = 450;
+			}else if(data == 1) {
+				w = 700;
+				h = 550;
+			}else {
+				w = 800;
+				h = 650;
+			}
+			
+			fis.close();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	// 시작 화면 띄우기 
 	public static void showStartup() {
-		sf.getContentPane().removeAll();
-		w = of.getFrameSize().width;
-		h = of.getFrameSize().height;
+		updateFrameSize(); // 멤버 변수 업데이트 
 		
-		sf.initComponents(w, h); // 크기 조절 
-		sf.setVisible(true); // 시작 화면 띄우기
+		sf.getContentPane().removeAll();
+		sf.initComponents(w, h); // 멤버 변수 값에 따라 컴포넌트 위치 조정 
+		sf.setVisible(true);
 		sf.getContentPane().repaint();
 	}
 	
+	// 게임 화면 띄우면서 스레드 시작 
 	public static void start() {
+		updateFrameSize();
+		
 		gf.getContentPane().removeAll();
-		w = of.getFrameSize().width;
-		h = of.getFrameSize().height;
-		
-		gf.initComponents(w, h); // 크기 조절 
-		gf.initControls(of.getCurrentKeyMode()); // 조작키 설정
-		gf.setVisible(true); // 게임 화면 띄우기
-		
+		gf.initComponents(w, h);
+		gf.initControls(of.getCurrentKeyMode()); // 조작 키 설정
+		gf.setVisible(true);
 		gf.getContentPane().repaint();
 		
 		gf.startGame(); // 게임 스레드 시작 
 	}
 	
-	// 다른 화면에서 설정 화면을 띄울 때, 현재 확정된 설정 값으로 보여주기
+	// 설정 화면 띄우기 
 	public static void showOption() {
+		updateFrameSize();
+		
 		of.getContentPane().removeAll();
-		w = of.getFrameSize().width;
-		h = of.getFrameSize().height;
-		
-		of.initComponents(w, h); // 크기 조절, 칼럼 확정 
-		
-		of.setVisible(true); // 설정 화면 띄우기
-		
+		of.initComponents(w, h); // 확정된 칼럼 값으로 보여주기
+		of.setVisible(true);
 		of.getContentPane().repaint();
 	}
 	
+	// 스코어보드 띄우기  
 	public static void showLeaderboard() {
+		updateFrameSize();
+		
 		lf.getContentPane().removeAll();
-		w = of.getFrameSize().width;
-		h = of.getFrameSize().height;
-		
-		lf.initComponents(w, h); // 프레임 크기
+		lf.initComponents(w, h);
 		lf.updateTableWithMode(0); // 일반 모드 먼저 보여주기 
-		
 		lf.setVisible(true);
 		lf.getContentPane().repaint();
-	}
-	
-	public static void saveSettings() {
-		of.saveSettings();
 	}
 	
 	// 게임 모드
@@ -118,37 +139,9 @@ public class Tetris {
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				
-				// 여기서 설정 파일을 불러와서, 모든 프레임의 크기를 한번에 조절해보자! 
-				// 파일에서 설정 값 가져와서 배열 초기화 
-				try {
-					File file = new File("settings.txt");
-					if(!file.exists()) { 
-						file.createNewFile(); 
-						System.out.println("Create new file.");
-					};
-					
-					FileInputStream fis = new FileInputStream(file);
-					int data = fis.read();
-					
-					// 파일에 저장된 값에 따라 크기 조절 
-					if(data == 0) {
-						w = 600;
-						h = 450;
-					}else if(data == 1) {
-						w = 700;
-						h = 550;
-					}else {
-						w = 800;
-						h = 650;
-					}
-					
-					fis.close();
-					
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+				// 파일에서 불러온 값에 따라 모든 프레임의 크기 조절 
+				updateFrameSize();
 				
-				// 여기서 모든 Form 객체 생성 (생성자 호출하여 초기화)
 				sf = new StartupForm(w, h);
 				of = new OptionForm(w, h); 
 				gf = new GameForm(w, h);
