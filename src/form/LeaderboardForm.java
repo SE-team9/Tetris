@@ -87,14 +87,14 @@ public class LeaderboardForm extends JFrame {
 	}
   
 	public void updateTableWithMode(int mode) {		
-		this.curMode = mode; // 모드 변경
-		initTableData(); // 테이블 모델 초기화  
+		this.curMode = mode; // 1. 모드 변경 
+		initTableData(); // 2. 테이블 모델 초기화  
     
-    // highlight 위해 initTableData에서 분리
-		makeLeaderboard(-1); // 테이블 모델 이용해서 테이블 초기화
+    		// highlight 위해 initTableData에서 분리
+		makeLeaderboard(-1); // 3. 테이블 모델 이용해서 테이블 초기화
     
-		initTableSorter(); // Sorter 초기화 및 정렬 
-		initScrollLeaderboard(); // // 스크롤 가능한 테이블 생성 
+		initTableSorter(); // 4. Sorter 초기화 및 정렬 
+		initScrollLeaderboard(); // 5. 스크롤 가능한 테이블 생성 
 	}
 	
 	// Input: 현재 모드에 해당하는 파일에서 데이터 읽어와서 테이블 모델 초기화 
@@ -112,7 +112,7 @@ public class LeaderboardForm extends JFrame {
 
 			@Override 
 			public Class<?> getColumnClass(int columnIndex) {
-        // 점수 읽어올 때 정수 타입으로
+        			// 점수 읽어올 때 정수 타입으로
 				if (columnIndex == 1)
 					return Integer.class;
 				
@@ -150,14 +150,13 @@ public class LeaderboardForm extends JFrame {
 	}
 
 	private void makeLeaderboard(int position) {
-    
 		// 테이블 모델을 이용하여 테이블 초기화
 		leaderboard = new JTable(tm) {
 			@Override
 			public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
 				JComponent component = (JComponent) super.prepareRenderer(renderer, row, column);
         
-        // 강조 표시하고 싶은 행의 인덱스를 인자로 받아오기 
+        			// 강조 표시하고 싶은 행의 인덱스를 인자로 받아오기 
 				if (row == position) {
 					component.setBackground(Color.YELLOW);
 				} else {
@@ -278,34 +277,31 @@ public class LeaderboardForm extends JFrame {
 	public void addPlayer(int mode, String name, int score, String level) {
 		this.remove(scrollLeaderboard);
 		
-    // 현재 모드에 대한 스코어보드 먼저 보여주기
+    		// 현재 모드에 대한 스코어보드 먼저 보여주기
 		lblGameMode.setText(gameMode[mode]);
-    
-    // 테이블을 관리하는 tm이 하나이기 때문에, 행 추가를 바로 하지 않고
-		// 현재 모드에 따라 파일 입출력을 처음부터 다시 한다! 
-		//updateTableWithMode(mode);
-   
-    //--------------------------------------------------------
-		initTableData(); // 1
-    
-		//sorter.sort(); // 재정렬, 뭐지 없어도 작동되네...?
+		
+    		// 테이블을 관리하는 tm이 하나이기 때문에, 행 추가를 바로 하지 않고
+		// 현재 모드에 따라 파일 입출력을 처음부터 다시 한다!
+		
+		this.curMode = mode; // 1. 모드 변경 
+		
+		initTableData(); // 2. 모드에 따른 파일 재업로드 
 		
 		// 유저 정보 추가
 		tm.addRow(new Object[] { name, score, level });
 
-		// 아래랑 중복되는 내용이기는 한데 sort()후에 highlight하기 위해서 필요함 -> position 값 얻어오는데 사용
+		// sort()후에 highlight하기 위해서 필요함 -> position 값 얻어오는데 사용
 		leaderboard = new JTable(tm);
 		initTableSorter();
 		
 		position = leaderboard.convertRowIndexToView(tm.getRowCount() - 1);
-		makeLeaderboard(position); // 2 (강조 표시)
-    
-		initTableSorter(); // 3
-		initScrollLeaderboard(); // 4
-    
-    //-----------------------------------------------------
+		makeLeaderboard(position); // 3. 마지막 행 강조 표시 
 		
-		saveLeaderboard(); // 파일에 저장
+		initTableSorter(); // 4. 재정렬 
+
+		initScrollLeaderboard(); // 5. 최종 테이블 생성 
+		
+		saveLeaderboard(); // 파일에 새로운 데이터 저장
 
 		// 스코어보드 보여주기
 		this.setVisible(true);
