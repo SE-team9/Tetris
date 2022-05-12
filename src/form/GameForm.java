@@ -199,7 +199,7 @@ public class GameForm extends JFrame {
 		nba.initNextBlockArea(); 
 		
 		// 게임 스레드 시작
-		gt = new GameThread(ga, this, nba);
+		gt = new GameThread(this, ga, nba);
 		gt.start();
 	}
 

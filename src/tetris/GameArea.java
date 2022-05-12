@@ -132,34 +132,41 @@ public class GameArea extends JPanel {
 
 		int level = Tetris.getGameLevel();
 		double weight, iWeight;
-		int blockNum;
+		int blockNum; // 블럭 번호 (인덱스) 
 
-		if (level == 0) {
+		if (level == 0) { // easy
 			weight = 14.0;
-			iWeight = 16.0;
+			iWeight = 16.0; // I형 블럭의 등장 확률 20% 증가
 			w.put("0", iWeight);
+			
 			for (int i = 1; i < blocks.length; i++) {
 				w.put(Integer.toString(i), weight);
 			}
+			
 			blockNum = Integer.parseInt(getWeightedRandom(w, r));
-		} else if (level == 2) {
+			
+		} else if (level == 2) { // hard 
 			weight = 15.0;
-			iWeight = 10.0;
+			iWeight = 10.0; // I형 블럭의 등장 확률 20% 감소 
 			w.put("0", iWeight);
+			
 			for (int i = 1; i < blocks.length; i++) {
 				w.put(Integer.toString(i), weight);
 			}
+			
 			blockNum = Integer.parseInt(getWeightedRandom(w, r));
+			
 		} else {
 			blockNum = r.nextInt(blocks.length);
 		}
+		
 		return blockNum;
 	}
 
 	// --------------------------------------------------------------------- 블럭생성관련동작
 	// 난이도에 따라 다음 블럭을 정한다.
 	public void updateNextBlock() {
-		int r= makeRandom();
+		int r = makeRandom();
 		nextBlock = blocks[r];
 		nextBlock.setShape();
 	}
@@ -196,6 +203,7 @@ public class GameArea extends JPanel {
 	}
 
 	public boolean moveBlockDown() {
+		// 현재 블럭에 의해 한 행의 높이가 다 채워진 경우 false 리턴 
 		if (!checkBottom()) {
 			return false;
 		}
@@ -605,7 +613,7 @@ public class GameArea extends JPanel {
 		block = null;
 	}
 
-	// 완성된 줄을 삭제한다.
+	// 삭제된 줄 수 리턴 
 	public int clearLines() {
 
 		boolean lineFilled;

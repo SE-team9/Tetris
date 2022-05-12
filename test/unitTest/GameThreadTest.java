@@ -15,7 +15,7 @@ class GameThreadTest {
 	private NextBlockArea nba;
 	
 	final GameForm gf = new GameForm(600, 450);
-	final GameThread gt = new GameThread(ga, gf, nba);
+	final GameThread gt = new GameThread(gf, ga, nba);
 
 	@Test
 	void testRun() {
