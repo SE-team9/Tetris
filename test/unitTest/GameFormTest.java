@@ -19,7 +19,7 @@ class GameFormTest {
 	private GameArea ga;
 	private GameThread gt;
 	private NextBlockArea nba;
-	final GameForm gf = new GameForm();;
+	final GameForm gf = new GameForm(600, 450);;
 
 	@Test
 	@Disabled

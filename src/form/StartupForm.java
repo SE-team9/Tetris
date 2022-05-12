@@ -29,13 +29,10 @@ public class StartupForm extends JFrame {
 	private String[] btnText = { "Start Game", "Settings", "ScoreBoard", "Quit" };
 	private int curPos;
 	
-	public StartupForm() {
-		this.w = 600;
-		this.h = 450;
-		
-		// 객체를 처음 생성할 때는 기본 값
-		initComponents(w, h); 
-		
+	public StartupForm(int w, int h) {
+		this.w = w;
+		this.h = h;
+		initComponents(w, h);
 		initControls();
 	}
 	
@@ -156,14 +153,9 @@ public class StartupForm extends JFrame {
 			Tetris.showLeaderboard(); // 스코어 보드
 			break;
 		case 3:
-			Tetris.saveSettings(); // 설정 값 파일에 저장 
 			System.exit(0); // 게임 종료
 			break;
 		}
-	}
-
-	private void saveSettings() {
-		
 	}
 
 	private void moveUp() {
@@ -211,7 +203,7 @@ public class StartupForm extends JFrame {
 	public static void main(String[] args) {
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				new StartupForm().setVisible(true);
+				
 			}
 		});
 	}

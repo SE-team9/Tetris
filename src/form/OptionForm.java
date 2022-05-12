@@ -26,7 +26,7 @@ public class OptionForm extends JFrame {
 			this.height = h;
 		}
 	}
-	private int w, h;
+	private int w, h; // 전역이어서 0으로 초기화 되려나? 
 	
 	private static final int ROW = 6; 
 	private JLabel[] lblOption = new JLabel[ROW]; 
@@ -45,14 +45,14 @@ public class OptionForm extends JFrame {
 	
 	// 각 행마다 어떤 열에 포커스가 놓여 있는지 배열에 저장하기 
 	private int row = 0;
-	private int[] focusColumn; // 전역이어서 기본적으로 0으로 초기화 
+	private int[] focusColumn;
 	
 	// 엔터 눌러서 확정된 칼럼 값을 저장 (다른 곳에서 참조 가능)
-	private int[] confirmedColumn; // 전역이어서 기본적으로 0으로 초기화 
-
-	public OptionForm() { // 객체 생성 시 초기화 작업 
-		this.w = 600;
-		this.h = 450;
+	private int[] confirmedColumn;
+	
+	public OptionForm(int w, int h) { // 객체 생성 시 초기화 작업 
+		this.w = w;
+		this.h = h;
 		
 		// 0으로 초기화 
 		focusColumn = new int[ROW];
@@ -70,7 +70,7 @@ public class OptionForm extends JFrame {
 			int data = 0;
 			int idx = 0;
 			
-			// 파일에 저장된 값이 없으면 그냥 닫아버림. 
+			// confirmedColumn 배열 초기화
 			while((data = fis.read()) != -1) {
 				confirmedColumn[idx] = data;
 				idx++;
@@ -79,7 +79,7 @@ public class OptionForm extends JFrame {
 			fis.close();
 			
 			// 디버그 
-			System.out.println("this is init object OF.");
+			System.out.println("This is init object OF.");
 			for(int i = 0; i < confirmedColumn.length; i++) {
 				System.out.print(confirmedColumn[i] + " ");
 			}
@@ -89,17 +89,26 @@ public class OptionForm extends JFrame {
 			e.printStackTrace();
 		}
 		
-		// 기본 크기로 설정
-		initComponents(w, h);
+		// 파일에 저장된 값에 따라 크기 조절 
+		if(confirmedColumn[0] == 0) {
+			updateFrameSize(600, 450);
+		}else if(confirmedColumn[0] == 1) {
+			updateFrameSize(700, 550);
+		}else {
+			updateFrameSize(800, 650);
+		}
 		
 		initControls();
 	}
 	
-	private void initDefaultSettings() {
-		for(int i = 0; i < ROW; i++) {
-			focusColumn[i] = 0;
-			confirmedColumn[i] = 0;
-		}
+	// 프레임 크기 변경 (텍스트는 confirmedColumn 값으로 바뀜) 
+	private void updateFrameSize(int w, int h) {
+		getContentPane().removeAll(); // 이걸 안 해주면 여러 개의 프레임이 겹침.
+		
+		// 멤버 변수 w, h 바꾸고, 컴포넌트 전부 다시 그리기
+		initComponents(w, h);
+	
+		getContentPane().repaint();
 	}
 	
 	private void initThisFrame() {
@@ -132,15 +141,15 @@ public class OptionForm extends JFrame {
 			this.add(btnOption[i]);
 		}
 		
-		System.out.println("components");
+		System.out.println("init components");
 		for(int i = 0; i < confirmedColumn.length; i++) {
 			System.out.print(confirmedColumn[i] + " ");
 		}
 		System.out.println();
 		
-		// 현재 포커스가 놓인 행에 화살표 표시
-		lblArrow[0].setBounds(w/3, h/30 + row * 60, 25, 25);
-		lblArrow[1].setBounds(w - w/3, h/30 + row * 60, 25, 25);
+		// 다른 화면에서 설정 화면을 띄울 때 화살표가 첫 행에 놓이도록 
+		lblArrow[0].setBounds(w/3, h/30, 25, 25);
+		lblArrow[1].setBounds(w - w/3, h/30, 25, 25);
 		this.add(lblArrow[0]);
 		this.add(lblArrow[1]);
 	}
@@ -183,6 +192,9 @@ public class OptionForm extends JFrame {
 		am.put("back", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				// 이때 파일에 설정 값을 저장하자! 
+				saveAllSettings();
+				
 				setVisible(false);
 				Tetris.showStartup();
 			}
@@ -199,10 +211,13 @@ public class OptionForm extends JFrame {
 				case 0: // 화면 크기 설정 
 					if(confirmedColumn[row] == 0) { // Small
 						updateFrameSize(600, 450);
+						setVisible(true);
 					}else if(confirmedColumn[row] == 1) { // Medium
 						updateFrameSize(700, 550);
+						setVisible(true);
 					}else { // Large
 						updateFrameSize(800, 650);
+						setVisible(true);
 					}
 					break;
 				case 4: // 스코어보드 초기화
@@ -212,13 +227,24 @@ public class OptionForm extends JFrame {
 					break;
 				case 5: // 기본 설정
 					if(confirmedColumn[row] == 1) {
-						initDefaultSettings(); // 첫번째 칼럼으로 옵션 초기화
-						updateFrameSize(600, 450); // 모든 컴포넌트 크기 조정
+						// 첫번째 칼럼으로 옵션 초기화 하고, 크기 조정 
+						initDefaultSettings(); 
+						setVisible(true);
 					}
 					break;
 				}
 			}
 		});
+	}
+	
+	// 모든 설정을 첫번째 칼럼으로 
+	private void initDefaultSettings() {
+		for(int i = 0; i < ROW; i++) {
+			focusColumn[i] = 0;
+			confirmedColumn[i] = 0;
+		}
+		
+		updateFrameSize(600, 450);
 	}
 	
 	private void moveUp() {
@@ -276,17 +302,6 @@ public class OptionForm extends JFrame {
 		
 		btnOption[row].setText(optionArray[row][focusColumn[row]]);
 	}
-	
-	// 프레임 크기 변경 (현재 포커스가 놓인 칼럼의 텍스트는 그대로 유지) 
-	private void updateFrameSize(int w, int h) {
-		getContentPane().removeAll(); // 이걸 안 해주면 여러 개의 프레임이 겹침.
-		
-		// 멤버 변수 w, h 바꾸고, 컴포넌트 전부 다시 그리기
-		initComponents(w, h);
-		getContentPane().repaint();
-		
-		this.setVisible(true);
-	}
 
 	// 모든 화면에 적용되는 프레임 크기 참조하기
 	public Pair<Integer, Integer> getFrameSize() {
@@ -326,7 +341,7 @@ public class OptionForm extends JFrame {
 		}
 	}
 	
-	public void saveSettings() {
+	public void saveAllSettings() {
 		try {
 			// 확정된 칼럼 값 파일에 저장하기 
 			FileOutputStream fos = new FileOutputStream("settings.txt", false); // append 하지 않고 매번 새로 쓰기 
@@ -351,7 +366,7 @@ public class OptionForm extends JFrame {
 	public static void main(String[] args) {
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				new OptionForm().setVisible(true);
+				
 			}
 		});
 	}

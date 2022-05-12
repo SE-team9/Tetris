@@ -9,7 +9,7 @@ import form.OptionForm;
 
 class OptionFormTest {
 
-	final OptionForm of = new OptionForm();
+	final OptionForm of = new OptionForm(600, 450);
 	
 	@Test
 	@Disabled
